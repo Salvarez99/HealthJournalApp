@@ -11,7 +11,7 @@ import Welcome from './screens/Welcome.js';
 
 
 const Stack = createStackNavigator(); // for navigator
-
+//Test comment 
 
 export default function App() {
   return (
