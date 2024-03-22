@@ -4,7 +4,12 @@ import Constants from 'expo-constants';
 
 
 //const StatusBarHeight = Constants.statusBarHeight;
+/**
+ * Citation:
+ * Used for learning react native url 
+ * https://www.youtube.com/watch?v=BQ-kHwLlhrg
 
+ */
 // Get the height of the status bar on the device
 const StatusBarHeight = StatusBar.currentHeight || 0;
 

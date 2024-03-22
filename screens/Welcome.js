@@ -1,6 +1,13 @@
 import React, { useState, useContext } from 'react';
 import { StatusBar } from 'expo-status-bar';
 
+/**
+ * Citation:
+ * Used for learning react native url 
+ * https://www.youtube.com/watch?v=BQ-kHwLlhrg
+
+ */
+
 import {
     StyledContainer,
     InnerContainer,
