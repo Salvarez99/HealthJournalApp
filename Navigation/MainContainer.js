@@ -37,7 +37,7 @@ export default function MainContainer(){
                 },
 
                 tabBarActiveTintColor: "purple",
-                tabBarInactiveTintColor: "blue",
+                tabBarInactiveTintColor: "#2c72a3",
                 tabBarLabelStyle: {
                   paddingBottom: 3,
                   fontSize: 16,
