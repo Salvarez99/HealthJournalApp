@@ -33,17 +33,18 @@ export default function MainContainer(){
                         iconName = focused ? 'medical' : 'medical-outline'
                     }
 
-                    return <Ionicons name = {iconName}  size={size} color={color}/>
+                    return <Ionicons name = {iconName}  size={28} color={color}/>
                 },
 
-                tabBarActiveTintColor: "lightblue",
-                tabBarInactiveTintColor: "blue",
+                tabBarActiveTintColor: "purple",
+                tabBarInactiveTintColor: "#2c72a3",
                 tabBarLabelStyle: {
                   paddingBottom: 3,
-                  fontSize: 10,
+                  fontSize: 16,
                 },
                 tabBarStyle:{
                     display: "flex",
+                    height: '7%',
                     
               },
             })}
