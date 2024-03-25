@@ -4,12 +4,7 @@ import Constants from 'expo-constants';
 
 
 //const StatusBarHeight = Constants.statusBarHeight;
-/**
- * Citation:
- * Used for learning react native url 
- * https://www.youtube.com/watch?v=BQ-kHwLlhrg
 
- */
 // Get the height of the status bar on the device
 const StatusBarHeight = StatusBar.currentHeight || 0;
 
@@ -24,9 +19,10 @@ export const Colors = {
     brand: '#000080',  // navy, login page health journaling app text color
     orange: '#CC5500',
     red: '#EF4444',
+    ligthBrown : '#D3B683'  // bottm nav bar 
 };
 
-const { primary, secondary, tertiary, darkLight, brand, orange, red } = Colors;
+const { primary, secondary, tertiary, darkLight, ligthBrown, brand, orange, red } = Colors;
 
 
 // Define styled components
@@ -49,17 +45,34 @@ export const InnerContainer = styled.View({
     flex: 1,
     alignItems: 'center', 
     justifyContent: 'center', // Center content vertically - add 
+
 });
 
 
 
 // style for only welcome.js 
 export const WelcomePageContainer = styled(InnerContainer)({ // use inner container style
-    padding : '25px', 
-    paddingTop : '360px', 
+    padding : '15px', 
+    paddingTop : '320px', 
     justifyContent : 'center',
-
+    // height : '30%', // added 
 });
+
+// BottomNavBar.js componenet styleing  >> add to styles.js in components 
+export const BottomNavBarContainer = styled.View({
+   flex : 1, 
+    zIndex : 1,
+    //padding: '5%', // Padding of 5% of the screen width
+    paddingTop: '30px',  // Padding top including StatusBar height
+    backgroundColor: Colors.ligthBrown, 
+    width : '100%',
+    height : '100%', // added 
+    borderRadius : '5px',
+    borderRadius: 20,
+    borderBottomLeftRadius: 20,  // doule check. 
+    borderBottomRightRadius: 20, 
+}); 
+
 
 // style for welcome.js 
 export const Avatar = styled.Image({
@@ -245,4 +258,4 @@ export const LinkText = styled.TouchableOpacity({
     color : brand ,
     fontSize :'15px',
     }); 
-      
+

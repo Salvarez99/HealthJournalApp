@@ -1,13 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
+// citation learned from : https://www.youtube.com/watch?v=BQ-kHwLlhrg
 
 
-/**
- * Citation:
- * Used for learning react native url 
- * https://www.youtube.com/watch?v=BQ-kHwLlhrg
-
- */
 // import formik
 import { Formik } from 'formik';
 import styled from 'styled-components/native';
@@ -255,7 +250,7 @@ const MyTextInput = ({ label, icon, isPassword,hidePassword, setHidePassword, is
             <StyledInputLabel>{label}</StyledInputLabel>
             
             {/* Check. if isDate is true,use touchableopacity onpress for datepicker, else(false) display empty text box   */}
-                
+            {/**  */}
             {isDate && (
                 <TouchableOpacity onPress={showDatePicker}>
                 <StyledTextInput {...props} />

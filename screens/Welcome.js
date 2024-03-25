@@ -1,76 +1,41 @@
 import React, { useState, useContext } from 'react';
 import { StatusBar } from 'expo-status-bar';
 
-/**
- * Citation:
- * Used for learning react native url 
- * https://www.youtube.com/watch?v=BQ-kHwLlhrg
-
- */
-
 import {
     StyledContainer,
-    InnerContainer,
-    
-    PageTitle,
-    SubTitle,
-    StyledFormArea,
-  
-    // for button 
-    StyledButton,
-    ButtonText,
-
-    // for welcome.js 
-    WelcomePageContainer,
-    Avatar,
-    WelcomePageImage,
-    //for welcome.js avartar
-    TopContainer,
+    // for Bottom nav bar 
+    BottomNavBarContainer,
 
 }from './../components/styles';
-import { Button, View, Image, Text } from 'react-native';
+import { Button, View, Image, Text, TouchableOpacity } from 'react-native';
 
 //for navigation
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation hook
+
+// import BottomNavBar.js from components
+import BottomNavBar from '../components/BottomNavBar';
+import { Ionicons } from '@expo/vector-icons'
 
 
 // handle Welcome
 const Welcome = () => {
     
      // init navigation hook.
-   const navigation = useNavigation(); 
+  // const navigation = useNavigation(state=>state);  // go to state
+
 
    return (
     <StyledContainer>
         <StatusBar style="dark" />
-        <TopContainer>
-            <Image
-                style={{ width: '100%', height: '100%' }}
-                source={require('./../assets/img/welcomeBackground.jpg')}
-                resizeMode="cover"
-            />
-        </TopContainer>
-
-        <InnerContainer>
-            <WelcomePageContainer>
-                <PageTitle welcome={true}><Text>Welcome!</Text></PageTitle>
-                <SubTitle welcome={true}><Text>You're in Control!</Text></SubTitle>
-                <SubTitle welcome={true}><Text>Keep up to date on how you're doing by secured healthy journaling app.</Text></SubTitle>
-                <SubTitle welcome={true}><Text>The information is encrypted and you can stop sharing at any time.</Text></SubTitle>
-
-                <StyledFormArea>
-                    <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                        <Avatar resizeMode="cover" source={require('./../assets/img/login_page.png')} />
-                    </View>
-
-                    <StyledButton onPress={() => navigation.navigate('Login')}>
-                        <ButtonText> Logout</ButtonText>
-                    </StyledButton>
-                </StyledFormArea>
-            </WelcomePageContainer>
-        </InnerContainer>
+        <BottomNavBarContainer>
+                <BottomNavBar />
+        </BottomNavBarContainer>
+        
+        
+      
     </StyledContainer>
-);
+
+    );
 };
 
 export default Welcome;
