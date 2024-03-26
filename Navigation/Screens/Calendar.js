@@ -19,14 +19,12 @@ import {
   StyledContainer,
   TopContainer,
   WelcomePageContainer,
+}from '../../AppStyles/styles.js';
 
-
-}from '../../Components/styles.js';
-
-// import { SafeAreaViewContainer } from './../components/calenderStyles.js';
+// import { SafeAreaViewContainer } from '../../AppStyles/calenderStyles.js';
 import styled from 'styled-components/native';
 import { setIn } from 'formik';
-import { InputContainer, SafeAreaViewContainer, TextInputContainer, ItemContainer } from '../../Components/calenderStyles.js';
+import { InputContainer, SafeAreaViewContainer, TextInputContainer, ItemContainer } from '../../AppStyles/calenderStyles.js';
 
 
 // named as CalendarScreen since we import Calendar from 'react-native-calendars'
@@ -74,6 +72,4 @@ const CalendarScreen = () => {
       </SafeAreaViewContainer>
   );
 };
-
-
 export default CalendarScreen;
