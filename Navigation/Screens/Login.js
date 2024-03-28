@@ -29,7 +29,7 @@ import {
     LinkText, 
     ContentOfLinkText,
 
-}from '../../Components/styles';
+}from '../../AppStyles/styles';
 import { Button, View } from 'react-native';
 
 // icon
@@ -43,7 +43,8 @@ import { useNavigation } from '@react-navigation/native'; // Import useNavigatio
 const { brand, darkLight, primary } = Colors;
 
 // handle login 
-const Login = () => {
+// const Login = () => {
+export default function Login(){
     // init navigation hook.
     const navigation = useNavigation(); 
 
@@ -51,7 +52,7 @@ const Login = () => {
     const [hidePassword, setHidePassword] = useState(true); //default is true
 
     const handleLogin = () => {
-        navigation.navigate('Welcome');
+        navigation.navigate('MainContainer');
       };
 
 
@@ -68,7 +69,7 @@ const Login = () => {
                     onSubmit={(values) => {
                         console.log(values);
                         // change screen from login.js to welcome.js 
-                       navigation.navigate('Welcome');
+                       navigation.navigate('MainContainer');
                     }}
                 >
                 
@@ -154,4 +155,4 @@ const MyTextInput = ({ label, icon,isPassword,hidePassword, setHidePassword, ...
     );
 };
 
-export default Login; 
+// export default Login; 

@@ -31,7 +31,7 @@ import {
      ContentOfLinkText,
  
  
- }from '../../Components/styles.js';
+ }from '../../AppStyles/styles';
  
 import { Button, View, TouchableOpacity } from 'react-native';
 
@@ -97,7 +97,7 @@ const Singup = () => {
 
 
     const handleSignup = () => {
-        navigation.navigate('Welcome');
+        navigation.navigate('Login');
       };
 
 
@@ -127,7 +127,7 @@ const Singup = () => {
                     initialValues={{ fullName: '',  email: '', dateOfBirth : '', password: '', confirmPassword : '', }}
                     onSubmit={(values) => {
                         console.log(values);
-                        navigation.navigate('Welcome');
+                        navigation.navigate('Login');
                     }} // declare properties in initialValues={}
                 >
                     {({ handleChange, handleBlur, handleSubmit, values }) => (

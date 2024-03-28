@@ -29,7 +29,7 @@ import {
     // for Bottom nav bar 
     BottomNavBarContainer,
 
-}from '../../Components/styles.js';
+}from '../../AppStyles/styles';;
 import { Button, View, Image, Text, TouchableOpacity } from 'react-native';
 
 //for navigation

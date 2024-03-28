@@ -128,6 +128,7 @@ export default function CalendarScreen({ navigation }) {
   // for agenda renderItem=() used https://medium.com/vectoscalar/setup-calendar-in-a-react-native-project-e0316341ec29
   return (
     <SafeAreaViewContainer>
+      {/* Put your content in this view */} 
       <InputContainer>
         <TextInputContainer />
         <Button
@@ -145,7 +146,10 @@ export default function CalendarScreen({ navigation }) {
           </ItemContainer>
         )}
       />
+      {/* Your content ends here */}
 
+
+      {/*Below is the quick add button */}
       <View style={styles.quickAddButtonContainer}>
         <QuickAddButton modalComponents={modalComponents} />
       </View>

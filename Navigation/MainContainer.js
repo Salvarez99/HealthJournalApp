@@ -17,8 +17,7 @@ const Tab = createBottomTabNavigator();
 
 export default function MainContainer(){
     return(
-        <NavigationContainer>
-            <Tab.Navigator
+        <Tab.Navigator
             initialRouteName={journalName}
             screenOptions={({route}) => ({
                 tabBarIcon: ({focused, color, size}) =>{
@@ -45,7 +44,6 @@ export default function MainContainer(){
                 tabBarStyle:{
                     display: "flex",
                     height: '7%',
-                    
               },
             })}
             >
@@ -54,7 +52,6 @@ export default function MainContainer(){
             <Tab.Screen name = {calendarName} component={CalendarScreen}/>
             <Tab.Screen name = {medicationName} component={MedicationScreen}/>
 
-            </Tab.Navigator>
-        </NavigationContainer>
+        </Tab.Navigator>
     );
 }
