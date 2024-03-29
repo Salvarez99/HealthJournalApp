@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Text, View, TextInput, Button } from 'react-native';
 import firebase from 'firebase/app';
 import 'firebase/database';
-import firebaseConfig from './firebaseConfig';
+import firebaseConfig from '../firebaseConfig';
 
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
   }
 
-  const App = () => {
+  export default function appDatabase () {
     //stored using the useState
     const [appointments, setAppointments] = useState([]);
     const [illnesses, setIllnesses] = useState([]);
@@ -259,5 +259,3 @@ if (!firebase.apps.length) {
       );
       
   };
-  
-  export default App;
