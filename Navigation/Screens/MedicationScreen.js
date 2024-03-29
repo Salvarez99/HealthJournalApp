@@ -52,12 +52,15 @@ export default function MedicationScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.mainContent}>
+      {/* Put your content in this view */}
         <Text style={styles.title}>
           Medication Screen
         </Text>
-        {/* Your main content goes here */}
       </View>
+      {/* Your content ends here */}
 
+
+      {/*Below is the quick add button */}
       <View style={styles.quickAddButtonContainer}>
         <QuickAddButton modalComponents={modalComponents} />
       </View>
