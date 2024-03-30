@@ -166,7 +166,6 @@ export default function MedicationScreen({ navigation }) {
       
               <View style={styles.mainContent}>
               {/* Put your content in this view */}
-                <Text style={styles.title}>Medication Screen</Text>
 
                {/* display add medication data */}
 
@@ -178,6 +177,7 @@ export default function MedicationScreen({ navigation }) {
                   keyExtractor={(item)=> item.id.toString()}
                   style={styles.flatListContainer} // use scroll view style. 
                   horizontal={false} // don't move horizontally
+                  showsVerticalScrollIndicator={false}
                   />
                 
               </View>

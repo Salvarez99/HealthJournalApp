@@ -3,6 +3,7 @@ import * as React from 'react'
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import { Platform } from 'react-native';
 
 import JournalScreen from './Screens/JournalScreen';
 import CalendarScreen from './Screens/CalendarScreen';
@@ -16,6 +17,8 @@ const medicationName = 'Medication';
 const Tab = createBottomTabNavigator();
 
 export default function MainContainer(){
+    const tabBarHeight = Platform.OS === 'ios' ? '12%' : '7%';
+
     return(
         <Tab.Navigator
             initialRouteName={journalName}
@@ -43,7 +46,7 @@ export default function MainContainer(){
                 },
                 tabBarStyle:{
                     display: "flex",
-                    height: '12%', // for ios 12% for android 7%
+                    height: tabBarHeight, // for ios 12% for android 7%
               },
             })}
             >

@@ -140,7 +140,6 @@ export default function JournalScreen({ navigation }) {
      
               <View style={styles.mainContent}>
               {/* Put your content in this view */}
-                <Text style={styles.title}> Journal Screen</Text>
 
               {/* display add appointment data */}
               {appointmentData &&(
@@ -160,6 +159,7 @@ export default function JournalScreen({ navigation }) {
                     renderItem={renderAppointmentItem}
                     keyExtractor={(item)=> item.id.toString()} 
                     contentContainerStyle={styles.horizontalListContent}
+                    showsVerticalScrollIndicator={false}
                     />
               
               </View>
