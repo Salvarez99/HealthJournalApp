@@ -43,7 +43,7 @@ export default function MainContainer(){
                 },
                 tabBarStyle:{
                     display: "flex",
-                    height: '7%',
+                    height: '12%', // for ios 12% for android 7%
               },
             })}
             >
