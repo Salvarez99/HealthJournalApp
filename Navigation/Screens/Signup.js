@@ -76,7 +76,7 @@ const Singup = () => {
 
     const showDatePicker = () => {
         setShow('date');
-      };
+    };
 
     // end of declation variables. 
 
