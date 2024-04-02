@@ -66,7 +66,6 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
               <Text style={styles.buttonHeaderText}>Event Name: </Text>
               <TextInput
                 style={{
-                  padding: 2,
                   borderWidth: 1,
                   borderRadius: 5,
                   borderColor: "black",
