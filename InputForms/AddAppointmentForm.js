@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -7,13 +7,48 @@ import {
   StyleSheet,
   Platform,
   TextInput,
-  ScrollView
+  ScrollView,
 } from "react-native";
 
 import DatePicker from "../Components/DatePicker";
 import TimePicker from "../Components/TimePicker";
 
 const AddAppointmentForm = ({ isVisible, onClose }) => {
+  const [eventName, setEventName] = new useState("");
+  const [eventDate, setEventDate] = new useState(null);
+  const [eventStartTime, setEventStartTime] = new useState(null);
+  const [eventEndTime, setEventEndTime] = new useState(null);
+  // const [event, setEvent] = new useState();
+
+  const handleDateChange = (selectedDate) => {
+    const formattedDate = selectedDate.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+    setEventDate(formattedDate);
+    console.log(formattedDate);
+  };
+
+  const handleStartTimeChange = (startTime) => {
+    setEventStartTime(startTime);
+    console.log("StartTime: " + startTime);
+  };
+
+  const handleEndTimeChange = (endTime) => {
+    setEventEndTime(endTime);
+    console.log("EndTime: " + endTime);
+  };
+
+  //FIX: Add function to clear fields when modal is closed
+  const clearFields = () => {
+    setEventName("");
+    setEventDate(null);
+    setEventStartTime(null);
+    setEventEndTime(null);
+    onClose();
+  };
+
   return (
     <Modal
       visible={isVisible}
@@ -37,16 +72,22 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
                   borderRadius: 5,
                   borderColor: "black",
                 }}
+                value={eventName}
+                onChangeText={setEventName}
               />
+              {console.log(eventName)}
             </View>
 
-            <DatePicker name={"Date"} />
+            <DatePicker name={"Date"} onDateChange={handleDateChange} />
 
-            <TimePicker name={"Start time"} />
-            <TimePicker name={"End time"} />
+            <TimePicker
+              name={"Start time"}
+              onTimeChange={handleStartTimeChange}
+            />
+            <TimePicker name={"End time"} onTimeChange={handleEndTimeChange} />
 
             <View style={styles.saveButtonContainer}>
-              <TouchableOpacity onPress={onClose} style={styles.saveButton}>
+              <TouchableOpacity onPress={clearFields} style={styles.saveButton}>
                 <Text>Save</Text>
               </TouchableOpacity>
             </View>
@@ -107,8 +148,8 @@ const styles = StyleSheet.create({
   },
 
   saveButtonContainer: {
-    left: '70%',
-    top :'35%',
+    left: "70%",
+    top: "35%",
   },
   saveButton: {
     marginTop: 10,

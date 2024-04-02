@@ -1,22 +1,17 @@
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Platform,
-} from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
-const DatePicker = ({name}) => {
+const DatePicker = ({ name, onDateChange }) => {
   const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
 
-  const onChange = (event, selectedDate) => {
+  const handleDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShow(false);
     setDate(currentDate);
-};
+    onDateChange(currentDate);
+  };
 
   const showDatePicker = () => {
     setShow(true);
@@ -31,35 +26,31 @@ const DatePicker = ({name}) => {
           mode="date"
           is24Hour={true}
           display="default"
-          onChange={onChange}
+          onChange={handleDateChange}
         />
       )}
-        <Text style={styles.dateText}>{name}: </Text>
+      <Text style={styles.dateText}>{name}: </Text>
       <TouchableOpacity style={styles.dateInput} onPress={showDatePicker}>
         <Text>{date.toLocaleDateString()}</Text>
       </TouchableOpacity>
-
-
-
     </View>
   );
 };
 
-const styles =  StyleSheet.create({
-    containter : {
-        paddingTop: 4,
-    },
-    dateText : {
-        fontWeight : 'bold'
-    },
-    dateInput : {
-        borderWidth : 1,
-        borderColor : 'black',
-        width : '50%',
-        padding : 4,
-        borderRadius : 5,
-    }
-
+const styles = StyleSheet.create({
+  containter: {
+    paddingTop: 4,
+  },
+  dateText: {
+    fontWeight: "bold",
+  },
+  dateInput: {
+    borderWidth: 1,
+    borderColor: "black",
+    width: "50%",
+    padding: 4,
+    borderRadius: 5,
+  },
 });
 
 export default DatePicker;

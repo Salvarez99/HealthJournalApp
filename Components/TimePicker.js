@@ -2,14 +2,15 @@ import React, { useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
-const TimePicker = ({ name }) => {
-  const [time, setTime] = useState('');
+const TimePicker = ({ name, onTimeChange }) => {
+  const [time, setTime] = useState("");
   const [show, setShow] = useState(false);
 
-  const onChange = (event, selectedTime) => {
+  const handleTimeChange = (event, selectedTime) => {
     const currentTime = selectedTime || time;
     setShow(false);
     setTime(currentTime);
+    onTimeChange(formatTime(currentTime));
   };
 
   const showTimePicker = () => {
@@ -20,25 +21,25 @@ const TimePicker = ({ name }) => {
     <View style={styles.container}>
       <Text style={styles.timeText}> {name}:</Text>
       <TouchableOpacity style={styles.timeInput} onPress={showTimePicker}>
-        <Text>{time ? formatTime(time) : ''}</Text>
+        <Text>{time ? formatTime(time) : ""}</Text>
       </TouchableOpacity>
       {show && (
         <DateTimePicker
           testID="timePicker"
           value={time ? new Date(time) : new Date()}
-          mode='time' 
+          mode="time"
           is24Hour={false}
-          display='clock'
-          onChange={onChange}
+          display="clock"
+          onChange={handleTimeChange}
         />
       )}
     </View>
   );
 };
 
-const formatTime = (time) =>{
-    return time.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
-}
+const formatTime = (time) => {
+  return time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+};
 
 const styles = StyleSheet.create({
   container: {
