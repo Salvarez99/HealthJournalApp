@@ -7,7 +7,6 @@ import {
   StyleSheet,
   Platform,
   TextInput,
-  ScrollView,
 } from "react-native";
 
 import DatePicker from "../Components/DatePicker";
