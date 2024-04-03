@@ -1,3 +1,4 @@
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import React, { useState } from "react";
 import {
   View,
@@ -39,7 +40,6 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
     console.log("EndTime: " + endTime);
   };
 
-  //FIX: Add function to clear fields when modal is closed
   const clearFields = () => {
     setEventName("");
     setEventDate(null);
@@ -47,6 +47,9 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
     setEventEndTime(null);
     onClose();
   };
+
+  //TODO: Implement save functionality
+  const onSave = () => {};
 
   return (
     <Modal
@@ -59,6 +62,13 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
         <View style={styles.modalForm}>
           <View style={styles.modalHeader}>
             <Text style={styles.modalHeaderText}> Add Appointment</Text>
+            <TouchableOpacity onPress={clearFields} style={{
+              position : 'absolute', 
+              right : 20,
+              top: 12,
+            }}>
+              <Ionicons name = {'close'}  size={28} color={'black'}/>
+            </TouchableOpacity>
           </View>
 
           <View style={styles.modalFormContent}>
@@ -69,6 +79,7 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
                   borderWidth: 1,
                   borderRadius: 5,
                   borderColor: "black",
+                  paddingLeft: 5,
                 }}
                 value={eventName}
                 onChangeText={setEventName}
@@ -146,8 +157,9 @@ const styles = StyleSheet.create({
   },
 
   saveButtonContainer: {
-    left: "70%",
-    top: "35%",
+    position: "absolute",
+    right: 15,
+    bottom: 15,
   },
   saveButton: {
     marginTop: 10,
@@ -155,7 +167,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 5,
     backgroundColor: "lightblue",
-    width: "30%",
+    width: 70,
     ...Platform.select({
       ios: {
         shadowColor: "black",

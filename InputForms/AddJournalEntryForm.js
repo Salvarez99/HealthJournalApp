@@ -1,3 +1,4 @@
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import React, { useState } from "react";
 import {
   View,
@@ -14,6 +15,10 @@ import TimePicker from "../Components/TimePicker";
 
 const AddJournalEntryForm = ({ isVisible, onClose }) => {
 
+  //TODO: Implement save functionality
+  const onSave = () =>{
+
+  };
 
   return (
     <Modal
@@ -26,6 +31,13 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
         <View style={styles.modalForm}>
           <View style={styles.modalHeader}>
             <Text style={styles.modalHeaderText}> Add Journal Entry</Text>
+            <TouchableOpacity onPress={onClose} style={{
+              position : 'absolute', 
+              right : 20,
+              top: 12,
+            }}>
+              <Ionicons name = {'close'}  size={28} color={'black'}/>
+            </TouchableOpacity>
           </View>
 
           <View style={styles.modalFormContent}>
@@ -93,8 +105,9 @@ const styles = StyleSheet.create({
   },
 
   saveButtonContainer: {
-    left: "70%",
-    top: "35%",
+    position : 'absolute',
+    right: 15,
+    bottom: 15,
   },
   saveButton: {
     marginTop: 10,
@@ -102,7 +115,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 5,
     backgroundColor: "lightblue",
-    width: "30%",
+    width: 70,
     ...Platform.select({
       ios: {
         shadowColor: "black",

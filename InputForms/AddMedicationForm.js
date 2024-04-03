@@ -1,3 +1,4 @@
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import React, { useState } from "react";
 import {
   View,
@@ -7,13 +8,33 @@ import {
   StyleSheet,
   Platform,
   TextInput,
+  KeyboardAvoidingView,
 } from "react-native";
 
 import DatePicker from "../Components/DatePicker";
 import TimePicker from "../Components/TimePicker";
+import DropDownList from "../Components/DropDownList";
+import WeekDaysButtons from "../Components/WeekdayButtons";
 
 const AddMedicationForm = ({ isVisible, onClose }) => {
 
+  const [medication, setMedication] = new useState("");
+  const [dosage, setDosage] = new useState("");
+  const [dosageSchedule, setDosageSchedule] = new useState(null);
+  const [frequency, setFrequency] = new useState(null);
+
+  const clearFields = () => {
+    setMedication('');
+    setDosage('');
+    setDosageSchedule(null);
+    setFrequency(null);
+    onClose();
+  };
+
+  //TODO: Implement save functionality
+  const onSave = () => {
+
+  };
 
   return (
     <Modal
@@ -26,11 +47,57 @@ const AddMedicationForm = ({ isVisible, onClose }) => {
         <View style={styles.modalForm}>
           <View style={styles.modalHeader}>
             <Text style={styles.modalHeaderText}> Add Medication</Text>
+            <TouchableOpacity onPress={clearFields} style={{
+              position : 'absolute', 
+              right : 20,
+              top: 12,
+            }}>
+              <Ionicons name = {'close'}  size={28} color={'black'}/>
+            </TouchableOpacity>
           </View>
 
           <View style={styles.modalFormContent}>
-            
+            <View>
+              <Text style={styles.buttonHeaderText}>Medicine Name: </Text>
+              <TextInput
+                style={{
+                  borderWidth: 1,
+                  borderRadius: 5,
+                  borderColor: "black",
+                  paddingLeft: 5,
+                }}
+                value={medication}
+                onChangeText={setMedication}
+              />
+              {console.log("Medication: " + medication)}
+            </View>
 
+            <View>
+              <Text style={styles.buttonHeaderText}>Dosage: </Text>
+              <TextInput
+                style={{
+                  borderWidth: 1,
+                  borderRadius: 5,
+                  borderColor: "black",
+                  width: "50%",
+                  paddingLeft: 5,
+                }}
+                value={dosage}
+                onChangeText={setDosage}
+              />
+              {console.log("Dosage: " + dosage)}
+            </View>
+
+            <View>
+              <Text style={styles.buttonHeaderText}>Dosage Schedule: </Text>
+            </View>
+            <DropDownList />
+
+            <View>
+              <Text style={styles.buttonHeaderText}>Frequency: </Text>
+            </View>
+
+            <WeekDaysButtons />
             <View style={styles.saveButtonContainer}>
               <TouchableOpacity onPress={onClose} style={styles.saveButton}>
                 <Text>Save</Text>
@@ -93,8 +160,9 @@ const styles = StyleSheet.create({
   },
 
   saveButtonContainer: {
-    left: "70%",
-    top: "35%",
+    position: "absolute",
+    right: 15,
+    bottom: 15,
   },
   saveButton: {
     marginTop: 10,
@@ -102,7 +170,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 5,
     backgroundColor: "lightblue",
-    width: "30%",
+    width: 70,
     ...Platform.select({
       ios: {
         shadowColor: "black",
