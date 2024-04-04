@@ -1,41 +1,65 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, Platform, StyleSheet } from 'react-native';
 
-const WeekDaysButtons = () => {
-  // Array representing the days of the week
-  const days = ['S','M', 'T', 'W', 'T', 'F', 'S'];
+const WeekDaysButtons = ({ selectedDays, setSelectedDays }) => {
+  const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+
+  const toggleDayPressed = (index) => {
+    const newSelectedDays = selectedDays.includes(index) 
+      ? selectedDays.filter(i => i !== index) // Remove index if already selected
+      : [...selectedDays, index]; // Add index if not already selected
+
+    setSelectedDays(newSelectedDays);
+  };
 
   return (
-    <View style={{ flexDirection: 'row', justifyContent: 'space-around',}}>
+    <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
       {days.map((day, index) => (
         <TouchableOpacity
           key={index}
-          style={{
-            backgroundColor: 'white',
-            borderWidth: 1,
-            borderRadius: 20,
-            width: 40,
-            height: 40,
-            justifyContent: 'center',
-            marginTop: 4,
-            ...Platform.select({
-              ios: {
-                shadowColor: 'black',
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.25,
-                shadowRadius: 3.84,
-              },
-              android: {
-                elevation: 5,
-              },
+          onPress={() => toggleDayPressed(index)}
+          style={[
+            styles.button,
+            selectedDays.includes(index) ? styles.buttonPressed : {},
+            Platform.select({
+              ios: styles.iosShadow,
+              android: styles.androidElevation,
             }),
-          }}
+          ]}
         >
-          <Text style={{ fontWeight: 'bold', textAlign: 'center' }}>{day}</Text>
+          <Text style={styles.buttonText}>{day}</Text>
         </TouchableOpacity>
       ))}
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  button: {
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderRadius: 20,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    marginTop: 4,
+  },
+  buttonPressed: {
+    backgroundColor: '#DDD', // Indicate the selected state with a different background
+  },
+  buttonText: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  iosShadow: {
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  androidElevation: {
+    elevation: 5,
+  },
+});
 
 export default WeekDaysButtons;

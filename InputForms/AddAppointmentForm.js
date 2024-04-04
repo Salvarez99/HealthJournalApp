@@ -1,4 +1,4 @@
-import Ionicons from 'react-native-vector-icons/Ionicons'
+import Ionicons from "react-native-vector-icons/Ionicons";
 import React, { useState } from "react";
 import {
   View,
@@ -12,6 +12,7 @@ import {
 
 import DatePicker from "../Components/DatePicker";
 import TimePicker from "../Components/TimePicker";
+import Appointment from "../Classes/Appointment";
 
 const AddAppointmentForm = ({ isVisible, onClose }) => {
   const [eventName, setEventName] = new useState("");
@@ -19,6 +20,7 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
   const [eventStartTime, setEventStartTime] = new useState(null);
   const [eventEndTime, setEventEndTime] = new useState(null);
   // const [event, setEvent] = new useState();
+  let appointment = null;
 
   const handleDateChange = (selectedDate) => {
     const formattedDate = selectedDate.toLocaleDateString("en-US", {
@@ -27,17 +29,17 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
       day: "2-digit",
     });
     setEventDate(formattedDate);
-    console.log(formattedDate);
+    // console.log(formattedDate);
   };
 
   const handleStartTimeChange = (startTime) => {
     setEventStartTime(startTime);
-    console.log("StartTime: " + startTime);
+    // console.log("StartTime: " + startTime);
   };
 
   const handleEndTimeChange = (endTime) => {
     setEventEndTime(endTime);
-    console.log("EndTime: " + endTime);
+    // console.log("EndTime: " + endTime);
   };
 
   const clearFields = () => {
@@ -45,11 +47,21 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
     setEventDate(null);
     setEventStartTime(null);
     setEventEndTime(null);
+    console.log("Appointment form closed");
     onClose();
   };
 
   //TODO: Implement save functionality
-  const onSave = () => {};
+  const onSave = () => {
+    appointment = new Appointment(
+      eventName,
+      eventDate,
+      eventStartTime,
+      eventEndTime
+    );
+    console.log(appointment.toString());
+    clearFields();
+  };
 
   return (
     <Modal
@@ -62,12 +74,15 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
         <View style={styles.modalForm}>
           <View style={styles.modalHeader}>
             <Text style={styles.modalHeaderText}> Add Appointment</Text>
-            <TouchableOpacity onPress={clearFields} style={{
-              position : 'absolute', 
-              right : 20,
-              top: 12,
-            }}>
-              <Ionicons name = {'close'}  size={28} color={'black'}/>
+            <TouchableOpacity
+              onPress={clearFields}
+              style={{
+                position: "absolute",
+                right: 20,
+                top: 12,
+              }}
+            >
+              <Ionicons name={"close"} size={28} color={"black"} />
             </TouchableOpacity>
           </View>
 
@@ -84,7 +99,7 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
                 value={eventName}
                 onChangeText={setEventName}
               />
-              {console.log(eventName)}
+              {/* {console.log(eventName)} */}
             </View>
 
             <DatePicker name={"Date"} onDateChange={handleDateChange} />
@@ -96,7 +111,7 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
             <TimePicker name={"End time"} onTimeChange={handleEndTimeChange} />
 
             <View style={styles.saveButtonContainer}>
-              <TouchableOpacity onPress={clearFields} style={styles.saveButton}>
+              <TouchableOpacity onPress={onSave} style={styles.saveButton}>
                 <Text>Save</Text>
               </TouchableOpacity>
             </View>
