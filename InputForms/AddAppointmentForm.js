@@ -16,10 +16,9 @@ import Appointment from "../Classes/Appointment";
 
 const AddAppointmentForm = ({ isVisible, onClose }) => {
   const [eventName, setEventName] = new useState("");
-  const [eventDate, setEventDate] = new useState(null);
+  const [eventDate, setEventDate] = new useState(new Date());
   const [eventStartTime, setEventStartTime] = new useState(null);
   const [eventEndTime, setEventEndTime] = new useState(null);
-  // const [event, setEvent] = new useState();
   let appointment = null;
 
   const handleDateChange = (selectedDate) => {
@@ -44,7 +43,7 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
 
   const clearFields = () => {
     setEventName("");
-    setEventDate(null);
+    setEventDate(new Date().toLocaleDateString());
     setEventStartTime(null);
     setEventEndTime(null);
     console.log("Appointment form closed");
