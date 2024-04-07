@@ -4,6 +4,7 @@ import QuickAddButton from '../../Components/QuickAddButton';
 import AddJournalEntryForm from '../../InputForms/AddJournalEntryForm'
 import AddAppointmentForm from '../../InputForms/AddAppointmentForm'
 import AddMedicationForm from '../../InputForms/AddMedicationForm'
+import JournalTitle from './JournalTitle';
 
 // for testing 
 import PlaceholderForm from '../../InputForms/PlaceholderForm';
@@ -12,38 +13,185 @@ export default function JournalScreen({ navigation }) {
   const [isModalVisible, setIsModalVisible] = React.useState(false);  // vsible or not
   const [selectedModal, setSelectedModal] = React.useState(null); // track which model should displayed. 
 
-  const [appointmentData, setAppointmentData] = React.useState(null); // take input from addappointmentFrom.js 
-  const [appointments , setAppointments] = useState([]); // hook. 
+  //const [appointmentData, setAppointmentData] = React.useState(null); // for data fetched from backend url take input from addappointmentFrom.js 
+  const [appointments , setAppointments] = useState([]); // hook. for dummy datas 
 
   // create useEffect() and use dummy data for now 
   useEffect(()=>{
     // think of fetching appointments variable from the backend side 
 
     const dummyAppointments = [
-      { id: 1, eventName: 'HealthCheckUp', date: '2024-04-01', startTime: '10:00 AM', endTime: '11:00 AM', location: 'Office' },
-      { id: 2, eventName: 'BloodTestVisit', date: '2024-04-02', startTime: '12:00 PM', endTime: '1:00 PM', location: 'Restaurant' },
-      { id: 3, eventName: 'BloodTestVisit', date: '2024-04-03', startTime: '12:00 PM', endTime: '1:00 PM', location: 'Restaurant' },
-      { id: 4, eventName: 'BloodTestVisit', date: '2024-04-04', startTime: '12:00 PM', endTime: '1:00 PM', location: 'Restaurant' },
-      { id: 5, eventName: 'BloodTestVisit', date: '2024-04-05', startTime: '12:00 PM', endTime: '1:00 PM', location: 'Restaurant' },
-      { id: 6, eventName: 'BloodTestVisit', date: '2024-04-06', startTime: '12:00 PM', endTime: '1:00 PM', location: 'Restaurant' },
-      { id: 7, eventName: 'BloodTestVisit', date: '2024-04-07', startTime: '12:00 PM', endTime: '1:00 PM', location: 'Restaurant' },
-      { id: 8, eventName: 'BloodTestVisit', date: '2024-04-08', startTime: '12:00 PM', endTime: '1:00 PM', location: 'Restaurant' },
-      { id: 9, eventName: 'BloodTestVisit', date: '2024-04-09', startTime: '12:00 PM', endTime: '1:00 PM', location: 'Restaurant' },
-      { id: 10, eventName: 'BloodTestVisit', date: '2024-04-10', startTime: '12:00 PM', endTime: '1:00 PM', location: 'Restaurant' },
-      { id: 11, eventName: 'BloodTestVisit', date: '2024-04-11', startTime: '12:00 PM', endTime: '1:00 PM', location: 'Restaurant' },
-      { id: 12, eventName: 'BloodTestVisit', date: '2024-04-12', startTime: '12:00 PM', endTime: '1:00 PM', location: 'Restaurant' },
-      { id: 13, eventName: 'BloodTestVisit', date: '2024-04-13', startTime: '12:00 PM', endTime: '1:00 PM', location: 'Restaurant' },
-      { id: 14, eventName: 'BloodTestVisit', date: '2024-04-14', startTime: '12:00 PM', endTime: '1:00 PM', location: 'Restaurant' },
-      { id: 15, eventName: 'BloodTestVisit', date: '2024-04-15', startTime: '12:00 PM', endTime: '1:00 PM', location: 'Restaurant' },
-      { id: 16, eventName: 'BloodTestVisit', date: '2024-04-16', startTime: '12:00 PM', endTime: '1:00 PM', location: 'Restaurant' },
-      { id: 17, eventName: 'BloodTestVisit', date: '2024-04-17', startTime: '12:00 PM', endTime: '1:00 PM', location: 'Restaurant' },
-      { id: 18, eventName: 'BloodTestVisit', date: '2024-04-18', startTime: '12:00 PM', endTime: '1:00 PM', location: 'Restaurant' },
-      { id: 19, eventName: 'BloodTestVisit', date: '2024-04-19', startTime: '12:00 PM', endTime: '1:00 PM', location: 'Restaurant' },
-      { id: 20, eventName: 'BloodTestVisit', date: '2024-04-20', startTime: '12:00 PM', endTime: '1:00 PM', location: 'Restaurant' },
+      //dummy data 1 
+      {
+        id: 1,
+        Symptom: [
+          { name: 'Fever',  startDate: '04-08-2024', endDate: '04-09-2024'  },
+          { name: 'Headache',  startDate: '04-03-2024', endDate: '04-19-2024'  },
+          { name: 'Tired',  startDate: '04-08-2024', endDate: '04-29-2024'  },
+        ],
+        Illness: [
+          { name: 'Cold', startDate: '04-01-2024', endDate: '04-09-2024'},
+          { name: 'Dizziness', startDate: '04-01-2024', endDate: '04-09-2024'},
+          { name: 'Fever', startDate: '04-01-2024', endDate: '04-09-2024'},
+          { name: 'Sore throat', startDate: '04-01-2024', endDate: '04-09-2024'},
+          { name: 'Stomach ache', startDate: '04-01-2024', endDate: '04-09-2024'},
+        ],
+        TestsAndLabWorks: [
+          { name: 'Blood Test', dateOccurred: '04-10-2024'},
+          { name: 'X-Ray', dateOccurred: '04-10-2024' },
+        ],
+      },
+
+      {
+        id: 2,
+        Symptom: [
+         
+        ],
+        Illness: [
+          { name: 'Common Cold', startDate: '04-01-2024', endDate: '04-09-2024'},
+        ],
+        TestsAndLabWorks: [
+          { name: 'Blood Test', dateOccurred: '04-10-2024'},
+          { name: 'X-Ray', dateOccurred: '04-10-2024' },
+        ],
+      },
+
+      {
+        id: 3,
+        Symptom: [
+         
+        ],
+        Illness: [
+          
+        ],
+        TestsAndLabWorks: [
+          { name: 'Blood Test', dateOccurred: '04-10-2024'},
+          { name: 'X-Ray', dateOccurred: '04-10-2024' },
+        ],
+      },
+
+      {
+        id: 4,
+        Symptom: [
+          
+        ],
+        Illness: [
+          { name: 'Common Cold', startDate: '04-01-2024', endDate: '04-09-2024'},
+        ],
+        TestsAndLabWorks: [
+          
+        ],
+      },
+
+      {
+        id: 5,
+        Symptom: [
+          { name: 'Back Pain',  startDate: '04-24-2024', endDate: '04-09-2024'  },
+          { name: 'Headache',  startDate: '04-01-2024', endDate: '04-09-2024'  },
+        ],
+        Illness: [
+          { name: 'Common Cold', startDate: '04-01-2024', endDate: '04-09-2024'},
+        ],
+        TestsAndLabWorks: [
+          { name: 'Blood Test', dateOccurred: '04-10-2024'},
+          { name: 'X-Ray', dateOccurred: '04-10-2024' },
+        ],
+      },
+
+      {
+        id: 6,
+        Symptom: [
+          { name: 'Back Pain',  startDate: '04-15-2024', endDate: '04-09-2024'  },
+          { name: 'Headache',  startDate: '04-01-2024', endDate: '04-09-2024'  },
+        ],
+        Illness: [
+          { name: 'Common Cold', startDate: '04-01-2024', endDate: '04-09-2024'},
+        ],
+        TestsAndLabWorks: [
+          { name: 'Blood Test', dateOccurred: '04-10-2024'},
+          { name: 'X-Ray', dateOccurred: '04-10-2024' },
+        ],
+      },
+
+      {
+        id: 7,
+        Symptom: [
+          { name: 'Back Pain',  startDate: '04-18-2024', endDate: '04-09-2024'  },
+        ],
+        Illness: [
+         
+        ],
+        TestsAndLabWorks: [
+          { name: 'Blood Test', dateOccurred: '04-10-2024'},
+          { name: 'X-Ray', dateOccurred: '04-10-2024' },
+        ],
+      },
+
+
+      // test 
+      {
+        id: 8,
+        Symptom: [
+          { name: 'Back Pain',  startDate: '05-13-2024', endDate: '04-09-2024'  },
+          { name: 'Headache',  startDate: '04-01-2024', endDate: '04-09-2024'  },
+        ],
+        Illness: [
+          { name: 'Common Cold', startDate: '04-01-2024', endDate: '04-09-2024'},
+        ],
+        TestsAndLabWorks: [
+          { name: 'Blood Test', dateOccurred: '04-10-2024'},
+          { name: 'X-Ray', dateOccurred: '04-10-2024' },
+        ],
+      },
+      // pass this entire array as arrayofinformationdata to journaltitle.js and distinguish there
+      {
+        id: 9,
+        Symptom: [
+          { name: 'Back Pain',  startDate: '05-18-2024', endDate: '04-09-2024'  },
+          { name: 'Headache',  startDate: '04-01-2024', endDate: '04-09-2024'  },
+        ],
+        Illness: [
+          { name: 'Common Cold', startDate: '04-01-2024', endDate: '04-09-2024'},
+        ],
+        TestsAndLabWorks: [
+          { name: 'Blood Test', dateOccurred: '04-10-2024'},
+          { name: 'X-Ray', dateOccurred: '04-10-2024' },
+        ],
+      }, 
       
-     
-      //add more data as needed 
-    ]; 
+      {
+        id: 10,
+        Symptom: [
+          { name: 'Back Pain',  startDate: '05-28-2024', endDate: '04-09-2024'  },
+          { name: 'Headache',  startDate: '04-01-2024', endDate: '04-09-2024'  },
+        ],
+        Illness: [
+          { name: 'Common Cold', startDate: '04-01-2024', endDate: '04-09-2024'},
+        ],
+        TestsAndLabWorks: [
+          { name: 'Blood Test', dateOccurred: '04-10-2024'},
+          { name: 'X-Ray', dateOccurred: '04-10-2024' },
+        ],
+      }, 
+      
+      {
+        id: 11,
+        Symptom: [
+          { name: 'Back Pain',  startDate: '06-08-2024', endDate: '04-09-2024'  },
+          { name: 'Headache',  startDate: '04-01-2024', endDate: '04-09-2024'  },
+        ],
+        Illness: [
+          
+        ],
+        TestsAndLabWorks: [
+          { name: 'Blood Test', dateOccurred: '04-10-2024'},
+          { name: 'X-Ray', dateOccurred: '04-10-2024' },
+        ],
+      },
+
+
+      // add more data as needed list of string symptom, illness , test and labworks. 
+    ];
 
     // set appointments state 
     setAppointments(dummyAppointments);
@@ -65,7 +213,7 @@ export default function JournalScreen({ navigation }) {
   }; 
 
   // after setting up backend API 
-  useEffect(()=>{
+  useEffect(()=>{ // citation : https://www.guvi.in/blog/how-to-fetch-data-using-api-in-react/ 
     //fetch appointmetn data from backend API 
     fetchAppointmentData(); 
   }, []);
@@ -92,22 +240,35 @@ export default function JournalScreen({ navigation }) {
 
   // handle input data parameter from AddJournalEntryForm.js 
   const saveAppointmentData = (data) =>{
-    setAppointmentData(data);
+    setAppointments(data); // setAppointmentData(data)
     setIsModalVisible(false);
   };
 
   // handel when user click journal screen entry >> display JournalTitle.js page 
-  const handleAppointmentPress =(appointment) =>{
-    navigation.navigate('JournalTitle', {appointment });
+  const handleAppointmentPress =(arryOfAppointmentInfo) =>{
+    navigation.navigate('JournalTitle', {arryOfAppointmentInfo}); //https://youtu.be/oBAOr1OswkQ?si=NQ_XdTnzKk3t8xGd
   };
+
+  // render journal date on journal screen. 
+  const displayStartDate = (item) => {
+    if (item.Symptom && item.Symptom.length > 0) {
+      return item.Symptom[0].startDate;
+    } else if (item.Illness && item.Illness.length > 0) {
+      return item.Illness[0].startDate;
+    } else if (item.TestsAndLabWorks && item.TestsAndLabWorks.length > 0) {
+      return item.TestsAndLabWorks[0].dateOccurred;
+    }
+  };
+
 
   // render appointment item (prepare for displaying)
   const renderAppointmentItem = ({item}) =>(
     <TouchableOpacity style={styles.appointmetnItem} onPress={()=>handleAppointmentPress(item)}>
           <View style={styles.appointmentInfo}>
-            <Text style={styles.JournalTitle}>{`Journal #${item.id}`}</Text>
-            <Text style={styles.JournalDate}>{item.date}</Text>
-        </View>
+            <Text style={styles.JournalTitle}>{`Journal ${item.id}`}</Text>
+            <Text style={styles.JournalDate}>{displayStartDate(item)}</Text>
+     
+        </View> 
         <Text style={styles.horizontalLine}></Text>
     </TouchableOpacity>
   );
@@ -142,16 +303,7 @@ export default function JournalScreen({ navigation }) {
               {/* Put your content in this view */}
 
               {/* display add appointment data */}
-              {appointmentData &&(
-                <View style={styles.appointmentDataContainer}> 
-                        <Text>Display Saved Appointment Data:</Text>
-                        <Text>Event name: {appointmentData.eventName} </Text> {/* take parameter update! */}
-                        <Text>Date: {appointmentData.date} </Text>
-                        <Text>Start time: {appointmentData.startTime}</Text>
-                        <Text>End time: {appointmentData.endTime} </Text>
-                        <Text>Location : {appointmentData.location}</Text>
-                </View>
-              )}
+              
               {/** show list of saved appointment records */}
               <FlatList 
                     
@@ -200,6 +352,7 @@ const styles = StyleSheet.create({
   },
   //
   appointmentDataContainer : {
+    paddingLeft : 20,
     marginTop: 20,
     padding: 10,
     borderWidth: 1,
@@ -244,13 +397,14 @@ const styles = StyleSheet.create({
     paddingRight : 7,
 },
   JournalTitle :{
-    fontSize: 18,
-    //fontWeight: 'bold',
+    fontSize: 15,
+    fontWeight: 'bold',
     paddingLeft: 20,
 },
 JournalDate: {
     fontSize: 14,
-    paddingLeft: 130,
+    paddingLeft: 150,
+    paddingRight : 20,
     color: '#555',
 },
   horizontalListContent : {
