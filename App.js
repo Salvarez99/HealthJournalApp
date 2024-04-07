@@ -5,7 +5,8 @@ import MainContainer from './Navigation/MainContainer';
 import Login from './Navigation/Screens/Login';
 import SignUp from './Navigation/Screens/Signup';
 import Logout from './Navigation/Screens/Logout';
-// import Search from './Navigation/Screens/SearchScreen'
+import JournalTitle from './Navigation/Screens/JournalTitle';
+
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -32,11 +33,15 @@ export default function App() {
           component={Logout}
           options={{ headerShown: false }}
         />
-        {/* <Stack.Screen
-          name="Search"
-          component={Search}
+
+        <Stack.Screen
+          name="JournalTitle"
+          component={JournalTitle}
+        
           options={{ headerShown: false }}
-        /> */}
+        />
+
+       
       </Stack.Navigator>
     </NavigationContainer>
   );
