@@ -22,63 +22,64 @@ export default function MedicationScreen({ navigation }) {
           name: 'Medicine 1',
           dosage: '10mg',
           dosageSchedule: ['Morning', 'Evening'],
-          days: ['M', 'W', 'F'],
+          frequency : [1,3,5],
         },
+
         {
           id: 2,
           name: 'Medicine 2',
           dosage: '20mg',
           dosageSchedule: ['Morning', 'Midday', 'Evening'],
-          days: ['M', 'W', 'F'],
+          frequency : [1,3,5],
         },
         {
           id: 3,
           name: 'Medicine 3',
           dosage: '30mg',
           dosageSchedule: ['Morning', 'Midday', 'Evening'],
-          days: ['M', 'W', 'F'],
+          frequency : [0,1,3,5],
         },
         {
           id: 4,
           name: 'Medicine 4',
           dosage: '40mg',
           dosageSchedule: ['Morning', 'Midday', 'Evening'],
-          days: ['M', 'W', 'F'],
+          frequency : [2,4,6],
         },
         {
           id: 5,
           name: 'Medicine 5',
           dosage: '50mg',
           dosageSchedule: ['Morning', 'Midday', 'Evening'],
-          days: ['M', 'W', 'F'],
+          frequency : [1,3,5],
         },
         {
           id: 6,
           name: 'Medicine 6',
           dosage: '60mg',
           dosageSchedule: ['Morning', 'Midday', 'Evening'],
-          days: ['M', 'W', 'F'],
+          frequency : [1,3,5],
         },
         {
           id: 7,
           name: 'Medicine 7',
           dosage: '70mg',
           dosageSchedule: ['Morning', 'Midday', 'Evening'],
-          days: ['M', 'W', 'F'],
+          frequency : [1,5],
         },
         {
           id: 8,
           name: 'Medicine 8',
           dosage: '80mg',
           dosageSchedule: ['Morning', 'Midday', 'Evening'],
-          days: ['M', 'W', 'F'],
+          frequency : [1],
         },
         {
           id: 9,
           name: 'Medicine 9',
           dosage: '90mg',
           dosageSchedule: ['Morning', 'Midday', 'Evening'],
-          days: ['M', 'W', 'F'],
+          frequency : [1,2,3,4,5,6],
         },
     ];
 
@@ -100,7 +101,7 @@ export default function MedicationScreen({ navigation }) {
   };
 
   // for later fetch data from backend API 
-  useEffect(()=>{
+  useEffect(()=>{  // citation :  https://www.guvi.in/blog/how-to-fetch-data-using-api-in-react/
     // fetch data from backend API 
     fetchMedicationData();  // call asyn fucntion
   }, [])
@@ -145,6 +146,17 @@ export default function MedicationScreen({ navigation }) {
     }
   };
 
+  // convert received list of int into appropriate frequency (string type) ex) 0,1 conver to Sunday Monday 
+  const convertFrequencyList  = ( frequency) => {
+    const days = ['S', 'M', 'T', 'W', 'TH', 'F','S']; 
+    let outputList = []; 
+    for(let i =0; i < frequency.length; i++){
+      outputList.push(days[frequency[i]]); 
+    }
+    return outputList.join(', '); 
+  }; 
+
+
   // create what we are going to render / display to screen. 
   const renderMedicationItem = ({ item }) => (
     <View style={styles.medicationItem}>
@@ -154,7 +166,7 @@ export default function MedicationScreen({ navigation }) {
       <View style={styles.rightContent}>
         <Text>{`Dosage: ${item.dosage}`}</Text>
         <Text>{`${item.dosageSchedule.join(', ')}`}</Text>
-        <Text >{item.days.join(', ')}</Text>
+        <Text >{`${convertFrequencyList(item.frequency)}`}</Text>
       </View>
     </View>
   );
