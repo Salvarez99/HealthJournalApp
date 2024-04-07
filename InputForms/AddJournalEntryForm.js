@@ -1,4 +1,4 @@
-import Ionicons from 'react-native-vector-icons/Ionicons'
+import Ionicons from "react-native-vector-icons/Ionicons";
 import React, { useState } from "react";
 import {
   View,
@@ -12,14 +12,14 @@ import {
 
 import DatePicker from "../Components/DatePicker";
 import TimePicker from "../Components/TimePicker";
+import SymptomDropDown from "../Components/SymptomList";
+import { useNavigation } from "@react-navigation/native"; // Import useNavigation hook
+import SearchOverlay from "../Navigation/Screens/SearchOverlay";
 
 const AddJournalEntryForm = ({ isVisible, onClose }) => {
-
   //TODO: Implement save functionality
-  const onSave = () =>{
-
-  };
-
+  const onSave = () => {};
+  const navigation = useNavigation();
   return (
     <Modal
       visible={isVisible}
@@ -31,22 +31,41 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
         <View style={styles.modalForm}>
           <View style={styles.modalHeader}>
             <Text style={styles.modalHeaderText}> Add Journal Entry</Text>
-            <TouchableOpacity onPress={onClose} style={{
-              position : 'absolute', 
-              right : 20,
-              top: 12,
-            }}>
-              <Ionicons name = {'close'}  size={28} color={'black'}/>
+            <TouchableOpacity
+              onPress={onClose}
+              style={{
+                position: "absolute",
+                right: 20,
+                top: 12,
+              }}
+            >
+              <Ionicons name={"close"} size={28} color={"black"} />
             </TouchableOpacity>
           </View>
 
           <View style={styles.modalFormContent}>
+            <View>
+              <Text style={{ fontWeight: "bold" }}> Symptoms: </Text>
+              <SearchOverlay/>
+              <SymptomDropDown />
+            </View>
+
             
 
             <View style={styles.saveButtonContainer}>
               <TouchableOpacity onPress={onClose} style={styles.saveButton}>
                 <Text>Save</Text>
               </TouchableOpacity>
+
+              {/* <TouchableOpacity
+                onPress={() => {
+                  onClose();
+                  navigation.navigate("Search");
+                }}
+                style={styles.saveButton}
+              >
+                <Text>To search</Text>
+              </TouchableOpacity> */}
             </View>
           </View>
         </View>
@@ -105,7 +124,7 @@ const styles = StyleSheet.create({
   },
 
   saveButtonContainer: {
-    position : 'absolute',
+    position: "absolute",
     right: 15,
     bottom: 15,
   },
