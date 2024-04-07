@@ -135,9 +135,11 @@ export const SubTitle = styled.Text({
     fontWeight: 'bold',
     color: tertiary,
     marginBottom: props => props.welcome ? '5px' : null,
-    fontWeight: props => props.welcome ? '400' : 'inherit',
+    //TODO: This line gives off a warning
+    // fontWeight: props => props.welcome ? '400' : 'inherit',
     textAlign: props => props.welcome ? 'center' : 'left', // Adjust textAlign based on props
-    // fontSize: props => props.welcome ? '14px' : null, //TODO:This line is causing issues: update this line
+    //TODO:This line is causing issues: update this line
+    // fontSize: props => props.welcome ? '14px' : null,
 });
 
 
