@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
+import auth from '@react-native-firebase/auth';
 // citation learned from : https://www.youtube.com/watch?v=BQ-kHwLlhrg
 
 
@@ -65,6 +66,26 @@ const Singup = () => {
 
     // variable to hold actural date of birth to be sent 
     const [dob, setDob] = useState();
+
+    const register = async () => {
+        try{
+            const userCredential = await auth().createUserWithEmailAndPassword(email,password);
+            console.log('User registered successfully!', userCredential.user);
+        }
+        catch(error){
+            Alert.alert('Error', error.message);
+        }
+    };
+
+    const login = async () => {
+        try{
+            const userCredential = await auth().signInWithEmailAndPassword(email,password);
+            console.log('User logged in successfully!', userCredential.user);
+        }
+        catch(error){
+            Alert.alert('Error', error.message);
+        }
+    };
 
     const onChange = (event, selectDate) => {
         const currentDate = selectDate || date; 
