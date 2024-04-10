@@ -29,7 +29,7 @@ const AddMedicationForm = ({ isVisible, onClose }) => {
     onClose();
   };
 
-  //TODO: Implement save functionality
+  
   const onSave = () => {
     medication = new Medication(
       medicationName,
@@ -37,13 +37,17 @@ const AddMedicationForm = ({ isVisible, onClose }) => {
       dosageSchedule,
       frequency
     );
-    // console.log("Medication: " + medicationName);
-    // console.log("Dosage: " + dosage);
-    // console.log('Dosage Schedule: ' + dosageSchedule);
-    // console.log('Frequency: ' + frequency);
-    console.log(medication.toString());
-    clearFields();
-    onClose();
+    writeMedicine({   // Use writeMedicine function to save medication data
+      dosage: medication.dosage,
+      dosage_schedule: medication.dosageSchedule,  // Updated field name
+      frequency: medication.frequency,
+      medicine_name: medication.name
+    }).then(() => {
+      console.log("Medication saved successfully");
+      clearFields();
+    }).catch((error) => {
+      console.error("Error saving medication:", error);
+    });
   };
 
   return (

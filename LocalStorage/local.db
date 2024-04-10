@@ -1,0 +1,45 @@
+CREATE TABLE Appointments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    date TEXT,
+    name TEXT,
+    time_started TEXT
+    time_ended TEXT
+);
+
+CREATE TABLE Illnesses (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    date_started TEXT,
+    date_ended TEXT,
+    illness_name TEXT,
+    time_started TEXT,
+    time_ended TEXT
+);
+
+CREATE TABLE Medicines (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    dosage TEXT,
+    dosage_schedule TEXT,
+    frequency TEXT,
+    medicine_name TEXT
+);
+
+CREATE TABLE Symptom_Checker (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    date TEXT,
+    symptom_name TEXT,
+    time TEXT
+);
+
+CREATE TABLE Test_and_Labworks (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    date TEXT,
+    test_lab_name TEXT,
+    time TEXT
+);
+
+CREATE TABLE User_Activity (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    date TEXT,
+    journal_entry TEXT,
+    time TEXT
+);
