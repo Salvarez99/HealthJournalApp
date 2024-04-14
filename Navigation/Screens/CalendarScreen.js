@@ -59,7 +59,7 @@ export default function CalendarScreen({ navigation }) {
       return;
     }
 
-    const newItems = { ...Items }; // copy value
+    const newItems = { ...Items };  // copy value
     const selectedDate = "2024-03-25"; // default date
 
     //check selectedDate - also can use array from https://react.dev/learn/updating-arrays-in-state

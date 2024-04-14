@@ -17,7 +17,7 @@ import MedicationScreen from './Screens/MedicationScreen';
 //Screen Names
 const journalName = 'Journal';
 const calendarName = 'Calendar';
-const medicationName = 'Medication';x
+const medicationName = 'Medication';
 
 
 const Tab = createBottomTabNavigator();

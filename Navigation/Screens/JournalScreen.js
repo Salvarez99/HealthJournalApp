@@ -40,7 +40,7 @@ export default function JournalScreen({ navigation }) {
           { name: 'Blood Test', dateOccurred: '04-10-2024'},
           { name: 'X-Ray', dateOccurred: '04-10-2024' },
         ],
-      },                                                                                                                                                                               
+      },
 
       {
         id: 2,
