@@ -12,14 +12,13 @@ import {
 
 import DatePicker from "../Components/DatePicker";
 import TimePicker from "../Components/TimePicker";
-import SymptomDropDown from "../Components/SymptomList";
-import { useNavigation } from "@react-navigation/native"; // Import useNavigation hook
-import SearchOverlay from "../Navigation/Screens/SearchOverlay";
+import SearchComponent from "../Components/SearchComponent";
 
 const AddJournalEntryForm = ({ isVisible, onClose }) => {
+
+
   //TODO: Implement save functionality
   const onSave = () => {};
-  const navigation = useNavigation();
   return (
     <Modal
       visible={isVisible}
@@ -46,8 +45,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
           <View style={styles.modalFormContent}>
             <View>
               <Text style={{ fontWeight: "bold" }}> Symptoms: </Text>
-              <SearchOverlay/>
-              <SymptomDropDown />
+              <SearchComponent/>
             </View>
 
             
@@ -56,16 +54,6 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
               <TouchableOpacity onPress={onClose} style={styles.saveButton}>
                 <Text>Save</Text>
               </TouchableOpacity>
-
-              {/* <TouchableOpacity
-                onPress={() => {
-                  onClose();
-                  navigation.navigate("Search");
-                }}
-                style={styles.saveButton}
-              >
-                <Text>To search</Text>
-              </TouchableOpacity> */}
             </View>
           </View>
         </View>

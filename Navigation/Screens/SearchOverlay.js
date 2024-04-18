@@ -47,7 +47,7 @@ const SearchOverlay = () => {
           <TextInput
             autoFocus={true}
             style={styles.input}
-            placeholder="Type here..."
+            placeholder="Search..."
             value={query}
             onChangeText={setQuery}
             onBlur={() => setIsActive(false)}
@@ -57,7 +57,9 @@ const SearchOverlay = () => {
             data={filteredList}
             keyExtractor={(item) => item}
             renderItem={({ item }) => (
-              <Text style={styles.itemText}>{item}</Text>
+              <TouchableOpacity>
+                <Text style={styles.itemText}>{item}</Text>
+              </TouchableOpacity>
             )}
           />
         </View>
