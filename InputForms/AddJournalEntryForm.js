@@ -16,6 +16,7 @@ import SearchComponent from "../Components/SearchComponent";
 
 const AddJournalEntryForm = ({ isVisible, onClose }) => {
 
+  const data = ["Cough", "Headache", "Sore throat", "Back pain", "Congestion", "Light Headedness"]; //Dummy db list, to be replaced with call to db
 
   //TODO: Implement save functionality
   const onSave = () => {};
@@ -45,7 +46,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
           <View style={styles.modalFormContent}>
             <View>
               <Text style={{ fontWeight: "bold" }}> Symptoms: </Text>
-              <SearchComponent/>
+              <SearchComponent searchData={data} typeDataInputted={'symptoms'}/>
             </View>
 
             

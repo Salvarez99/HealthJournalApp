@@ -1,84 +1,113 @@
-import { View, TextInput, FlatList, TouchableOpacity, Text, StyleSheet } from "react-native";
-import { useState, useCallback, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  TextInput,
+  FlatList,
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+} from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import Symptom from "../Classes/Symptom";
+import Illness from "../Classes/Illness";
+import TestAndLabwork from "../Classes/TestAndLabwork";
 
-const SearchComponent = () => {
+const SearchComponent = ({ searchData, typeDataInputted }) => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [showPicker, setShowPicker] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  const [showPicker, setShowPicker] = useState(false);
-  const [dateSelectionStep, setDateSelectionStep] = useState(null); // 'start', 'end', or null
-  const [dateSet, setDateSet] = useState(false);
+  const [picker, setPicker] = useState("start");
+  const [items, setItems] = useState([]); //List of data stored from user input
 
-  let data = [
-    { name: "Cough", startDate: "4/10/24", endDate: "4/13/24" },
-    { name: "Headache", startDate: "4/10/24", endDate: "4/13/24" },
-    { name: "Sore throat", startDate: "4/10/24", endDate: "4/13/24" },
-    { name: "Back pain", startDate: "4/10/24", endDate: "4/13/24" },
-    { name: "Congestion", startDate: "4/10/24", endDate: "4/13/24" },
-  ];
 
-  const filteredList = searchQuery ? data.filter(item => item.name.toLowerCase().includes(searchQuery.toLowerCase())) : [];
+  const addItem = (name, startDate, endDate) => {
+    let item;
 
-  useEffect(() => {
-    console.log("Start date updated: " + startDate.toLocaleDateString());
-  }, [startDate]);
-  
-  useEffect(() => {
-    console.log("End date updated: " + endDate.toLocaleDateString());
-  }, [endDate]);
-
-  const debounce = (func, delay) => {
-    let timer;
-    return function(...args) {
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        func.apply(this, args);
-      }, delay);
-    };
+    switch (typeDataInputted) {
+      case "symptoms":
+        item = new Symptom(name, startDate, endDate);
+        break;
+      case "illnesses":
+        item = new Illness(name, startDate, endDate);
+        break;
+      case "test":
+        item = new TestAndLabwork(name, startDate, endDate);
+        break;
+      default:
+        console.error("Unknown Type: " + typeDataInputted);
+        return;
+    }
+    setItems((prevItems) => [...prevItems, item]);
   };
-  
-  const handleDateChange = useCallback(debounce((event, selectedDate) => {
-    console.log('Handling date change for step: ' + dateSelectionStep);
-    if (!selectedDate || dateSet){
-      console.log('No date selected, returning.');
-      return;
-    } 
 
-    if (dateSet) {
-      console.log('Date already set, returning.');
-      return;
-    }
+  const filteredList = searchQuery
+    ? searchData.filter((item) =>
+        item.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : [];
 
-    if (dateSelectionStep === 'start') {
-      setStartDate(selectedDate);
-      setDateSet(true);
-      setDateSelectionStep('end');
-    } else if (dateSelectionStep === 'end') {
-      setEndDate(selectedDate);
-      setDateSet(true);
-      setDateSelectionStep(null);
-      setShowPicker(false);
+  useEffect(() => {
+    // console.log("Current picker: " + picker);
+  }, [picker]);
+
+  const onChange = (event, selectedDate) => {
+    console.log("onChange");
+    const newDate = selectedDate || (picker === "start" ? startDate : endDate);
+
+    if (event.type === "set") {
+      if (picker === "start") {
+        // Delay before changing states
+        setTimeout(() => {
+          console.log(picker + " " + showPicker);
+          setStartDate(newDate);
+          console.log("Start date " + newDate.toLocaleDateString());
+          setShowPicker(false); // Close start picker
+
+          // Delay after state has changed
+          setTimeout(() => {
+            setPicker("end");
+            // Delay before opening the next picker
+            setTimeout(() => {
+              setShowPicker(true); // Open end picker
+            }, 325);
+          }, 325);
+        }, 325);
+      } else if (picker === "end") {
+        // Delay before changing states
+        setTimeout(() => {
+          console.log(picker + " " + showPicker);
+          setEndDate(newDate);
+          console.log("End date: " + newDate.toLocaleDateString());
+          setShowPicker(false); // Close end picker
+
+          // Delay after state has changed
+          setTimeout(() => {
+            setPicker("start");
+            // Delay before preparing for the next use
+            setTimeout(() => {
+              setShowPicker(false); // Prepare for next use
+            }, 325);
+          }, 325);
+        }, 325);
+      }
     }
-  }, 300), [dateSelectionStep, dateSet]);
+  };
 
   const onItemPress = (item) => {
-    console.log('Item pressed: ' + item.name);
-    setSearchQuery(item.name); 
-    if (!dateSelectionStep) {
-      console.log('No current date selection step, initializing start date selection.');
-      setDateSelectionStep('start');
-      setShowPicker(true);
-      setDateSet(false);
-    }else{
-      console.log('Current date selection step:', dateSelectionStep);
-    }
+    console.log("item: " + item);
+    setSearchQuery(item);
+    setShowPicker(true); // Open picker when item is pressed
   };
 
   const renderItem = ({ item }) => (
     <TouchableOpacity onPress={() => onItemPress(item)}>
-      <Text>{item.name}</Text>
+      <Text>{item}</Text>
     </TouchableOpacity>
+  );
+
+  const renderOutputListItem = ({ item }) => (
+  <Text> {item.toString()} </Text>
   );
 
   return (
@@ -89,34 +118,35 @@ const SearchComponent = () => {
         onChangeText={setSearchQuery}
         maxLength={20}
       />
-
       <FlatList
         data={filteredList}
         renderItem={renderItem}
         contentContainerStyle={{ borderWidth: 1, borderColor: "black" }}
       />
-
-      {showPicker && dateSelectionStep === 'start' && (
+      {showPicker && (
         <DateTimePicker
-          testID="startDateTimePicker"
-          value={startDate}
+          testID={
+            picker === "start" ? "startDateTimePicker" : "endDateTimePicker"
+          }
+          value={picker === "start" ? startDate : endDate}
           mode="date"
           is24Hour={true}
           display="default"
-          onChange={handleDateChange}
+          onChange={onChange}
         />
       )}
-
-      {showPicker && dateSelectionStep === 'end' && (
-        <DateTimePicker
-          testID="endDateTimePicker"
-          value={endDate}
-          mode="date"
-          is24Hour={true}
-          display="default"
-          onChange={handleDateChange}
-        />
-      )}
+      <FlatList
+        data={items}
+        renderItem={renderOutputListItem}
+        contentContainerStyle={{
+          borderWidth: 1,
+          borderColor: "black",
+          height: 80,
+          maxHeight: 80,
+          borderBottomLeftRadius: 5,
+          borderBottomRightRadius: 5,
+        }}
+      />
     </View>
   );
 };
