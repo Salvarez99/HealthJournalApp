@@ -3,7 +3,7 @@ import React, { useState , useEffect} from 'react';
 import { View, Text, ScrollView, StyleSheet} from 'react-native';
 import { Calendar } from 'react-native-calendars';
 
-// Dummy event data - all types are string. 
+// dummy data to test
 const dummyData = {
   '2024-04-20': {
     events: [
