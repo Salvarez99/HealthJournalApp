@@ -13,10 +13,17 @@ import {
 import DatePicker from "../Components/DatePicker";
 import TimePicker from "../Components/TimePicker";
 import SearchComponent from "../Components/SearchComponent";
+import DisplayItems from "../Components/DisplayItems";
 
 const AddJournalEntryForm = ({ isVisible, onClose }) => {
-
-  const data = ["Cough", "Headache", "Sore throat", "Back pain", "Congestion", "Light Headedness"]; //Dummy db list, to be replaced with call to db
+  let data = [
+    "Cough",
+    "Headache",
+    "Sore throat",
+    "Back pain",
+    "Congestion",
+    "Light Headedness",
+  ]; //Dummy db list, to be replaced with call to db
 
   //TODO: Implement save functionality
   const onSave = () => {};
@@ -31,25 +38,42 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
         <View style={styles.modalForm}>
           <View style={styles.modalHeader}>
             <Text style={styles.modalHeaderText}> Add Journal Entry</Text>
-            <TouchableOpacity
-              onPress={onClose}
-              style={{
-                position: "absolute",
-                right: 20,
-                top: 12,
-              }}
-            >
+            <TouchableOpacity onPress={onClose} style={styles.closeButton}>
               <Ionicons name={"close"} size={28} color={"black"} />
             </TouchableOpacity>
           </View>
 
           <View style={styles.modalFormContent}>
-            <View>
+            <View style={{ backgroundColor : 'white',}}>
               <Text style={{ fontWeight: "bold" }}> Symptoms: </Text>
-              <SearchComponent searchData={data} typeDataInputted={'symptoms'}/>
-            </View>
 
-            
+            </View>
+            <View style={{flex : 1}}>
+              <SearchComponent
+                searchData={data}
+                typeDataInputted={"symptoms"}
+              />
+            </View>
+            <View style={{ backgroundColor : 'white',}}>
+              <Text style={{ fontWeight: "bold" }}> Illnesses: </Text>
+
+            </View>
+            <View style={{flex : 1}}>
+              <SearchComponent
+                searchData={data}
+                typeDataInputted={"symptoms"}
+              />
+            </View>
+            <View style={{ backgroundColor : 'white',}}>
+              <Text style={{ fontWeight: "bold" }}> Test & Labworks: </Text>
+
+            </View>
+            <View style={{flex : 1}}>
+              <SearchComponent
+                searchData={data}
+                typeDataInputted={"symptoms"}
+              />
+            </View>
 
             <View style={styles.saveButtonContainer}>
               <TouchableOpacity onPress={onClose} style={styles.saveButton}>
@@ -90,6 +114,7 @@ const styles = StyleSheet.create({
     }),
   },
   modalHeader: {
+    height : 50,
     backgroundColor: "#d7dbe0",
     padding: 12,
     borderTopLeftRadius: 10,
@@ -103,9 +128,9 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   modalFormContent: {
-    flex: 1,
-    width: "100%",
+    flex: 16,
     backgroundColor: "white",
+    width: "100%",
     padding: 18,
     paddingTop: 10,
     borderBottomRightRadius: 10,
@@ -116,6 +141,11 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 15,
     bottom: 15,
+  },
+  closeButton: {
+    position: "absolute",
+    right: 20,
+    top: 12,
   },
   saveButton: {
     marginTop: 10,

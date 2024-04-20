@@ -18,6 +18,6 @@ export default class Symptom{
     }
 
     toString() {
-      return `${this._name}\nStart date: ${this._startDate}\nEnd date: ${this._endDate}`;
+      return `${this._name}\nStart date: ${this._startDate.toLocaleDateString()}\nEnd date: ${this._endDate.toLocaleDateString()}`;
     }
 };

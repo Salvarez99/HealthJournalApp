@@ -11,6 +11,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import Symptom from "../Classes/Symptom";
 import Illness from "../Classes/Illness";
 import TestAndLabwork from "../Classes/TestAndLabwork";
+import DisplayItems from "./DisplayItems";
 
 const SearchComponent = ({ searchData, typeDataInputted }) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -19,7 +20,6 @@ const SearchComponent = ({ searchData, typeDataInputted }) => {
   const [endDate, setEndDate] = useState(new Date());
   const [picker, setPicker] = useState("start");
   const [items, setItems] = useState([]); //List of data stored from user input
-
 
   const addItem = (name, startDate, endDate) => {
     let item;
@@ -90,7 +90,13 @@ const SearchComponent = ({ searchData, typeDataInputted }) => {
             }, 325);
           }, 325);
         }, 325);
+        addItem(searchQuery, startDate, newDate);
       }
+    } else {
+      setTimeout(() => {
+        setPicker("start");
+        setShowPicker(false);
+      }, 325);
     }
   };
 
@@ -107,22 +113,52 @@ const SearchComponent = ({ searchData, typeDataInputted }) => {
   );
 
   const renderOutputListItem = ({ item }) => (
-  <Text> {item.toString()} </Text>
+    <Text style={{ borderBottomWidth: 1 }}>{item.toString()}</Text>
   );
 
+  const listStyle =
+    filteredList.length > 0
+      ? {
+          flex: 1,
+          zIndex: 2,
+          backgroundColor: "white",
+          padding: 5,
+          borderLeftWidth: 1,
+          borderRightWidth: 1,
+          borderBottomWidth: 1,
+        }
+      : {
+          flex: 1,
+          zIndex: 2,
+          backgroundColor: "#d7dbe0",
+          borderLeftWidth: 1,
+          borderRightWidth: 1,
+        };
+
   return (
-    <View>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: "white",
+        borderWidth: 1,
+        padding: 2,
+      }}
+    >
       <TextInput
         placeholder="Search..."
         value={searchQuery}
         onChangeText={setSearchQuery}
         maxLength={20}
+        style={{ borderBottomWidth: 1 }}
       />
-      <FlatList
-        data={filteredList}
-        renderItem={renderItem}
-        contentContainerStyle={{ borderWidth: 1, borderColor: "black" }}
-      />
+      <View style={styles.listContainer}>
+        <FlatList
+          data={filteredList}
+          renderItem={renderItem}
+          contentContainerStyle={listStyle}
+          keyExtractor={(item) => item.toString()}
+        />
+      </View>
       {showPicker && (
         <DateTimePicker
           testID={
@@ -135,20 +171,22 @@ const SearchComponent = ({ searchData, typeDataInputted }) => {
           onChange={onChange}
         />
       )}
-      <FlatList
-        data={items}
-        renderItem={renderOutputListItem}
-        contentContainerStyle={{
-          borderWidth: 1,
-          borderColor: "black",
-          height: 80,
-          maxHeight: 80,
-          borderBottomLeftRadius: 5,
-          borderBottomRightRadius: 5,
-        }}
+      <DisplayItems
+        data={["asd", "asd", "asd", "asd", "asd", "asd", "asd", "asd"]}
       />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  listContainer: {
+    position: "absolute",
+    top: 32, // Adjust based on the height of the search input
+    left: 0,
+    right: 0,
+    backgroundColor: "white", // Ensure the list is visible with a solid background
+    zIndex: 2, // Make sure it sits above the other content
+  },
+});
 
 export default SearchComponent;
