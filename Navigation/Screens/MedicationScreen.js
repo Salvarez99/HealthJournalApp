@@ -164,9 +164,9 @@ export default function MedicationScreen({ navigation }) {
       <Text style={styles.medicationName}>{item.name}</Text>
    
       <View style={styles.rightContent}>
-        <Text>{`Dosage: ${item.dosage}`}</Text>
-        <Text>{`${item.dosageSchedule.join(', ')}`}</Text>
-        <Text >{`${convertFrequencyList(item.frequency)}`}</Text>
+        <Text style={{fontFamily: 'Times New Roman'}}>{`Dosage: ${item.dosage}`}</Text>
+        <Text style={{fontFamily: 'Times New Roman'}}>{`${item.dosageSchedule.join(', ')}`}</Text>
+        <Text style={{fontFamily: 'Times New Roman'}} >{`${convertFrequencyList(item.frequency)}`}</Text>
       </View>
     </View>
   );
@@ -220,6 +220,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     fontWeight: 'bold',
+    
   },
   quickAddButtonContainer: {
     position: 'absolute',
@@ -238,15 +239,17 @@ const styles = StyleSheet.create({
   padding: 20,
   borderBottomWidth: 1,
   borderColor: '#ccc',
+  
 },
 rightContent: {
   paddingLeft : 100,
   paddingTop : 0,
-  
 },
 
 
 medicationName: {
   fontWeight: 'bold',
+  fontFamily: 'Times New Roman',
+  fontSize : 15,
 },
 });

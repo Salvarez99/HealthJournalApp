@@ -128,13 +128,14 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   
-  mainIdContainer : {
+  mainIdContainer : {   // display Journal #number
     fontSize : 30, 
     fontWeight : 'bold', 
     marginTop : 50, 
    alignContent : 'center', // vertically 
    textAlign: 'center', // center horizontally 
-
+   fontFamily: 'Times New Roman',
+   
   }, 
   innerContainer : {
      marginTop : 10, 
@@ -142,29 +143,33 @@ const styles = StyleSheet.create({
      minHeight : 120, // min hight 
   }, 
 
-  sectionTitle: {
+  sectionTitle: { // display gray box symtom, illness, test and labworks.
     backgroundColor: 'lightgray',
     padding: 10,
     borderRadius: 10,
     textAlign: 'center',
 
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
     marginTop: 20,
+    fontFamily: 'Times New Roman',
   },
   entryContainer: {
     marginTop: 10,
     padding: 20,
     justifyContent: 'center', 
     //minHeight: 300, // set minimum height
+    fontFamily: 'Times New Roman',
   },
   entryTitle: {
     fontSize: 16,
     paddingTop : 10,
+    fontFamily: 'Times New Roman',
   },
   entryDate: {
     fontSize: 18,
     marginTop: 10,
+    fontFamily: 'Times New Roman',
     
   },
   exitButton: {
@@ -180,5 +185,6 @@ const styles = StyleSheet.create({
   exitButtonText: {
     color: 'white',
     fontSize: 16,
+    fontFamily: 'Times New Roman',
   },
 });
