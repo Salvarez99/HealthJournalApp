@@ -27,13 +27,21 @@ const SearchComponent = ({ searchData, typeDataInputted, updateList }) => {
 
     switch (typeDataInputted) {
       case "symptoms":
-        item = new Symptom(name, startDate.toLocaleDateString(), endDate.toLocaleDateString());
+        item = new Symptom(
+          name,
+          startDate.toLocaleDateString(),
+          endDate.toLocaleDateString()
+        );
         break;
       case "illnesses":
-        item = new Illness(name, startDate.toLocaleDateString(), endDate.toLocaleDateString());
+        item = new Illness(
+          name,
+          startDate.toLocaleDateString(),
+          endDate.toLocaleDateString()
+        );
         break;
       case "tests":
-        item = new TestAndLabwork(name, dateOccured.toLocaleDateString());
+        item = new TestAndLabwork(name, startDate.toLocaleDateString());
         break;
       default:
         console.error("Unknown Type: " + typeDataInputted);
@@ -45,7 +53,6 @@ const SearchComponent = ({ searchData, typeDataInputted, updateList }) => {
   useEffect(() => {
     updateList(items);
   }, [items]); // Only call updateList when items changes
-  
 
   const filteredList = searchQuery
     ? searchData.filter((item) =>
@@ -62,42 +69,49 @@ const SearchComponent = ({ searchData, typeDataInputted, updateList }) => {
     const newDate = selectedDate || (picker === "start" ? startDate : endDate);
 
     if (event.type === "set") {
-      if (picker === "start") {
-        // Delay before changing states
-        setTimeout(() => {
-          // console.log(picker + " " + showPicker);
-          setStartDate(newDate);
-          // console.log("Start date " + newDate.toLocaleDateString());
-          setShowPicker(false); // Close start picker
-
-          // Delay after state has changed
-          setTimeout(() => {
-            setPicker("end");
-            // Delay before opening the next picker
-            setTimeout(() => {
-              setShowPicker(true); // Open end picker
-            }, 325);
-          }, 325);
-        }, 325);
-      } else if (picker === "end") {
-        // Delay before changing states
-        setTimeout(() => {
-          // console.log(picker + " " + showPicker);
-          setEndDate(newDate);
-          // console.log("End date: " + newDate.toLocaleDateString());
-          setShowPicker(false); // Close end picker
-
-          // Delay after state has changed
-          setTimeout(() => {
-            setPicker("start");
-            // Delay before preparing for the next use
-            setTimeout(() => {
-              setShowPicker(false); // Prepare for next use
-            }, 325);
-          }, 325);
-        }, 325);
-        addItem(searchQuery, startDate, newDate);
+      if (typeDataInputted === "tests") {
+        setDateOccured(newDate);
+        setShowPicker(false);
+        addItem(searchQuery, newDate, newDate); // Assuming the use of one date for simplicity
         setSearchQuery("");
+      } else {
+        if (picker === "start") {
+          // Delay before changing states
+          setTimeout(() => {
+            // console.log(picker + " " + showPicker);
+            setStartDate(newDate);
+            // console.log("Start date " + newDate.toLocaleDateString());
+            setShowPicker(false); // Close start picker
+
+            // Delay after state has changed
+            setTimeout(() => {
+              setPicker("end");
+              // Delay before opening the next picker
+              setTimeout(() => {
+                setShowPicker(true); // Open end picker
+              }, 325);
+            }, 325);
+          }, 325);
+        } else if (picker === "end") {
+          // Delay before changing states
+          setTimeout(() => {
+            // console.log(picker + " " + showPicker);
+            setEndDate(newDate);
+            // console.log("End date: " + newDate.toLocaleDateString());
+            setShowPicker(false); // Close end picker
+
+            // Delay after state has changed
+            setTimeout(() => {
+              setPicker("start");
+              // Delay before preparing for the next use
+              setTimeout(() => {
+                setShowPicker(false); // Prepare for next use
+              }, 325);
+            }, 325);
+          }, 325);
+          addItem(searchQuery, startDate, newDate);
+          setSearchQuery("");
+        }
       }
     } else {
       setTimeout(() => {
@@ -110,7 +124,9 @@ const SearchComponent = ({ searchData, typeDataInputted, updateList }) => {
   const onItemPress = (item) => {
     // console.log("item: " + item);
     setSearchQuery(item);
-    setShowPicker(true); // Open picker when item is pressed
+    if (typeDataInputted !== 'tests' || !showPicker) {
+      setShowPicker(true); // Only set to show if not already showing for 'tests'
+  }
   };
 
   const renderItem = ({ item }) => (
@@ -160,11 +176,19 @@ const SearchComponent = ({ searchData, typeDataInputted, updateList }) => {
           keyExtractor={(item) => item.toString()}
         />
       </View>
-      {showPicker && (
+      {showPicker && typeDataInputted === 'tests' && (
         <DateTimePicker
-          testID={
-            picker === "start" ? "startDateTimePicker" : "endDateTimePicker"
-          }
+          testID="dateTimePickerTest"
+          value={dateOccured}
+          mode="date"
+          is24Hour={true}
+          display="default"
+          onChange={onChange}
+        />
+      )}
+      {showPicker && typeDataInputted !== 'tests' && (
+        <DateTimePicker
+          testID={picker === "start" ? "startDateTimePicker" : "endDateTimePicker"}
           value={picker === "start" ? startDate : endDate}
           mode="date"
           is24Hour={true}

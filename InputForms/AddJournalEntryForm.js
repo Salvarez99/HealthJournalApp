@@ -63,7 +63,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
 
     console.log("Tests: \n");
     for (const test of tests) {
-      console.log(test + "\n");
+      console.log(test.name + ': ' + test.dateOccured + "\n");
     }
     console.log("\n");
   };
