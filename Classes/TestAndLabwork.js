@@ -13,6 +13,6 @@ export default class TestAndLabwork{
     }
 
     toString() {
-      return `${this._name}\nDate Occured: ${this._dateOccured}`;
+      return `${this._name}\nDate Occured: ${this._dateOccured.toLocaleDateString()}`;
     }
 };

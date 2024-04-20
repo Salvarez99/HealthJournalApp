@@ -7,7 +7,7 @@ import {
   Modal,
   StyleSheet,
   Platform,
-  TextInput,
+  ScrollView,
 } from "react-native";
 
 import DatePicker from "../Components/DatePicker";
@@ -16,14 +16,36 @@ import SearchComponent from "../Components/SearchComponent";
 import DisplayItems from "../Components/DisplayItems";
 
 const AddJournalEntryForm = ({ isVisible, onClose }) => {
-  let data = [
+  let dummySymptoms = [
     "Cough",
     "Headache",
     "Sore throat",
     "Back pain",
     "Congestion",
     "Light Headedness",
+  ]; //Dummy db list, to be replaced with call to
+
+  let dummyIllnesses = [
+    "Cold",
+    "Flu",
+    "Pneumonia",
+    "Cancer",
+    "Allergies",
+    "Pink eye",
   ]; //Dummy db list, to be replaced with call to db
+
+  let dummyTest = [
+    "Bloodwork",
+    "X-Ray",
+    "Physical Exam",
+    "Biopsy",
+    "Blood Pressure",
+    "Cholestrol",
+  ]; //Dummy db list, to be replaced with call to db
+
+  const [symptoms, setSymptoms] = useState([]);
+  const [illnesses, setIllnesses] = useState([]);
+  const [tests, setTests] = useState([]);
 
   //TODO: Implement save functionality
   const onSave = () => {};
@@ -44,34 +66,31 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
           </View>
 
           <View style={styles.modalFormContent}>
-            <View style={{ backgroundColor : 'white',}}>
-              <Text style={{ fontWeight: "bold" }}> Symptoms: </Text>
-
+            <View>
+              <Text style={styles.SearchComponentHeader}>Symptoms:</Text>
             </View>
-            <View style={{flex : 1}}>
+            <View style={{ height: 100 }}>
               <SearchComponent
-                searchData={data}
+                searchData={dummySymptoms}
                 typeDataInputted={"symptoms"}
               />
             </View>
-            <View style={{ backgroundColor : 'white',}}>
-              <Text style={{ fontWeight: "bold" }}> Illnesses: </Text>
-
+            <View>
+              <Text style={styles.SearchComponentHeader}>Illnesses: </Text>
             </View>
-            <View style={{flex : 1}}>
+            <View style={{ height: 100 }}>
               <SearchComponent
-                searchData={data}
-                typeDataInputted={"symptoms"}
+                searchData={dummyIllnesses}
+                typeDataInputted={"illnesses"}
               />
             </View>
-            <View style={{ backgroundColor : 'white',}}>
-              <Text style={{ fontWeight: "bold" }}> Test & Labworks: </Text>
-
+            <View>
+              <Text style={styles.SearchComponentHeader}>Test & Labworks:</Text>
             </View>
-            <View style={{flex : 1}}>
+            <View style={{ height: 100 }}>
               <SearchComponent
-                searchData={data}
-                typeDataInputted={"symptoms"}
+                searchData={dummyTest}
+                typeDataInputted={"tests"}
               />
             </View>
 
@@ -97,10 +116,11 @@ const styles = StyleSheet.create({
   modalForm: {
     backgroundColor: "white",
     width: "90%",
-    height: "60%",
+    height: 470,
     borderRadius: 10,
     alignItems: "center",
-    bottom: "12%",
+    position: "absolute",
+    top: 60,
     ...Platform.select({
       ios: {
         shadowColor: "black",
@@ -114,7 +134,7 @@ const styles = StyleSheet.create({
     }),
   },
   modalHeader: {
-    height : 50,
+    height: 50,
     backgroundColor: "#d7dbe0",
     padding: 12,
     borderTopLeftRadius: 10,
@@ -128,19 +148,25 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   modalFormContent: {
-    flex: 16,
+    height: 50,
     backgroundColor: "white",
     width: "100%",
+    height: "90%",
     padding: 18,
-    paddingTop: 10,
+    paddingTop: 5,
     borderBottomRightRadius: 10,
     borderBottomLeftRadius: 10,
+  },
+  SearchComponentHeader: {
+    fontWeight: "bold",
+    paddingTop: 5,
+    zIndex : 1,
   },
 
   saveButtonContainer: {
     position: "absolute",
     right: 15,
-    bottom: 15,
+    bottom: 10,
   },
   closeButton: {
     position: "absolute",

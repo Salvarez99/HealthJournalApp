@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import {
   View,
   TextInput,
@@ -18,6 +18,7 @@ const SearchComponent = ({ searchData, typeDataInputted }) => {
   const [showPicker, setShowPicker] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
+  const [dateOccured, setDateOccured] = useState(new Date());
   const [picker, setPicker] = useState("start");
   const [items, setItems] = useState([]); //List of data stored from user input
 
@@ -31,8 +32,8 @@ const SearchComponent = ({ searchData, typeDataInputted }) => {
       case "illnesses":
         item = new Illness(name, startDate, endDate);
         break;
-      case "test":
-        item = new TestAndLabwork(name, startDate, endDate);
+      case "tests":
+        item = new TestAndLabwork(name, dateOccured);
         break;
       default:
         console.error("Unknown Type: " + typeDataInputted);
@@ -47,9 +48,9 @@ const SearchComponent = ({ searchData, typeDataInputted }) => {
       )
     : [];
 
-  useEffect(() => {
-    // console.log("Current picker: " + picker);
-  }, [picker]);
+  // useEffect(() => {
+  //   console.log("Current picker: " + picker);
+  // }, [picker]);
 
   const onChange = (event, selectedDate) => {
     console.log("onChange");
@@ -91,6 +92,7 @@ const SearchComponent = ({ searchData, typeDataInputted }) => {
           }, 325);
         }, 325);
         addItem(searchQuery, startDate, newDate);
+        setSearchQuery('');
       }
     } else {
       setTimeout(() => {
@@ -112,20 +114,16 @@ const SearchComponent = ({ searchData, typeDataInputted }) => {
     </TouchableOpacity>
   );
 
-  const renderOutputListItem = ({ item }) => (
-    <Text style={{ borderBottomWidth: 1 }}>{item.toString()}</Text>
-  );
-
   const listStyle =
     filteredList.length > 0
       ? {
-          flex: 1,
-          zIndex: 2,
-          backgroundColor: "white",
-          padding: 5,
-          borderLeftWidth: 1,
-          borderRightWidth: 1,
-          borderBottomWidth: 1,
+        flex: 1,
+        zIndex: 2,
+        backgroundColor: "white",
+        padding: 5,
+        borderLeftWidth: 1,
+        borderRightWidth: 1,
+        borderBottomWidth: 1,
         }
       : {
           flex: 1,
@@ -140,8 +138,6 @@ const SearchComponent = ({ searchData, typeDataInputted }) => {
       style={{
         flex: 1,
         backgroundColor: "white",
-        borderWidth: 1,
-        padding: 2,
       }}
     >
       <TextInput
@@ -149,7 +145,7 @@ const SearchComponent = ({ searchData, typeDataInputted }) => {
         value={searchQuery}
         onChangeText={setSearchQuery}
         maxLength={20}
-        style={{ borderBottomWidth: 1 }}
+        style={{ borderWidth: 1, paddingLeft : 5}}
       />
       <View style={styles.listContainer}>
         <FlatList
@@ -172,7 +168,7 @@ const SearchComponent = ({ searchData, typeDataInputted }) => {
         />
       )}
       <DisplayItems
-        data={["asd", "asd", "asd", "asd", "asd", "asd", "asd", "asd"]}
+        data={items}
       />
     </View>
   );
@@ -181,11 +177,12 @@ const SearchComponent = ({ searchData, typeDataInputted }) => {
 const styles = StyleSheet.create({
   listContainer: {
     position: "absolute",
-    top: 32, // Adjust based on the height of the search input
+    top: 32,
     left: 0,
     right: 0,
-    backgroundColor: "white", // Ensure the list is visible with a solid background
-    zIndex: 2, // Make sure it sits above the other content
+    backgroundColor: "white", 
+    zIndex: 2,
+    borderBottomWidth : 1,
   },
 });
 

@@ -3,7 +3,6 @@ import { View, FlatList, Text, StyleSheet } from 'react-native';
 
 const DisplayItems = ({ data }) => {
 
-  // Ensure that renderItem returns the JSX
   const renderItem = ({ item }) => (
     <Text style={{ borderBottomWidth: 1, backgroundColor: '#d7dbe0' }}>{item.toString()}</Text>
   );
@@ -13,7 +12,7 @@ const DisplayItems = ({ data }) => {
       <FlatList
         data={data}
         renderItem={renderItem}
-        keyExtractor={(item, index) => index.toString()} // Ensure keys are unique
+        keyExtractor={(item, index) => index.toString()} 
         contentContainerStyle={{padding : 10}}
         scrollEnabled ={true}
       />
