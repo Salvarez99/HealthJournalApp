@@ -7,13 +7,10 @@ import {
   Modal,
   StyleSheet,
   Platform,
-  ScrollView,
 } from "react-native";
 
-import DatePicker from "../Components/DatePicker";
-import TimePicker from "../Components/TimePicker";
 import SearchComponent from "../Components/SearchComponent";
-import DisplayItems from "../Components/DisplayItems";
+import JournalEntry from "../Classes/JournalEntry";
 
 const AddJournalEntryForm = ({ isVisible, onClose }) => {
   let dummySymptoms = [
@@ -46,9 +43,37 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
   const [symptoms, setSymptoms] = useState([]);
   const [illnesses, setIllnesses] = useState([]);
   const [tests, setTests] = useState([]);
+  let journalEntry = null;
+
+  const printLists = () => {
+    console.log("Symptoms: \n");
+    for (const symptom of symptoms) {
+      console.log(
+        symptom.name + ":" + symptom.startDate + " -> " + symptom.endDate + "\n"
+      );
+    }
+    console.log("\n");
+    console.log("Illnesses: \n");
+    for (const illness of illnesses) {
+      console.log(
+        illness.name + ":" + illness.startDate + " -> " + illness.endDate + "\n"
+      );
+    }
+    console.log("\n");
+
+    console.log("Tests: \n");
+    for (const test of tests) {
+      console.log(test + "\n");
+    }
+    console.log("\n");
+  };
 
   //TODO: Implement save functionality
-  const onSave = () => {};
+  const onSave = () => {
+    printLists();
+    journalEntry = new JournalEntry(symptoms, illnesses, tests);
+    onClose();
+  };
   return (
     <Modal
       visible={isVisible}
@@ -73,6 +98,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
               <SearchComponent
                 searchData={dummySymptoms}
                 typeDataInputted={"symptoms"}
+                updateList={setSymptoms}
               />
             </View>
             <View>
@@ -82,6 +108,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
               <SearchComponent
                 searchData={dummyIllnesses}
                 typeDataInputted={"illnesses"}
+                updateList={setIllnesses}
               />
             </View>
             <View>
@@ -91,11 +118,12 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
               <SearchComponent
                 searchData={dummyTest}
                 typeDataInputted={"tests"}
+                updateList={setTests}
               />
             </View>
 
             <View style={styles.saveButtonContainer}>
-              <TouchableOpacity onPress={onClose} style={styles.saveButton}>
+              <TouchableOpacity onPress={onSave} style={styles.saveButton}>
                 <Text>Save</Text>
               </TouchableOpacity>
             </View>
@@ -160,7 +188,7 @@ const styles = StyleSheet.create({
   SearchComponentHeader: {
     fontWeight: "bold",
     paddingTop: 5,
-    zIndex : 1,
+    zIndex: 1,
   },
 
   saveButtonContainer: {

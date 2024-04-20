@@ -18,6 +18,6 @@ export default class Illness{
     }
 
     toString() {
-      return `${this._name}\nStart date: ${this._startDate.toLocaleDateString()}\nEnd date: ${this._endDate.toLocaleDateString()}`;
+      return `${this._name}\nStart date: ${this._startDate}\nEnd date: ${this._endDate}`;
     }
 };

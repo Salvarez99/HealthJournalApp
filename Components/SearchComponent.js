@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   TextInput,
@@ -13,7 +13,7 @@ import Illness from "../Classes/Illness";
 import TestAndLabwork from "../Classes/TestAndLabwork";
 import DisplayItems from "./DisplayItems";
 
-const SearchComponent = ({ searchData, typeDataInputted }) => {
+const SearchComponent = ({ searchData, typeDataInputted, updateList }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [showPicker, setShowPicker] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
@@ -27,13 +27,13 @@ const SearchComponent = ({ searchData, typeDataInputted }) => {
 
     switch (typeDataInputted) {
       case "symptoms":
-        item = new Symptom(name, startDate, endDate);
+        item = new Symptom(name, startDate.toLocaleDateString(), endDate.toLocaleDateString());
         break;
       case "illnesses":
-        item = new Illness(name, startDate, endDate);
+        item = new Illness(name, startDate.toLocaleDateString(), endDate.toLocaleDateString());
         break;
       case "tests":
-        item = new TestAndLabwork(name, dateOccured);
+        item = new TestAndLabwork(name, dateOccured.toLocaleDateString());
         break;
       default:
         console.error("Unknown Type: " + typeDataInputted);
@@ -41,6 +41,11 @@ const SearchComponent = ({ searchData, typeDataInputted }) => {
     }
     setItems((prevItems) => [...prevItems, item]);
   };
+
+  useEffect(() => {
+    updateList(items);
+  }, [items]); // Only call updateList when items changes
+  
 
   const filteredList = searchQuery
     ? searchData.filter((item) =>
@@ -53,16 +58,16 @@ const SearchComponent = ({ searchData, typeDataInputted }) => {
   // }, [picker]);
 
   const onChange = (event, selectedDate) => {
-    console.log("onChange");
+    // console.log("onChange");
     const newDate = selectedDate || (picker === "start" ? startDate : endDate);
 
     if (event.type === "set") {
       if (picker === "start") {
         // Delay before changing states
         setTimeout(() => {
-          console.log(picker + " " + showPicker);
+          // console.log(picker + " " + showPicker);
           setStartDate(newDate);
-          console.log("Start date " + newDate.toLocaleDateString());
+          // console.log("Start date " + newDate.toLocaleDateString());
           setShowPicker(false); // Close start picker
 
           // Delay after state has changed
@@ -77,9 +82,9 @@ const SearchComponent = ({ searchData, typeDataInputted }) => {
       } else if (picker === "end") {
         // Delay before changing states
         setTimeout(() => {
-          console.log(picker + " " + showPicker);
+          // console.log(picker + " " + showPicker);
           setEndDate(newDate);
-          console.log("End date: " + newDate.toLocaleDateString());
+          // console.log("End date: " + newDate.toLocaleDateString());
           setShowPicker(false); // Close end picker
 
           // Delay after state has changed
@@ -92,7 +97,7 @@ const SearchComponent = ({ searchData, typeDataInputted }) => {
           }, 325);
         }, 325);
         addItem(searchQuery, startDate, newDate);
-        setSearchQuery('');
+        setSearchQuery("");
       }
     } else {
       setTimeout(() => {
@@ -103,7 +108,7 @@ const SearchComponent = ({ searchData, typeDataInputted }) => {
   };
 
   const onItemPress = (item) => {
-    console.log("item: " + item);
+    // console.log("item: " + item);
     setSearchQuery(item);
     setShowPicker(true); // Open picker when item is pressed
   };
@@ -117,13 +122,13 @@ const SearchComponent = ({ searchData, typeDataInputted }) => {
   const listStyle =
     filteredList.length > 0
       ? {
-        flex: 1,
-        zIndex: 2,
-        backgroundColor: "white",
-        padding: 5,
-        borderLeftWidth: 1,
-        borderRightWidth: 1,
-        borderBottomWidth: 1,
+          flex: 1,
+          zIndex: 2,
+          backgroundColor: "white",
+          padding: 5,
+          borderLeftWidth: 1,
+          borderRightWidth: 1,
+          borderBottomWidth: 1,
         }
       : {
           flex: 1,
@@ -145,7 +150,7 @@ const SearchComponent = ({ searchData, typeDataInputted }) => {
         value={searchQuery}
         onChangeText={setSearchQuery}
         maxLength={20}
-        style={{ borderWidth: 1, paddingLeft : 5}}
+        style={{ borderWidth: 1, paddingLeft: 5 }}
       />
       <View style={styles.listContainer}>
         <FlatList
@@ -167,9 +172,7 @@ const SearchComponent = ({ searchData, typeDataInputted }) => {
           onChange={onChange}
         />
       )}
-      <DisplayItems
-        data={items}
-      />
+      <DisplayItems data={items} />
     </View>
   );
 };
@@ -180,9 +183,9 @@ const styles = StyleSheet.create({
     top: 32,
     left: 0,
     right: 0,
-    backgroundColor: "white", 
+    backgroundColor: "white",
     zIndex: 2,
-    borderBottomWidth : 1,
+    borderBottomWidth: 1,
   },
 });
 
