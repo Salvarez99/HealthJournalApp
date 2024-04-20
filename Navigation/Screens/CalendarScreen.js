@@ -101,8 +101,9 @@ export default function CalendarScreen() {
 
 
   // check whether clicked date has data - check with actual data from backend 
+  // citation: use useEffect() with if else : https://forum.freecodecamp.org/t/react-useeffect-cleanup-function-within-if-statement/556965
   useEffect(() => {
-    if (pickedDate && appointmentInfo && appointmentInfo[pickedDate]) {
+    if (pickedDate &&  appointmentInfo[pickedDate]) {
       setHasDataInPickedDate(true);
     } else {
       setHasDataInPickedDate(false);
