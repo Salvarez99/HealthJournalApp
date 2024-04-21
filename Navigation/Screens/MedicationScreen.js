@@ -1,5 +1,5 @@
 import React , { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Platform,} from 'react-native';
 import QuickAddButton from '../../Components/QuickAddButton';
 import AddJournalEntryForm from '../../InputForms/AddJournalEntryForm'
 import AddAppointmentForm from '../../InputForms/AddAppointmentForm'
@@ -164,9 +164,9 @@ export default function MedicationScreen({ navigation }) {
       <Text style={styles.medicationName}>{item.name}</Text>
    
       <View style={styles.rightContent}>
-        <Text>{`Dosage: ${item.dosage}`}</Text>
-        <Text>{`${item.dosageSchedule.join(', ')}`}</Text>
-        <Text >{`${convertFrequencyList(item.frequency)}`}</Text>
+        <Text style={styles.medicationDetail}>{`Dosage: ${item.dosage}`}</Text>
+        <Text style={styles.medicationDetail}>{`${item.dosageSchedule.join(', ')}`}</Text>
+        <Text style={styles.medicationDetail} >{`${convertFrequencyList(item.frequency)}`}</Text>
       </View>
     </View>
   );
@@ -220,6 +220,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     fontWeight: 'bold',
+    
   },
   quickAddButtonContainer: {
     position: 'absolute',
@@ -238,15 +239,28 @@ const styles = StyleSheet.create({
   padding: 20,
   borderBottomWidth: 1,
   borderColor: '#ccc',
+  
 },
 rightContent: {
   paddingLeft : 100,
   paddingTop : 0,
-  
 },
 
 
 medicationName: {
   fontWeight: 'bold',
+  ...Platform.select({
+    ios: {
+      fontFamily: 'Times New Roman', // Set font family to Times New Roman
+    }
+  }),
+  fontSize : 15,
 },
+medicationDetail: {
+  ...Platform.select({
+    ios: {
+      fontFamily: 'Times New Roman', // Set font family to Times New Roman
+    }
+  }),
+}
 });

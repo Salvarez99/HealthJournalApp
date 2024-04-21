@@ -9,7 +9,7 @@ const data = [
   { label: "Bedtime", value: "4" },
 ];
 
-const DropdownComponent = ({ setDosageSchedule }) => {
+const DosageSchedDropDown = ({ setDosageSchedule }) => {
   const [value, setValue] = useState("Morning");
   const [isFocus, setIsFocus] = useState(false);
 
@@ -35,7 +35,7 @@ const DropdownComponent = ({ setDosageSchedule }) => {
   );
 };
 
-export default DropdownComponent;
+export default DosageSchedDropDown;
 
 const styles = StyleSheet.create({
   container: {

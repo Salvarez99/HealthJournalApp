@@ -1,4 +1,4 @@
-import Ionicons from 'react-native-vector-icons/Ionicons'
+import Ionicons from "react-native-vector-icons/Ionicons";
 import React, { useState } from "react";
 import {
   View,
@@ -7,19 +7,73 @@ import {
   Modal,
   StyleSheet,
   Platform,
-  TextInput,
 } from "react-native";
 
-import DatePicker from "../Components/DatePicker";
-import TimePicker from "../Components/TimePicker";
+import SearchComponent from "../Components/SearchComponent";
+import JournalEntry from "../Classes/JournalEntry";
 
 const AddJournalEntryForm = ({ isVisible, onClose }) => {
+  let dummySymptoms = [
+    "Cough",
+    "Headache",
+    "Sore throat",
+    "Back pain",
+    "Congestion",
+    "Light Headedness",
+  ]; //Dummy db list, to be replaced with call to
 
-  //TODO: Implement save functionality
-  const onSave = () =>{
+  let dummyIllnesses = [
+    "Cold",
+    "Flu",
+    "Pneumonia",
+    "Cancer",
+    "Allergies",
+    "Pink eye",
+  ]; //Dummy db list, to be replaced with call to db
 
+  let dummyTest = [
+    "Bloodwork",
+    "X-Ray",
+    "Physical Exam",
+    "Biopsy",
+    "Blood Pressure",
+    "Cholestrol",
+  ]; //Dummy db list, to be replaced with call to db
+
+  const [symptoms, setSymptoms] = useState([]);
+  const [illnesses, setIllnesses] = useState([]);
+  const [tests, setTests] = useState([]);
+  let journalEntry = null;
+
+  const printLists = () => {
+    console.log("Symptoms: \n");
+    for (const symptom of symptoms) {
+      console.log(
+        symptom.name + ":" + symptom.startDate + " -> " + symptom.endDate + "\n"
+      );
+    }
+    console.log("\n");
+    console.log("Illnesses: \n");
+    for (const illness of illnesses) {
+      console.log(
+        illness.name + ":" + illness.startDate + " -> " + illness.endDate + "\n"
+      );
+    }
+    console.log("\n");
+
+    console.log("Tests: \n");
+    for (const test of tests) {
+      console.log(test.name + ': ' + test.dateOccured + "\n");
+    }
+    console.log("\n");
   };
 
+  //TODO: Implement save functionality
+  const onSave = () => {
+    printLists();
+    journalEntry = new JournalEntry(symptoms, illnesses, tests);
+    onClose();
+  };
   return (
     <Modal
       visible={isVisible}
@@ -31,20 +85,45 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
         <View style={styles.modalForm}>
           <View style={styles.modalHeader}>
             <Text style={styles.modalHeaderText}> Add Journal Entry</Text>
-            <TouchableOpacity onPress={onClose} style={{
-              position : 'absolute', 
-              right : 20,
-              top: 12,
-            }}>
-              <Ionicons name = {'close'}  size={28} color={'black'}/>
+            <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+              <Ionicons name={"close"} size={28} color={"black"} />
             </TouchableOpacity>
           </View>
 
           <View style={styles.modalFormContent}>
-            
+            <View>
+              <Text style={styles.SearchComponentHeader}>Symptoms:</Text>
+            </View>
+            <View style={{ height: 100 }}>
+              <SearchComponent
+                searchData={dummySymptoms}
+                typeDataInputted={"symptoms"}
+                updateList={setSymptoms}
+              />
+            </View>
+            <View>
+              <Text style={styles.SearchComponentHeader}>Illnesses: </Text>
+            </View>
+            <View style={{ height: 100 }}>
+              <SearchComponent
+                searchData={dummyIllnesses}
+                typeDataInputted={"illnesses"}
+                updateList={setIllnesses}
+              />
+            </View>
+            <View>
+              <Text style={styles.SearchComponentHeader}>Test & Labworks:</Text>
+            </View>
+            <View style={{ height: 100 }}>
+              <SearchComponent
+                searchData={dummyTest}
+                typeDataInputted={"tests"}
+                updateList={setTests}
+              />
+            </View>
 
             <View style={styles.saveButtonContainer}>
-              <TouchableOpacity onPress={onClose} style={styles.saveButton}>
+              <TouchableOpacity onPress={onSave} style={styles.saveButton}>
                 <Text>Save</Text>
               </TouchableOpacity>
             </View>
@@ -65,10 +144,11 @@ const styles = StyleSheet.create({
   modalForm: {
     backgroundColor: "white",
     width: "90%",
-    height: "60%",
+    height: 470,
     borderRadius: 10,
     alignItems: "center",
-    bottom: "12%",
+    position: "absolute",
+    top: 60,
     ...Platform.select({
       ios: {
         shadowColor: "black",
@@ -82,6 +162,7 @@ const styles = StyleSheet.create({
     }),
   },
   modalHeader: {
+    height: 50,
     backgroundColor: "#d7dbe0",
     padding: 12,
     borderTopLeftRadius: 10,
@@ -95,19 +176,30 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   modalFormContent: {
-    flex: 1,
-    width: "100%",
+    height: 50,
     backgroundColor: "white",
+    width: "100%",
+    height: "90%",
     padding: 18,
-    paddingTop: 10,
+    paddingTop: 5,
     borderBottomRightRadius: 10,
     borderBottomLeftRadius: 10,
   },
+  SearchComponentHeader: {
+    fontWeight: "bold",
+    paddingTop: 5,
+    zIndex: 1,
+  },
 
   saveButtonContainer: {
-    position : 'absolute',
+    position: "absolute",
     right: 15,
-    bottom: 15,
+    bottom: 10,
+  },
+  closeButton: {
+    position: "absolute",
+    right: 20,
+    top: 12,
   },
   saveButton: {
     marginTop: 10,

@@ -9,9 +9,10 @@ import {
   Platform,
   TextInput,
   KeyboardAvoidingView,
+  ScrollView
 } from "react-native";
 import Medication from "../Classes/Medication";
-import DropDownList from "../Components/DropDownList";
+import DropDownList from "../Components/DosageSchedDropDown";
 import WeekDaysButtons from "../Components/WeekdayButtons";
 
 const AddMedicationForm = ({ isVisible, onClose }) => {
@@ -142,7 +143,8 @@ const styles = StyleSheet.create({
     height: "60%",
     borderRadius: 10,
     alignItems: "center",
-    bottom: "12%",
+    position : 'absolute',
+    bottom: "32%",
     ...Platform.select({
       ios: {
         shadowColor: "black",
