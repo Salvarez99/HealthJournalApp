@@ -9,7 +9,7 @@ import {
   Platform,
   TextInput,
   KeyboardAvoidingView,
-  ScrollView
+  ScrollView,
 } from "react-native";
 import Medication from "../Classes/Medication";
 import DropDownList from "../Components/DosageSchedDropDown";
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     height: "60%",
     borderRadius: 10,
     alignItems: "center",
-    position : 'absolute',
+    position: "absolute",
     bottom: "32%",
     ...Platform.select({
       ios: {
