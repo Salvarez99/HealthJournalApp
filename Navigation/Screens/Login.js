@@ -110,7 +110,7 @@ export default function Login(){
                                 {/*Change screen from login.js to Signup.js when user click button */}
                                 <TouchableOpacity style={{justifyContent : 'center', alignItems : 'center' }}
                                  onPress={() => navigation.navigate('Signup')}>
-                                    <Text style={{color :'#000080', fontSize :'15px'}}>Signup</Text>
+                                    <Text style={{color :'#000080', fontSize :15}}>Signup</Text>
                                 </TouchableOpacity>
                             
                             </View>
@@ -134,7 +134,7 @@ export default function Login(){
 // Get the height of the status bar on the device : https://stackoverflow.com/questions/64926356/paddingtop-platform-os-android-statusbar-currentheight-0
 const StatusBarHeight = Platform.OS === 'android' ? StatusBar.currentHeight : 0;
 
-// Define styled components
+// Define styled components -fixed
 const styles = StyleSheet.create({
     LoginStyleButton : { // for login button style 
         marginTop : 10,
@@ -142,18 +142,18 @@ const styles = StyleSheet.create({
         backgroundColor: '#6495ED',  // dark  navy 
         justifyContent:  'center', // centered
         alignItems: 'center', // horionzontally
-        borderRadius: '7px',
-        marginVertical: '5px',
-        height: '60px', 
+        borderRadius: 7, //'7px',
+       // marginVertical: '5px',
+        height: 48, //'60px', 
         
     } , 
     GoogleStyleButton : { // for google login button 
-        padding: '4vh',
+        padding: 2, //'4vh',
         backgroundColor: '#6495ED',  // dark  navy 
         justifyContent:  'center', // centered
         alignItems: 'center', // horionzontally
-        borderRadius: '7px',
-        marginVertical: '5px',
+        borderRadius: 7, //'7px',
+      //  marginVertical: '5px',
         flexDirection: 'row', 
       
     } , 
@@ -183,26 +183,26 @@ const styles = StyleSheet.create({
    MainPageImage : {
     paddingTop: 230, // 20% of the screen height
     width: '70%', // Width of 250 pixels
-    height: '200px', // Height of 200 pixels
+    height: 200, //'200px', // Height of 200 pixels
    },
     
    Title : {
     // Health journaling App text styling 
-    fontSize: '32px', /* if props.welcome is ture font size : 35 else 30px*/
+    fontSize: 32, //'32px', /* if props.welcome is ture font size : 35 else 30px*/
     textAlign: 'center',
     fontWeight: 'bold',
     color: '#000080',
-    padding: '10px', // Padding of 10 pixels
+  //  padding: '10px', // Padding of 10 pixels
    }, 
    
    SubText : { 
     // display account login text styling 
-    fontSize: '18px',
-    marginBottom: '20px',
-    letterSpacing: '1px',
+    fontSize: 18, //'18px',
+    marginBottom: 5, //'20px',
+    letterSpacing: 1, //'1px',
     fontWeight: 'bold',
     color:  '#1F2937',
-    marginBottom:  '5px' ,
+    marginBottom:  2, //'5px' ,
     textAlign:'center',
     paddingBottom : 7,
    },
@@ -211,23 +211,27 @@ const styles = StyleSheet.create({
     width: '85%', // styled form area (s.t. enter email, login box) set size of 85%of width
 
    },
-   TextInputLabel : {
-    padding: '10px',
-    paddingLeft: '55px',
-    paddingRight: '55px',
-    borderRadius: '5px',
-    fontSize: '16px',
-    height: '60px',
-    marginVertical: '3px',
-    marginBottom: '10px',
-    color: '#1F2937',
-    minHeight : 20,
+   TextInputLabel : { //fixed
+       // padding: "10px",
+        padding: 3,
+        //paddingLeft: "55px",
+       // paddingLeft: 5,
+       // paddingRight: 55,
+        borderRadius: 5,
+        fontSize: 16,
+        // height: "60px",
+        height: 25,
+       // marginVertical: "3px",
+      // marginVertical: 3,
+       // marginBottom: "10px",
+        color: "#1F2937",
+        minHeight: 20,
    },
 
    LoginTextInButton : {
     color: '#FAF3E6',
-    fontSize: '16px',
-    padding:  '20px' ,
+    fontSize: 16, //'16px',
+   // padding:  '20px' ,
  
    }, 
 
@@ -240,15 +244,15 @@ const styles = StyleSheet.create({
 
    GoogleTextInButton : {
     color: '#FAF3E6',
-    fontSize: '16px',
-    padding:  '20px' ,
+    fontSize: 16,
+    padding:  3 ,
    paddingLeft : '7%' , // only for  signin with google button text 
    marginTop : 12, 
    marginBottom : 12, 
    },
    messageBox : { 
     textAlign: 'center', //horizontally
-    fontSize: '20px',
+    fontSize: 20, //'20px',
    }, 
 
    horizontalLineStyle: {
@@ -262,7 +266,7 @@ const styles = StyleSheet.create({
     justifyContent : 'center',
     flexDirection : 'row',
     alignItems : 'center',
-    padding: '10px',
+    padding: 2, //'10px',
    },
 
    textInputStyle: {
@@ -279,8 +283,9 @@ const styles = StyleSheet.create({
   },
    
 
-
 }); 
+
+
 
 
 

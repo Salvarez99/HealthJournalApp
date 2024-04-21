@@ -205,19 +205,19 @@ const Singup = () => {
                             />
                              <Text style={{ textAlign: 'center', fontSize: 20 }}>...</Text>
                             <TouchableOpacity style={styles.SignInStyleButton} onPress={handleSubmit}>
-                                <Text style={{color: '#FAF3E6', fontSize : '16px', padding : '20px' }}> SignUp </Text>
+                                <Text style={{color: '#FAF3E6', fontSize : 16, textAlign : 'center' , justifyContent : 'center' , }}> SignUp </Text>
                             </TouchableOpacity>
                             <Text style={styles.horizontalLineStyle}></Text>
 
                         
                             {/** display text and link to login page at the end of page. */}
                             <View style={{justifyContent : 'center', flexDirection : 'row', 
-                                            alignItems : 'center' , padding : '10px'}}>
-                                <Text style={{ justifyContent: 'center', alignContent : 'center', color : '#1F2937', fontSize : '15px'}}>Already have an account? </Text>
+                                            alignItems : 'center' ,}}>
+                                <Text style={{ justifyContent: 'center', alignContent : 'center', color : '#1F2937', fontSize : 15}}>Already have an account? </Text>
                                 {/*Change screen from signup.js t ologin.js when user click button */}
                                 <TouchableOpacity style={{justifyContent : 'center',alignItems : 'center' }}
                                  onPress={() => navigation.navigate('Login')}>
-                                    <Text style={{color :'#000080', fontSize :'15px'}}>Login</Text>
+                                    <Text style={{color :'#000080', fontSize :15 }}>Login</Text>
                                     </TouchableOpacity>
                             
                             </View>
@@ -244,7 +244,7 @@ export const Colors = {
 const { tertiary,  } = Colors;
 
 
-// Define styled components
+// Define styled components -fixed 
 const styles = StyleSheet.create({
     SignInStyleButton : { // for login button style 
         marginTop : 10,
@@ -252,9 +252,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#6495ED',  // dark  navy 
         justifyContent:  'center', // centered
         alignItems: 'center', // horionzontally
-        borderRadius: '7px',
-        marginVertical: '5px',
-        height: '60px', 
+        borderRadius:5,// '7px',
+        marginVertical: 3,//'5px',
+        height: 50, //'60px', 
     } , 
 
     MainContainer : { 
@@ -275,36 +275,40 @@ const styles = StyleSheet.create({
 
        Title : {
         // Health journaling App text styling 
-        fontSize: '32px', 
+        fontSize: 32, //'32px', /* if props.welcome is ture font size : 35 else 30px*/
         textAlign: 'center',
         fontWeight: 'bold',
         color: '#000080',
-        padding: '10px', // Padding of 10 pixels
+      //  padding: '10px', // Padding of 10 pixels
        }, 
        
        SubText : { 
         // display account login text styling 
-        fontSize: '18px',
-        marginBottom: '20px',
-        letterSpacing: '1px',
+        fontSize: 18, //'18px',
+        marginBottom: 5, //'20px',
+        letterSpacing: 1, //'1px',
         fontWeight: 'bold',
-        color: tertiary,
-        marginBottom:  '5px' ,
+        color:  '#1F2937',
+        marginBottom:  2, //'5px' ,
         textAlign:'center',
         paddingBottom : 7,
        },
 
        TextInputLabel : {
-        padding: '10px',
-        paddingLeft: '55px',
-        paddingRight: '55px',
-        borderRadius: '5px',
-        fontSize: '16px',
-        height: '60px',
-        marginVertical: '3px',
-        marginBottom: '10px',
-        color: '#1F2937',
-        minHeight : 20,
+        // padding: "10px",
+        padding: 1,
+        //paddingLeft: "55px",
+       // paddingLeft: 5,
+       // paddingRight: 55,
+        borderRadius: 5,
+        fontSize: 16,
+        // height: "60px",
+        height: 20,
+       // marginVertical: "3px",
+      // marginVertical: 3,
+       // marginBottom: "10px",
+        color: "#1F2937",
+        minHeight: 10,
        },
 
        horizontalLineStyle: {
@@ -337,4 +341,3 @@ const styles = StyleSheet.create({
 
 
 });
-
