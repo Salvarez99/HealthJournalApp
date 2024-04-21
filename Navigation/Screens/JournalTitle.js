@@ -1,11 +1,6 @@
-<<<<<<< HEAD
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import { useAnimatedGestureHandler } from 'react-native-reanimated';
 import {Ionicons } from '@expo/vector-icons';
-//Goal : Distinguish between different type of entries ( symptom, illness, test and labworks) from fetched data. 
-=======
-import React from "react";
+
 import {
   View,
   Text,
@@ -17,7 +12,6 @@ import {
 import { useAnimatedGestureHandler } from "react-native-reanimated";
 
 //Goal : Distinguish between different type of entries ( symptom, illness, test and labworks) from fetched data.
->>>>>>> c2cc91e21d774dd2db2a2cd2519d6b71cc0a680a
 // display details + exit button ( go back to journalscreen.js )
 
 export default function JournalTitle({ route, navigation }) {
@@ -130,17 +124,11 @@ export default function JournalTitle({ route, navigation }) {
         </View>
 
         {/* Exit Button */}
-<<<<<<< HEAD
         <TouchableOpacity style={styles.exitButton} onPress={() => navigation.goBack()}>
         <Ionicons name="exit-outline" size={24} color="lightblue" />
-=======
-        <TouchableOpacity
-          style={styles.exitButton}
-          onPress={() => navigation.goBack()}
-        >
->>>>>>> c2cc91e21d774dd2db2a2cd2519d6b71cc0a680a
           <Text style={styles.exitButtonText}>Exit</Text>
         </TouchableOpacity>
+     
       </View>
     </ScrollView>
   );
@@ -192,16 +180,15 @@ const styles = StyleSheet.create({
     padding: 20,
     justifyContent: "center",
     //minHeight: 300, // set minimum height
-<<<<<<< HEAD
+
     fontFamily: 'Times New Roman',
     marginBottom : 40,
-=======
+
     ...Platform.select({
       ios: {
         fontFamily: "Times New Roman", // Set font family to Times New Roman
       },
     }),
->>>>>>> c2cc91e21d774dd2db2a2cd2519d6b71cc0a680a
   },
   entryTitle: {
     fontSize: 16,
@@ -222,25 +209,18 @@ const styles = StyleSheet.create({
     }),
   },
   exitButton: {
-<<<<<<< HEAD
     position: 'absolute',
     bottom: -30,
-=======
-    position: "absolute",
-    bottom: 60,
->>>>>>> c2cc91e21d774dd2db2a2cd2519d6b71cc0a680a
     right: 20,
     backgroundColor: "gray",
     padding: 10,
     borderRadius: 5,
-<<<<<<< HEAD
     alignItems: 'center',
     minWidth : 60,
     zIndex: 1,
     marginBottom : 50,
-=======
-    alignItems: "center",
->>>>>>> c2cc91e21d774dd2db2a2cd2519d6b71cc0a680a
+   
+
   },
 
   exitButtonText: {
