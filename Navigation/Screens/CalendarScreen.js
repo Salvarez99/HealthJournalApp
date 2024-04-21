@@ -1,6 +1,6 @@
 // CalendarScreen.js
 import React, { useState , useEffect} from 'react';
-import { View, Text, ScrollView, StyleSheet} from 'react-native';
+import { View, Text, ScrollView, Platform,StyleSheet} from 'react-native';
 import { Calendar } from 'react-native-calendars';
 
 // dummy data to test
@@ -192,12 +192,20 @@ const styles = StyleSheet.create({
   eventName: {
     fontSize: 18,
     fontWeight: 'bold',
-    fontFamily: 'Times New Roman',
     paddingBottom : 5,
+    ...Platform.select({
+      ios: {
+        fontFamily: 'Times New Roman',
+      }
+    }),
   },
   eventDetail: {
     fontSize : 15,
-    fontFamily: 'Times New Roman', // Set font family to Times New Roman
+    ...Platform.select({
+      ios: {
+        fontFamily: 'Times New Roman', // Set font family to Times New Roman
+      }
+    }),
   },
 
 });

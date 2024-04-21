@@ -1,5 +1,5 @@
 import React , { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Platform,} from 'react-native';
 import QuickAddButton from '../../Components/QuickAddButton';
 import AddJournalEntryForm from '../../InputForms/AddJournalEntryForm'
 import AddAppointmentForm from '../../InputForms/AddAppointmentForm'
@@ -164,9 +164,9 @@ export default function MedicationScreen({ navigation }) {
       <Text style={styles.medicationName}>{item.name}</Text>
    
       <View style={styles.rightContent}>
-        <Text style={{fontFamily: 'Times New Roman'}}>{`Dosage: ${item.dosage}`}</Text>
-        <Text style={{fontFamily: 'Times New Roman'}}>{`${item.dosageSchedule.join(', ')}`}</Text>
-        <Text style={{fontFamily: 'Times New Roman'}} >{`${convertFrequencyList(item.frequency)}`}</Text>
+        <Text style={styles.medicationDetail}>{`Dosage: ${item.dosage}`}</Text>
+        <Text style={styles.medicationDetail}>{`${item.dosageSchedule.join(', ')}`}</Text>
+        <Text style={styles.medicationDetail} >{`${convertFrequencyList(item.frequency)}`}</Text>
       </View>
     </View>
   );
@@ -249,7 +249,18 @@ rightContent: {
 
 medicationName: {
   fontWeight: 'bold',
-  fontFamily: 'Times New Roman',
+  ...Platform.select({
+    ios: {
+      fontFamily: 'Times New Roman', // Set font family to Times New Roman
+    }
+  }),
   fontSize : 15,
 },
+medicationDetail: {
+  ...Platform.select({
+    ios: {
+      fontFamily: 'Times New Roman', // Set font family to Times New Roman
+    }
+  }),
+}
 });
