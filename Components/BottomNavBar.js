@@ -29,7 +29,7 @@ import Logout from '../screens/Logout';
 import { Button, View, Image, Text } from 'react-native';
 
 // Import styling
-import { BottomNavBarContainer, Colors}  from './styles'; 
+import { BottomNavBarContainer, Colors}  from './classes/styles'; 
 
 import { ScrollView } from 'react-native';
 
