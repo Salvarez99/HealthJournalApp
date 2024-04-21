@@ -44,19 +44,19 @@ export default function App() {
         <Stack.Screen
           name="SettingPage"
           component={SettingPage}
-          options={{ headerShown: false }}
+          options={{ headerShown: true,  headerTitle : 'Settings'}}
         />
 
         <Stack.Screen
           name="AccountSetting"
           component={AccountSetting}
-          options={{ headerShown: false }}
+          options={{ headerShown: true, headerTitle : 'Account Setting' }}
         />
 
         <Stack.Screen
           name="StorageSetting"
           component={StorageSetting}
-          options={{ headerShown: false }}
+          options={{ headerShown: true, headerTitle : 'Storage Settings' }}
         />
       </Stack.Navigator>
     </NavigationContainer>
