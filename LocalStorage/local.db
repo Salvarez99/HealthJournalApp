@@ -1,18 +1,18 @@
 CREATE TABLE Appointments (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    date TEXT,
+    date DATE,
     name TEXT,
-    time_started TEXT
-    time_ended TEXT
+    time_started TIME,
+    time_ended TIME
 );
 
 CREATE TABLE Illnesses (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    date_started TEXT,
-    date_ended TEXT,
+    date_started DATE,
+    date_ended DATE,
     illness_name TEXT,
-    time_started TEXT,
-    time_ended TEXT
+    time_started TIME,
+    time_ended TIME
 );
 
 CREATE TABLE Medicines (
@@ -25,21 +25,21 @@ CREATE TABLE Medicines (
 
 CREATE TABLE Symptom_Checker (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    date TEXT,
+    date DATE,
     symptom_name TEXT,
-    time TEXT
+    time TIME
 );
 
 CREATE TABLE Test_and_Labworks (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    date TEXT,
+    date DATE,
     test_lab_name TEXT,
-    time TEXT
+    time TIME
 );
 
 CREATE TABLE User_Activity (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    date TEXT,
+    date DATE,
     journal_entry TEXT,
-    time TEXT
+    time TIME
 );
