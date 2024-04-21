@@ -13,6 +13,11 @@ import CalendarScreen from './Screens/CalendarScreen';
 import MedicationScreen from './Screens/MedicationScreen';
 //import JournalTitle from './Screens/JournalTitle';
 
+// for setting button 
+import SettingButton  from '../Components/SettingButton';
+import SettingPage from './Screens/SettingPage';
+
+
 
 //Screen Names
 const journalName = 'Journal';
@@ -25,8 +30,15 @@ const Tab = createBottomTabNavigator();
   export default function MainContainer() {
     const tabBarHeight = Platform.OS === 'ios' ? '12%' : '7%';
   
+    
+  // for adding setting button onto MainContainer (where it links to rest of all screens.) >> display setting buttons on the screens.
+  // citation for header button ( setting button ) : https://reactnavigation.org/docs/header-buttons/
+  const addSettingButton = ({ navigation }) => ({
+    headerRight: () => <SettingButton navigation={navigation} />,
+  });
+  
     return (
-      
+    
         <Tab.Navigator
           initialRouteName={journalName}
           screenOptions={({ route }) => ({
@@ -56,10 +68,11 @@ const Tab = createBottomTabNavigator();
             },
           })}
         >
-          <Tab.Screen name={journalName} component={JournalScreen} />
-          <Tab.Screen name={calendarName} component={CalendarScreen} />
-          <Tab.Screen name={medicationName} component={MedicationScreen} />
-        </Tab.Navigator>
-      
+           
+           <Tab.Screen name={journalName} component={JournalScreen} options={addSettingButton}/>
+          <Tab.Screen name={calendarName} component={CalendarScreen} options={addSettingButton}/>
+          <Tab.Screen name={medicationName} component={MedicationScreen} options={addSettingButton}/>
+      </Tab.Navigator>
+     
     );
   }

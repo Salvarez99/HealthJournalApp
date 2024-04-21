@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useAnimatedGestureHandler } from 'react-native-reanimated';
-
+import {Ionicons } from '@expo/vector-icons';
 //Goal : Distinguish between different type of entries ( symptom, illness, test and labworks) from fetched data. 
 // display details + exit button ( go back to journalscreen.js )
 
@@ -114,6 +114,7 @@ const checkPassedInfo = (arryOfAppointmentInfo) => {
 
         {/* Exit Button */}
         <TouchableOpacity style={styles.exitButton} onPress={() => navigation.goBack()}>
+        <Ionicons name="exit-outline" size={24} color="lightblue" />
           <Text style={styles.exitButtonText}>Exit</Text>
         </TouchableOpacity>
      
@@ -160,6 +161,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center', 
     //minHeight: 300, // set minimum height
     fontFamily: 'Times New Roman',
+    marginBottom : 40,
   },
   entryTitle: {
     fontSize: 16,
@@ -174,12 +176,15 @@ const styles = StyleSheet.create({
   },
   exitButton: {
     position: 'absolute',
-    bottom: 60,
+    bottom: -30,
     right: 20,
     backgroundColor: 'gray',
     padding: 10,
     borderRadius: 5,
     alignItems: 'center',
+    minWidth : 60,
+    zIndex: 1,
+    marginBottom : 50,
   },
 
   exitButtonText: {
