@@ -395,17 +395,21 @@ const styles = StyleSheet.create({
     paddingTop : 25, 
     paddingBottom : 25, 
     paddingRight : 7,
+    fontFamily: 'Times New Roman',
 },
   JournalTitle :{
-    fontSize: 15,
+    fontSize: 17,
     fontWeight: 'bold',
     paddingLeft: 20,
+    fontFamily: 'Times New Roman',
 },
 JournalDate: {
     fontSize: 14,
     paddingLeft: 150,
     paddingRight : 20,
     color: '#555',
+    fontFamily: 'Times New Roman',
+
 },
   horizontalListContent : {
     horizontal : '100%',

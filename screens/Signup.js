@@ -2,17 +2,52 @@ import React, { useState, useContext, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 // citation learned from : https://www.youtube.com/watch?v=BQ-kHwLlhrg
 
+
 // import formik
 import { Formik } from 'formik';
 import styled from 'styled-components/native';
-import { Platform, Button, View, StyleSheet, TouchableOpacity, Image, Text, TextInput } from 'react-native';
+import {
+    StyledContainer,
+     InnerContainer,
+     PageLogo,
+     PageTitle,
+     SubTitle,
+     StyledFormArea,
+     LeftIcon,
+     RightIcon,
+     StyledInputLabel,
+     StyledTextInput,
+     Colors,
+     // for button
+     StyledButton,
+     ButtonText,
+     //message box and line
+     MsgBox,
+     Line,
+     // import for text  view and link styles
+     StyleView,
+     StyleText,
+     LinkText,
+     ContentOfLinkText,
+ 
+ 
+ }from './../components/styles.js';
+ 
+import { Button, View, TouchableOpacity } from 'react-native';
 
 // icon
 import { Octicons, Fontisto, Ionicons } from '@expo/vector-icons'; // Ionicons : for isPassword , Fontisto : for goole icon
+
+//colors
+const { brand, darkLight, primary } = Colors;
+
 // Datetimepicker - need to be installed on terminal before using it. check out expo datetimepicker documentation.
 import DateTimePicker from '@react-native-community/datetimepicker';
+
 // import screenorientation 
 import { ScreenOrientation } from 'expo';
+
+
 //for navigation
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation hook
 
@@ -41,7 +76,7 @@ const Singup = () => {
 
     const showDatePicker = () => {
         setShow('date');
-    };
+      };
 
     // end of declation variables. 
 
@@ -62,48 +97,17 @@ const Singup = () => {
 
 
     const handleSignup = () => {
-        navigation.navigate('Login');
+        navigation.navigate('Welcome');
       };
-
-    
-    // MyTextInput component
-    const MyTextInput = ({ label, icon, isPassword,hidePassword, setHidePassword, isDate, showDatePicker, ...props }) => {
-        // input parameteres. 
-        return (
-            <View>
-                <View style={{ left: '5%', top: '40%',position: 'absolute',zIndex: 1,  }}>
-                    <Octicons name={icon} size={30} color='#000080' />
-                </View>
-                <Text style={styles.TextInputLabel}>{label}</Text>
-                
-                {/* Check. if isDate is true,use touchableopacity onpress for datepicker, else(false) display empty text box   */}
-                {isDate && (
-                    <TouchableOpacity onPress={showDatePicker}>
-                    <TextInput style={styles.textInputStyle} {...props} />
-                    </TouchableOpacity>
-                )}
-                {!isDate && <TextInput style={styles.textInputStyle} {...props} /> }
-
-                {/* To hide password  */}
-                {isPassword && (
-                    <TouchableOpacity style={styles.righticonstyle} onPress={()=> setHidePassword(!hidePassword)}>
-                        <Ionicons name={hidePassword ? 'eye-off' : 'eye'} size={30} color='#9CA3AF' />
-                    </TouchableOpacity>
-
-                )}
-                
-            </View>
-        );
-    };
 
 
     return(
-        <View style={styles.MainContainer}>
+        <StyledContainer>
             <StatusBar style="dark" />
-            <View style={styles.SmallerContainer}>
-                <Text style={styles.Title}>Health Journaling App</Text>
-                <Text style={styles.SubText}>Account Signup</Text>
-            
+            <InnerContainer>
+                <PageTitle>Health Journaling App</PageTitle>
+                <SubTitle>Account Signup</SubTitle>
+
                 {show && (
                         <DateTimePicker
                         testID="dateTimePicker"
@@ -123,17 +127,17 @@ const Singup = () => {
                     initialValues={{ fullName: '',  email: '', dateOfBirth : '', password: '', confirmPassword : '', }}
                     onSubmit={(values) => {
                         console.log(values);
-                        navigation.navigate('Login');
+                        navigation.navigate('Welcome');
                     }} // declare properties in initialValues={}
                 >
                     {({ handleChange, handleBlur, handleSubmit, values }) => (
-                        <View style={{width: '85%'}}>
+                        <StyledFormArea>
                             <MyTextInput
                             // text input box for entering name 
                                 label="Full Name"
                                 icon="person"
                                 placeholder="Seoyeon Choi"  // default value
-                                placeholderTextColor= '#9CA3AF'
+                                placeholderTextColor={darkLight}
                                 onChangeText={handleChange('fullName')}
                                 onBlur={handleBlur('fullName')}
                                 value={values.fullName}
@@ -145,7 +149,7 @@ const Singup = () => {
                                 label="Email Address"
                                 icon="mail"
                                 placeholder="welcome@gmail.com"
-                                placeholderTextColor= '#9CA3AF'
+                                placeholderTextColor={darkLight}
                                 onChangeText={handleChange('email')}
                                 onBlur={handleBlur('email')}
                                 value={values.email}
@@ -159,7 +163,7 @@ const Singup = () => {
                                 label="Date of Birth"
                                 icon="calendar"
                                 placeholder="YYYY - MM - DD"
-                                placeholderTextColor= '#9CA3AF'
+                                placeholderTextColor={darkLight}
                                 onChangeText={handleChange('dateOfBirth')}
                                 onBlur={handleBlur('dateOfBirth')}
                                 value={dob ? dob.toDateString() : ''} // if value is pass make dob to datestring else return empty string
@@ -175,7 +179,7 @@ const Singup = () => {
                                 label="Password"
                                 icon="lock"
                                 placeholder="Enter Password"
-                                placeholderTextColor= '#9CA3AF'
+                                placeholderTextColor={darkLight}
                                 onChangeText={handleChange('password')}
                                 onBlur={handleBlur('password')}
                                 value={values.password}
@@ -192,7 +196,7 @@ const Singup = () => {
                                 label="Confirm Password"
                                 icon="lock"
                                 placeholder="Enter Password"
-                                placeholderTextColor= '#9CA3AF'
+                                placeholderTextColor={darkLight}
                                 onChangeText={handleChange('confirmPassword')}
                                 onBlur={handleBlur('confirmPassword')}
                                 value={values.confirmPassword}
@@ -203,141 +207,68 @@ const Singup = () => {
                                 hidePassword={hidePassword}
                                 setHidePassword = {setHidePassword}
                             />
-                             <Text style={{ textAlign: 'center', fontSize: 20 }}>...</Text>
-                            <TouchableOpacity style={styles.SignInStyleButton} onPress={handleSubmit}>
-                                <Text style={{color: '#FAF3E6', fontSize : 16, textAlign : 'center' , justifyContent : 'center' , }}> SignUp </Text>
-                            </TouchableOpacity>
-                            <Text style={styles.horizontalLineStyle}></Text>
 
+                            
+                            <MsgBox>...</MsgBox>
+                            <StyledButton onPress={handleSubmit}>
+                                    <ButtonText>Signup</ButtonText>
+                            </StyledButton>
+                            <Line />
                         
                             {/** display text and link to login page at the end of page. */}
-                            <View style={{justifyContent : 'center', flexDirection : 'row', 
-                                            alignItems : 'center' ,}}>
-                                <Text style={{ justifyContent: 'center', alignContent : 'center', color : '#1F2937', fontSize : 15}}>Already have an account? </Text>
+                            <StyleView>
+                                <StyleText>Already have an account? </StyleText>
                                 {/*Change screen from signup.js t ologin.js when user click button */}
-                                <TouchableOpacity style={{justifyContent : 'center',alignItems : 'center' }}
-                                 onPress={() => navigation.navigate('Login')}>
-                                    <Text style={{color :'#000080', fontSize :15 }}>Login</Text>
-                                    </TouchableOpacity>
+                                <LinkText onPress={() => navigation.navigate('Login')}>
+                                    <ContentOfLinkText>Login</ContentOfLinkText>
+                                </LinkText>
                             
-                            </View>
+                            </StyleView>
 
+                            
+                            
+                         
+                            
 
-                        </View>
+                        </StyledFormArea>
                     )}
                 </Formik>
-            </View>
-        </View>
+            </InnerContainer>
+        </StyledContainer>
     );
 };
 
 
+// MyTextInput component
+const MyTextInput = ({ label, icon, isPassword,hidePassword, setHidePassword, isDate, showDatePicker, ...props }) => {
+    // input parameteres. 
+    return (
+        <View>
+            <LeftIcon>
+                <Octicons name={icon} size={30} color={brand} />
+            </LeftIcon>
+            <StyledInputLabel>{label}</StyledInputLabel>
+            
+            {/* Check. if isDate is true,use touchableopacity onpress for datepicker, else(false) display empty text box   */}
+            {/**  */}
+            {isDate && (
+                <TouchableOpacity onPress={showDatePicker}>
+                <StyledTextInput {...props} />
+                </TouchableOpacity>
+            )}
+            {!isDate && <StyledTextInput {...props} />}
+
+
+            {/* To hide password  */}
+            {isPassword && (
+                <RightIcon onPress={()=> setHidePassword(!hidePassword)}>
+                    <Ionicons name={hidePassword ? 'eye-off' : 'eye'} size={30} color={darkLight} />
+                </RightIcon>
+
+            )}
+            
+        </View>
+    );
+};
 
 export default Singup;  // use .js name 
-
-// Get the height of the status bar on the device : https://stackoverflow.com/questions/64926356/paddingtop-platform-os-android-statusbar-currentheight-0
-const StatusBarHeight = Platform.OS === 'android' ? StatusBar.currentHeight : 0;
-
-export const Colors = {
-    tertiary: '#1F2937',
-};
-const { tertiary,  } = Colors;
-
-
-// Define styled components -fixed 
-const styles = StyleSheet.create({
-    SignInStyleButton : { // for login button style 
-        marginTop : 10,
-        padding: 15,
-        backgroundColor: '#6495ED',  // dark  navy 
-        justifyContent:  'center', // centered
-        alignItems: 'center', // horionzontally
-        borderRadius:5,// '7px',
-        marginVertical: 3,//'5px',
-        height: 50, //'60px', 
-    } , 
-
-    MainContainer : { 
-        flex: 1,
-        padding: '5%', 
-        paddingTop: StatusBarHeight,  // Padding top including StatusBar height
-        backgroundColor:'#FAF3E6',// sky blue
-        width : '100%',
-        height :'100%',
-       },
-    
-       SmallerContainer : { 
-        width: '100%',
-        flex: 1,
-        alignItems: 'center', 
-        justifyContent: 'center', // Center content vertically - add 
-       },
-
-       Title : {
-        // Health journaling App text styling 
-        fontSize: 32, //'32px', /* if props.welcome is ture font size : 35 else 30px*/
-        textAlign: 'center',
-        fontWeight: 'bold',
-        color: '#000080',
-      //  padding: '10px', // Padding of 10 pixels
-       }, 
-       
-       SubText : { 
-        // display account login text styling 
-        fontSize: 18, //'18px',
-        marginBottom: 5, //'20px',
-        letterSpacing: 1, //'1px',
-        fontWeight: 'bold',
-        color:  '#1F2937',
-        marginBottom:  2, //'5px' ,
-        textAlign:'center',
-        paddingBottom : 7,
-       },
-
-       TextInputLabel : {
-        // padding: "10px",
-        padding: 1,
-        //paddingLeft: "55px",
-       // paddingLeft: 5,
-       // paddingRight: 55,
-        borderRadius: 5,
-        fontSize: 16,
-        // height: "60px",
-        height: 20,
-       // marginVertical: "3px",
-      // marginVertical: 3,
-       // marginBottom: "10px",
-        color: "#1F2937",
-        minHeight: 10,
-       },
-
-       horizontalLineStyle: {
-        height: 1.5,  // make line little thicker. 
-        width: '100%',
-        backgroundColor: '#9CA3AF',
-        marginVertical: '5%',
-      },
-
-      righticonstyle: {
-        right: '5%',
-        top: '40%',
-        position: 'absolute',
-        zIndex: 1,
-      },
-
-      textInputStyle: {
-        backgroundColor: '#E5E7EB',
-        padding: 15,
-        paddingLeft: 55,
-        paddingRight: 55,
-        borderRadius: 5,
-        fontSize: 16,
-        height: 60,
-        marginVertical: 3,
-        marginBottom: 10,
-        color: '#1F2937',
-      },
-       
-
-
-});
