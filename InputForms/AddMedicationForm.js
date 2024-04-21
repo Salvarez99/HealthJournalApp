@@ -14,6 +14,7 @@ import {
 import Medication from "../Classes/Medication";
 import DropDownList from "../Components/DosageSchedDropDown";
 import WeekDaysButtons from "../Components/WeekdayButtons";
+import { writeMedicine } from "../LocalStorage/LocalDatabaseManager";
 
 const AddMedicationForm = ({ isVisible, onClose }) => {
   const [medicationName, setMedicationName] = new useState("");

@@ -11,39 +11,23 @@ import {
 
 import SearchComponent from "../Components/SearchComponent";
 import JournalEntry from "../Classes/JournalEntry";
-
+import { writeSymptom, writeIllness, writeTest } from "../LocalStorage/LocalDatabaseManager"; // Import writeSymptom, writeIllness, writeTest functions
+import { fetchLocalData } from "../LocalStorage/fetchLocal";
 const AddJournalEntryForm = ({ isVisible, onClose }) => {
-  let dummySymptoms = [
-    "Cough",
-    "Headache",
-    "Sore throat",
-    "Back pain",
-    "Congestion",
-    "Light Headedness",
-  ]; //Dummy db list, to be replaced with call to
-
-  let dummyIllnesses = [
-    "Cold",
-    "Flu",
-    "Pneumonia",
-    "Cancer",
-    "Allergies",
-    "Pink eye",
-  ]; //Dummy db list, to be replaced with call to db
-
-  let dummyTest = [
-    "Bloodwork",
-    "X-Ray",
-    "Physical Exam",
-    "Biopsy",
-    "Blood Pressure",
-    "Cholestrol",
-  ]; //Dummy db list, to be replaced with call to db
-
+  
   const [symptoms, setSymptoms] = useState([]);
   const [illnesses, setIllnesses] = useState([]);
   const [tests, setTests] = useState([]);
   let journalEntry = null;
+
+  useEffect(() => {
+    // Fetch local data
+    fetchLocalData().then((data) => {
+      setSymptoms(data.symptoms);
+      setIllnesses(data.illnesses);
+      setTests(data.tests);
+    });
+  }, []); // Empty dependency array ensures this effect runs only once
 
   const printLists = () => {
     console.log("Symptoms: \n");
@@ -68,8 +52,29 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
     console.log("\n");
   };
 
-  //TODO: Implement save functionality
+  // Implement save functionality
   const onSave = () => {
+    // Save symptoms
+    for (const symptom of symptoms) {
+      writeSymptom(symptom.name, symptom.startDate, symptom.endDate)
+        .then(() => console.log("Symptom saved successfully"))
+        .catch((error) => console.error("Error saving symptom:", error));
+    }
+
+    // Save illnesses
+    for (const illness of illnesses) {
+      writeIllness(illness.name, illness.startDate, illness.endDate)
+        .then(() => console.log("Illness saved successfully"))
+        .catch((error) => console.error("Error saving illness:", error));
+    }
+
+    // Save tests
+    for (const test of tests) {
+      writeTest(test.name, test.dateOccured)
+        .then(() => console.log("Test saved successfully"))
+        .catch((error) => console.error("Error saving test:", error));
+    }
+
     printLists();
     journalEntry = new JournalEntry(symptoms, illnesses, tests);
     onClose();
