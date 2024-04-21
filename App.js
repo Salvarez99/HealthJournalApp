@@ -7,9 +7,17 @@ import SignUp from './Navigation/Screens/Signup';
 //import Logout from './Navigation/Screens/Logout';
 import JournalTitle from './Navigation/Screens/JournalTitle';
 
+// for setting 
+import SettingButton from './Components/SettingButton';
+import SettingPage from './Navigation/Screens/SettingPage';
+import AccountSetting from './Navigation/Screens/AccountSetting';
+import StorageSetting from './Navigation/Screens/StorageSetting';
+
 const Stack = createStackNavigator();
 
 export default function App() {
+
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
@@ -21,7 +29,7 @@ export default function App() {
         <Stack.Screen
           name="MainContainer"
           component={MainContainer}
-          options={{ headerShown: false }} 
+         options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Signup"
@@ -32,12 +40,31 @@ export default function App() {
         <Stack.Screen
           name="JournalTitle"
           component={JournalTitle}
-        
           options={{ headerShown: false }}
         />
 
-       
+        <Stack.Screen
+          name="SettingPage"
+          component={SettingPage}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name="AccountSetting"
+          component={AccountSetting}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name="StorageSetting"
+          component={StorageSetting}
+          options={{ headerShown: false }}
+        />
+      
+
+
       </Stack.Navigator>
+      
     </NavigationContainer>
   );
 }
