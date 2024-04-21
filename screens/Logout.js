@@ -29,7 +29,7 @@ import {
     // for Bottom nav bar 
     BottomNavBarContainer,
 
-}from '../../AppStyles/styles';;
+}from './../components/styles';
 import { Button, View, Image, Text, TouchableOpacity } from 'react-native';
 
 //for navigation
@@ -47,7 +47,7 @@ const Logout = () =>{
         <TopContainer>
             <Image
                 style={{ width: '100%', height: '100%' }}
-                source={require('../../assets/welcomeBackground.jpg')}
+                source={require('./../assets/img/welcomeBackground.jpg')}
                 resizeMode="cover"
             />
         </TopContainer>
@@ -61,7 +61,7 @@ const Logout = () =>{
  
                 <StyledFormArea>
                     <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                        <Avatar resizeMode="cover" source={require('../../assets/login_page.png')} />
+                        <Avatar resizeMode="cover" source={require('./../assets/img/login_page.png')} />
                     </View>
 
                     <StyledButton onPress={() => navigation.navigate('Login')}>

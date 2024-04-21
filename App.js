@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import MainContainer from './Navigation/MainContainer';
 import Login from './Navigation/Screens/Login';
 import SignUp from './Navigation/Screens/Signup';
-import Logout from './Navigation/Screens/Logout';
+//import Logout from './Navigation/Screens/Logout';
 import JournalTitle from './Navigation/Screens/JournalTitle';
 
 const Stack = createStackNavigator();
@@ -26,11 +26,6 @@ export default function App() {
         <Stack.Screen
           name="Signup"
           component={SignUp}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Logout"
-          component={Logout}
           options={{ headerShown: false }}
         />
 
