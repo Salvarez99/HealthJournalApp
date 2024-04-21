@@ -108,7 +108,11 @@ const styles = StyleSheet.create({
   exitButtonText: {
     color: 'white',
     fontSize: 16,
-    fontFamily: 'Times New Roman',
+    ...Platform.select({
+      ios: {
+        fontFamily: 'Times New Roman', // Set font family to Times New Roman
+      }
+    }),
   },
 
 });
