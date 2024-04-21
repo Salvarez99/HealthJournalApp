@@ -18,12 +18,13 @@ const firebaseConfig = {
   measurementId: process.env.measurementId
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const storage = getStorage(app);
 
-export default firebaseConfig;
-export{storage};
-//Initializing Firebase Authentification 
+// Initialize Firebase
+export const FIREBASE_APP = initializeApp(firebaseConfig);
 export const FIREBASE_AUTH = getAuth(FIREBASE_APP);
+//const analytics = getAnalytics(app);
+//const storage = getStorage(app);
+
+//export default firebaseConfig;
+//export{storage};
+//Initializing Firebase Authentification 

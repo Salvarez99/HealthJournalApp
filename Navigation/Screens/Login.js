@@ -1,5 +1,8 @@
 import React, { useState, useContext } from 'react';
 import { StatusBar } from 'expo-status-bar';
+import { FIREBASE_AUTH } from '../../firebaseConfig';
+//import {GoogleSignIn} from '@react-native-google-signin/google-signin';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider } from 'firebase/auth';
 // citation learned from : https://www.youtube.com/watch?v=BQ-kHwLlhrg
 
 // import formik
@@ -42,18 +45,37 @@ import { useNavigation } from '@react-navigation/native'; // Import useNavigatio
 //colors
 const { brand, darkLight, primary } = Colors;
 
-// handle login 
-// const Login = () => {
+
 export default function Login(){
     // init navigation hook.
     const navigation = useNavigation(); 
-
+    const auth = FIREBASE_AUTH;
     // use Usestate hook for pasword 
     const [hidePassword, setHidePassword] = useState(true); //default is true
+    //const[email, setEmail] = useState('');
+    //const[password, setPassword] = useState('');
 
-    const handleLogin = () => {
-        navigation.navigate('MainContainer');
+
+    const handleLogin = async({email, password}) => {
+       
+        
+        try{
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+            navigation.navigate('MainContainer');
+            console.log("Logging in successful! ", user);
+        }
+        catch(error){
+            console.log(email);
+            console.log(password);
+            console.log("Error Logging in", error.message);
+        }
       };
+
+      const handleGoogleLogin = async({}) => {
+
+
+      }
 
 
       // most of container components are defined in style.js
@@ -66,16 +88,13 @@ export default function Login(){
                 <SubTitle>Account Login</SubTitle>
                 <Formik
                     initialValues={{ email: '', password: '' }}
-                    onSubmit={(values) => {
-                        console.log(values);
-                        // change screen from login.js to welcome.js 
-                       navigation.navigate('MainContainer');
-                    }}
+                    onSubmit={handleLogin}
                 >
                 
                     {({ handleChange, handleBlur, handleSubmit, values }) => (
                         <StyledFormArea>
                             <MyTextInput
+                                required
                                 label="Email Address"
                                 icon="mail"
                                 placeholder="welcome@gmail.com"
@@ -84,8 +103,10 @@ export default function Login(){
                                 onBlur={handleBlur('email')}
                                 value={values.email}
                                 keyboardType="email-address"
+                                
                             />
                             <MyTextInput
+                                required
                                 label="Password"
                                 icon="lock"
                                 placeholder="Enter Password"
@@ -101,7 +122,7 @@ export default function Login(){
                                 setHidePassword = {setHidePassword}
                             />
                             <MsgBox>...</MsgBox>
-                            <StyledButton onPress={handleLogin}>
+                            <StyledButton onPress={handleSubmit}>
                                 <ButtonText> Login </ButtonText>
                             </StyledButton>
                             <Line />

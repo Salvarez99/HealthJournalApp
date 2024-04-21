@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import auth from '@react-native-firebase/auth';
+import { FIREBASE_AUTH } from '../../firebaseConfig';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 // citation learned from : https://www.youtube.com/watch?v=BQ-kHwLlhrg
 
 
@@ -63,29 +64,25 @@ const Singup = () => {
     const [hidePassword, setHidePassword] = useState(true); //default is true
     const [show, setShow] = useState(false);// show for the datetimepicker
     const [date, setDate] = useState(new Date(2024, 12, 14));// set this date as default
-
+    const auth = FIREBASE_AUTH;
     // variable to hold actural date of birth to be sent 
     const [dob, setDob] = useState();
 
-    const register = async () => {
+    const register = async ({email, password}) => {
         try{
-            const userCredential = await auth().createUserWithEmailAndPassword(email,password);
-            console.log('User registered successfully!', userCredential.user);
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+            navigation.navigate('Login');
+            console.log("Registration successful! ", user);
         }
         catch(error){
-            Alert.alert('Error', error.message);
+            console.log(email);
+            console.log(password);
+            console.log("Error creating user", error.message);
         }
     };
 
-    const login = async () => {
-        try{
-            const userCredential = await auth().signInWithEmailAndPassword(email,password);
-            console.log('User logged in successfully!', userCredential.user);
-        }
-        catch(error){
-            Alert.alert('Error', error.message);
-        }
-    };
+    
 
     const onChange = (event, selectDate) => {
         const currentDate = selectDate || date; 
@@ -146,10 +143,7 @@ const Singup = () => {
                 {/* Use Formik Library to manage form state and handle submission.  */}
                 <Formik
                     initialValues={{ fullName: '',  email: '', dateOfBirth : '', password: '', confirmPassword : '', }}
-                    onSubmit={(values) => {
-                        console.log(values);
-                        navigation.navigate('Login');
-                    }} // declare properties in initialValues={}
+                    onSubmit={register} // declare properties in initialValues={}
                 >
                     {({ handleChange, handleBlur, handleSubmit, values }) => (
                         <StyledFormArea>
