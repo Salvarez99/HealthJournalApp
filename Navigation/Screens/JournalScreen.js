@@ -446,8 +446,8 @@ const styles = StyleSheet.create({
     color: "#555",
     ...Platform.select({
       ios: {
-        fontFamily: 'Times New Roman', // Set font family to Times New Roman
-      }
+        fontFamily: "Times New Roman", // Set font family to Times New Roman
+      },
     }),
   },
   horizontalListContent: {

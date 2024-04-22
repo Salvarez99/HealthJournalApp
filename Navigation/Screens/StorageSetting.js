@@ -1,23 +1,96 @@
-import React, { useState, useContext } from 'react';
-import { StatusBar } from 'expo-status-bar';
-// citation learned from : https://www.youtube.com/watch?v=BQ-kHwLlhrg
-import styled from 'styled-components/native';
-// import formik
-import { Formik } from 'formik';
-import {  Platform, Button, View, StyleSheet, TouchableOpacity, Image, Text, TextInput } from 'react-native';
+import React, { useState } from "react";
+import {
+  Platform,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  Switch,
+} from "react-native";
 
-// icon
-import { Octicons, Fontisto, Ionicons } from '@expo/vector-icons'; // Ionicons : for isPassword , Fontisto : for goole icon
+export default function StorageSetting() {
+  const [isEnabled, setIsEnabled] = useState(true);
+  const toggleSwitch = () => {
+    setIsEnabled((previousState) => !previousState);
+    !isEnabled
+      ? alert("Cloud Storage Enabled")
+      : alert("Cloud Storage Disabled");
 
-//for navigation
-import { useNavigation } from '@react-navigation/native'; // Import useNavigation hook
+    //db logic goes here
+  };
+  const removeJournals = () => {
+    //db logic goes here
+    alert("Removed Journals from cloud.");
+  };
 
-// import on app.js on navigation stack. 
-export default function StorageSetting(){
+  const removeMedications = () => {
+    //db logic goes here
+    alert("Removed medications from cloud.");
+  };
 
-return(
-   <View>
-     <Text>Storage Setting </Text>
-   </View>
-);
-};
+  return (
+    <View style={styles.mainContainer}>
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity style={styles.storageButtons} onPress={toggleSwitch}>
+          <Text style={styles.buttonText}>Upload Data to Cloud </Text>
+          <View style={styles.toggleContainer}>
+            <Switch
+              trackColor={{ false: "#767577", true: "#81b0ff" }}
+              thumbColor={"#f4f3f4"}
+              ios_backgroundColor="#3e3e3e"
+              onValueChange={toggleSwitch}
+              value={isEnabled}
+            />
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.storageButtons}
+          onPress={removeJournals}
+        >
+          <Text style={styles.buttonText}>Remove Journals </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.storageButtons}
+          onPress={removeMedications}
+        >
+          <Text style={styles.buttonText}>Remove Medications </Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+}
+const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f9f9f9",
+  },
+  buttonsContainer: {
+    width: "100%",
+    position: "absolute",
+    top: 0,
+  },
+  toggleContainer: {
+    justifyContent: "center",
+    paddingRight: 10,
+  },
+  storageButtons: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    height: 60,
+    borderWidth: 1,
+    borderTopWidth: 0,
+    borderBottomWidth: 1,
+    borderColor: "#ccc",
+    backgroundColor: "#f9f9f9",
+  },
+  buttonText: {
+    fontSize: 16,
+  },
+});

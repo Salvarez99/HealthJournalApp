@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import React, { useState } from "react";
+import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function QuickAddButton({ modalComponents }) {
   const [showButtons, setShowButtons] = useState(false);
@@ -16,7 +16,11 @@ export default function QuickAddButton({ modalComponents }) {
         style={styles.primaryButton}
         onPress={() => setShowButtons(!showButtons)}
       >
-        <Ionicons name={showButtons ? 'close' : 'add'} size={30} color="white" />
+        <Ionicons
+          name={showButtons ? "close" : "add"}
+          size={30}
+          color="white"
+        />
       </TouchableOpacity>
 
       {showButtons && (
@@ -44,35 +48,35 @@ export default function QuickAddButton({ modalComponents }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position: 'relative',
+    position: "relative",
   },
   buttonContainer: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 70,
     left: 10,
   },
   menuButton: {
     marginBottom: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'transparent',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "transparent",
     borderRadius: 30,
     width: 180,
     height: 60,
-    justifyContent: 'flex-start',
+    justifyContent: "flex-start",
   },
   primaryButton: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 10,
     left: 10,
-    backgroundColor: '#2c72a3',
+    backgroundColor: "#2c72a3",
     padding: 10,
     borderRadius: 30,
     width: 60,
     height: 60,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -85,10 +89,10 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     width: 60,
     height: 60,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#2c72a3',
-    shadowColor: '#000',
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#2c72a3",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -98,12 +102,12 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   textContainer: {
-    backgroundColor: '#ddd',
+    backgroundColor: "#ddd",
     borderRadius: 5,
     marginLeft: 10,
     paddingVertical: 8,
     paddingHorizontal: 10,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,

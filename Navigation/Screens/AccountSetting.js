@@ -1,13 +1,22 @@
-import React, { useState, useContext } from 'react';
-import { StatusBar } from 'expo-status-bar';
+import React, { useState, useContext } from "react";
+import { StatusBar } from "expo-status-bar";
 // citation learned from : https://www.youtube.com/watch?v=BQ-kHwLlhrg
-import styled from 'styled-components/native';
+import styled from "styled-components/native";
 // import formik
-import { Formik } from 'formik';
-import {  Platform, Button, View, StyleSheet, TouchableOpacity, Image, Text, TextInput } from 'react-native';
+import { Formik } from "formik";
+import {
+  Platform,
+  Button,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Text,
+  TextInput,
+} from "react-native";
 
 // icon
-import { Octicons, Fontisto, Ionicons } from '@expo/vector-icons'; // Ionicons : for isPassword , Fontisto : for goole icon
+import { Octicons, Fontisto, Ionicons } from "@expo/vector-icons"; // Ionicons : for isPassword , Fontisto : for goole icon
 
 //for navigation
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation hook
@@ -34,49 +43,49 @@ return(
           borderWidth : 1,
           borderRadius : 10,
           }}>
+
         <Text style={styles.titleStyle}>Account Setting</Text>
 
         {/*change password button */}
-      <TouchableOpacity
-        onPress={handleChangePassword}
-        style={[styles.button, { backgroundColor: 'lightblue' }]}
-      >
-        <Text style={styles.buttonText}>Change Password</Text>
-      </TouchableOpacity>
-       
-
+        <TouchableOpacity
+          onPress={handleChangePassword}
+          style={[styles.button, { backgroundColor: "lightblue" }]}
+        >
+          <Text style={styles.buttonText}>Change Password</Text>
+        </TouchableOpacity>
       </View>
 
       {/* Exit Button */}
-      <TouchableOpacity style={styles.exitButton} onPress={() => navigation.goBack()}>
-         <Ionicons name="exit-outline" size={24} color="lightblue" />
-          <Text style={styles.exitButtonText}>Exit</Text>
-        </TouchableOpacity>
-
-
-   </View>
-);
-};
+      <TouchableOpacity
+        style={styles.exitButton}
+        onPress={() => navigation.goBack()}
+      >
+        <Ionicons name="exit-outline" size={24} color="lightblue" />
+        <Text style={styles.exitButtonText}>Exit</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    paddingVertical : 100,
+    paddingVertical: 100,
   },
-  titleStyle : {
-    fontSize : 20,
-    justifyContent : 'center',
-    alignItems : 'center',
-    paddingBottom : 5, 
-    fontWeight: 'bold',
-  }, 
+  titleStyle: {
+    fontSize: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingBottom: 5,
+    fontWeight: "bold",
+  },
 
   button: {
-    minWidth: '90%',
+    minWidth: "90%",
     minHeight: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginVertical: 5,
     borderRadius: 10,
   },
@@ -84,22 +93,23 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   exitButton: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 60,
     right: 20,
-    backgroundColor: 'gray',
+    backgroundColor: "gray",
     padding: 10,
     borderRadius: 5,
-    alignItems: 'center',
-    minWidth : 80,
+    alignItems: "center",
+    minWidth: 80,
   },
 
   exitButtonText: {
-    color: 'white',
+    color: "white",
     fontSize: 16,
-    fontFamily: 'Times New Roman',
+    ...Platform.select({
+      ios: {
+        fontFamily: "Times New Roman", // Set font family to Times New Roman
+      },
+    }),
   },
-
 });
-
-

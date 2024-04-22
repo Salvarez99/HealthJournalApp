@@ -1,11 +1,12 @@
-import * as React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import MainContainer from './Navigation/MainContainer';
-import Login from './Navigation/Screens/Login';
-import SignUp from './Navigation/Screens/Signup';
+import * as React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import MainContainer from "./Navigation/MainContainer";
+import Login from "./Navigation/Screens/Login";
+import SignUp from "./Navigation/Screens/Signup";
 //import Logout from './Navigation/Screens/Logout';
-import JournalTitle from './Navigation/Screens/JournalTitle';
+import JournalTitle from "./Navigation/Screens/JournalTitle";
+
 
 // for setting 
 import SettingButton from './Components/SettingButton';
@@ -14,23 +15,22 @@ import AccountSetting from './Navigation/Screens/AccountSetting';
 import StorageSetting from './Navigation/Screens/StorageSetting';
 import ChangePasswordScreen from './Navigation/Screens/ChangePasswordScreen';
 
+
 const Stack = createStackNavigator();
 
 export default function App() {
-
-
   return (
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
           name="Login"
           component={Login}
-          options={{ headerShown: false }} 
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="MainContainer"
           component={MainContainer}
-         options={{ headerShown: false }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="Signup"
@@ -47,19 +47,19 @@ export default function App() {
         <Stack.Screen
           name="SettingPage"
           component={SettingPage}
-          options={{ headerShown: false }}
+          options={{ headerShown: true,  headerTitle : 'Settings'}}
         />
 
         <Stack.Screen
           name="AccountSetting"
           component={AccountSetting}
-          options={{ headerShown: false }}
+          options={{ headerShown: true, headerTitle : 'Account Setting' }}
         />
 
         <Stack.Screen
           name="StorageSetting"
           component={StorageSetting}
-          options={{ headerShown: false }}
+          options={{ headerShown: true, headerTitle : 'Storage Settings' }}
         />
 
         <Stack.Screen
@@ -69,9 +69,7 @@ export default function App() {
         />
       
 
-
       </Stack.Navigator>
-      
     </NavigationContainer>
   );
 }
