@@ -124,9 +124,9 @@ const SearchComponent = ({ searchData, typeDataInputted, updateList }) => {
   const onItemPress = (item) => {
     // console.log("item: " + item);
     setSearchQuery(item);
-    if (typeDataInputted !== 'tests' || !showPicker) {
+    if (typeDataInputted !== "tests" || !showPicker) {
       setShowPicker(true); // Only set to show if not already showing for 'tests'
-  }
+    }
   };
 
   const renderItem = ({ item }) => (
@@ -176,7 +176,7 @@ const SearchComponent = ({ searchData, typeDataInputted, updateList }) => {
           keyExtractor={(item) => item.toString()}
         />
       </View>
-      {showPicker && typeDataInputted === 'tests' && (
+      {showPicker && typeDataInputted === "tests" && (
         <DateTimePicker
           testID="dateTimePickerTest"
           value={dateOccured}
@@ -186,9 +186,11 @@ const SearchComponent = ({ searchData, typeDataInputted, updateList }) => {
           onChange={onChange}
         />
       )}
-      {showPicker && typeDataInputted !== 'tests' && (
+      {showPicker && typeDataInputted !== "tests" && (
         <DateTimePicker
-          testID={picker === "start" ? "startDateTimePicker" : "endDateTimePicker"}
+          testID={
+            picker === "start" ? "startDateTimePicker" : "endDateTimePicker"
+          }
           value={picker === "start" ? startDate : endDate}
           mode="date"
           is24Hour={true}
