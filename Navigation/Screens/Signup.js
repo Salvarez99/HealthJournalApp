@@ -61,10 +61,56 @@ const Singup = () => {
     }
 
     lockScreenOrientation(); //call function(potrait mode.)
+    // end of declation variables. 
 
-    // when component is unmounted, unlock screen, let it as landscape mode.
-    return async () => {
-      await ScreenOrientation.unlockAsync();
+    
+    // initially lock screen as portrait mode ( vertical)
+    useEffect(() => {
+        async function lockScreenOrientation() {
+            await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
+        }
+        lockScreenOrientation(); //call function(potrait mode.)
+
+        // when component is unmounted, unlock screen, let it as landscape mode. 
+        return async () => {
+            await ScreenOrientation.unlockAsync();
+        };
+    }, []); // Empty dependency array ensures this effect runs only once when the component mounts
+
+
+    const handleSignup = () => {
+        navigation.navigate('Login');
+      };
+
+    
+    // MyTextInput component
+    const MyTextInput = ({ label, icon, isPassword,hidePassword, setHidePassword, isDate, showDatePicker, ...props }) => {
+        // input parameteres. 
+        return (
+            <View>
+                <View style={{ left: '5%', top: '40%',position: 'absolute',zIndex: 1,  }}>
+                    <Octicons name={icon} size={30} color='#000080' />
+                </View>
+                <Text style={styles.TextInputLabel}>{label}</Text>
+                
+                {/* Check. if isDate is true,use touchableopacity onpress for datepicker, else(false) display empty text box   */}
+                {isDate && (
+                    <TouchableOpacity onPress={showDatePicker}>
+                    <TextInput style={styles.textInputStyle} {...props} />
+                    </TouchableOpacity>
+                )}
+                {!isDate && <TextInput style={styles.textInputStyle} {...props} /> }
+
+                {/* To hide password  */}
+                {isPassword && (
+                    <TouchableOpacity style={styles.righticonstyle} onPress={()=> setHidePassword(!hidePassword)}>
+                        <Ionicons name={hidePassword ? 'eye-off' : 'eye'} size={30} color='#9CA3AF' />
+                    </TouchableOpacity>
+
+                )}
+                
+            </View>
+        );
     };
   }, []); // Empty dependency array ensures this effect runs only once when the component mounts
 
@@ -289,96 +335,87 @@ const { tertiary } = Colors;
 
 // Define styled components -fixed
 const styles = StyleSheet.create({
-  SignInStyleButton: {
-    // for login button style
-    marginTop: 10,
-    padding: 15,
-    backgroundColor: "#6495ED", // dark  navy
-    justifyContent: "center", // centered
-    alignItems: "center", // horionzontally
-    borderRadius: 5, // '7px',
-    marginVertical: 3, //'5px',
-    height: 50, //'60px',
-  },
+    SignInStyleButton : { // for login button style 
+        marginTop : 10,
+        padding: 15,
+        backgroundColor: '#1E90FF',
+        justifyContent:  'center', // centered
+        alignItems: 'center', // horionzontally
+        borderRadius:5,// '7px',
+        marginVertical: 3,//'5px',
+        height: 50, //'60px', 
+    } , 
 
-  MainContainer: {
-    flex: 1,
-    padding: "5%",
-    paddingTop: StatusBarHeight, // Padding top including StatusBar height
-    backgroundColor: "#FAF3E6", // sky blue
-    width: "100%",
-    height: "100%",
-  },
+    MainContainer : { 
+        flex: 1,
+        padding: '5%', 
+        paddingTop: StatusBarHeight,  // Padding top including StatusBar height
+        //backgroundColor:'#FAF3E6',// sky blue
+        width : '100%',
+        height :'100%',
+       },
+    
+       SmallerContainer : { 
+        width: '100%',
+        flex: 1,
+        alignItems: 'center', 
+        justifyContent: 'center', // Center content vertically - add 
+       },
 
-  SmallerContainer: {
-    width: "100%",
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center", // Center content vertically - add
-  },
+       Title : {
+        // Health journaling App text styling 
+        fontSize: 32, //'32px', /* if props.welcome is ture font size : 35 else 30px*/
+        textAlign: 'center',
+        fontWeight: 'bold',
+        color: '#000080',
+       }, 
+       
+       SubText : { 
+        // display account login text styling 
+        fontSize: 18, //'18px',
+        marginBottom: 5, //'20px',
+        letterSpacing: 1, //'1px',
+        fontWeight: 'bold',
+        color:  '#1F2937',
+        marginBottom:  2, //'5px' ,
+        textAlign:'center',
+        paddingBottom : 7,
+       },
 
-  Title: {
-    // Health journaling App text styling
-    fontSize: 32, //'32px', /* if props.welcome is ture font size : 35 else 30px*/
-    textAlign: "center",
-    fontWeight: "bold",
-    color: "#000080",
-    //  padding: '10px', // Padding of 10 pixels
-  },
+       TextInputLabel : {
+    
+        padding: 1,
+        borderRadius: 5,
+        fontSize: 16,
+        height: 20,
+        color: "#1F2937",
+        minHeight: 10,
+       },
 
-  SubText: {
-    // display account login text styling
-    fontSize: 18, //'18px',
-    marginBottom: 5, //'20px',
-    letterSpacing: 1, //'1px',
-    fontWeight: "bold",
-    color: "#1F2937",
-    marginBottom: 2, //'5px' ,
-    textAlign: "center",
-    paddingBottom: 7,
-  },
+       horizontalLineStyle: {
+        height: 1.5,  // make line little thicker. 
+        width: '100%',
+        backgroundColor: '#9CA3AF',
+        marginVertical: '5%',
+      },
 
-  TextInputLabel: {
-    // padding: "10px",
-    padding: 1,
-    //paddingLeft: "55px",
-    // paddingLeft: 5,
-    // paddingRight: 55,
-    borderRadius: 5,
-    fontSize: 16,
-    // height: "60px",
-    height: 20,
-    // marginVertical: "3px",
-    // marginVertical: 3,
-    // marginBottom: "10px",
-    color: "#1F2937",
-    minHeight: 10,
-  },
+      righticonstyle: {
+        right: '5%',
+        top: '40%',
+        position: 'absolute',
+        zIndex: 1,
+      },
 
-  horizontalLineStyle: {
-    height: 1.5, // make line little thicker.
-    width: "100%",
-    backgroundColor: "#9CA3AF",
-    marginVertical: "5%",
-  },
-
-  righticonstyle: {
-    right: "5%",
-    top: "40%",
-    position: "absolute",
-    zIndex: 1,
-  },
-
-  textInputStyle: {
-    backgroundColor: "#E5E7EB",
-    padding: 15,
-    paddingLeft: 55,
-    paddingRight: 55,
-    borderRadius: 5,
-    fontSize: 16,
-    height: 60,
-    marginVertical: 3,
-    marginBottom: 10,
-    color: "#1F2937",
-  },
+      textInputStyle: {
+        backgroundColor: '#E5E7EB',
+        padding: 15,
+        paddingLeft: 55,
+        paddingRight: 55,
+        borderRadius: 5,
+        fontSize: 16,
+        height: 60,
+        marginVertical: 3,
+        marginBottom: 10,
+        color: '#1F2937',
+      },
 });

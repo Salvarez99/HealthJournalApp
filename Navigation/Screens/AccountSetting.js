@@ -19,31 +19,31 @@ import {
 import { Octicons, Fontisto, Ionicons } from "@expo/vector-icons"; // Ionicons : for isPassword , Fontisto : for goole icon
 
 //for navigation
-import { useNavigation } from "@react-navigation/native"; // Import useNavigation hook
+import { useNavigation } from '@react-navigation/native'; // Import useNavigation hook
+import ChangePasswordScreen from './ChangePasswordScreen';
 
-// import on app.js on navigation stack.
-export default function AccountSetting() {
-  // init navigation hook.
-  const navigation = useNavigation();
+// import on app.js on navigation stack. 
+export default function AccountSetting(){
 
-  const handleChangePassword = () => {
-    navigation.navigate("AccountSetting");
-  };
+   // init navigation hook.
+   const navigation = useNavigation(); 
 
-  return (
-    <View style={styles.container}>
-      <View
-        style={{
-          minWidth: "98%",
-          paddingTop: 10,
-          paddingBottom: 10,
-          paddingLeft: 5,
-          paddingRight: 5,
-          borderColor: "black",
-          borderWidth: 1,
-          borderRadius: 10,
-        }}
-      >
+   const handleChangePassword = () => {
+       navigation.navigate('ChangePasswordScreen');
+     };
+
+
+return(
+  <View style={styles.container}>
+    <View style={{
+          minWidth: '98%',
+          paddingTop : 10, paddingBottom : 10,
+          paddingLeft : 5, paddingRight: 5, 
+          borderColor : 'black',
+          borderWidth : 1,
+          borderRadius : 10,
+          }}>
+
         <Text style={styles.titleStyle}>Account Setting</Text>
 
         {/*change password button */}

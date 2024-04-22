@@ -7,11 +7,14 @@ import SignUp from "./Navigation/Screens/Signup";
 //import Logout from './Navigation/Screens/Logout';
 import JournalTitle from "./Navigation/Screens/JournalTitle";
 
-// for setting
-import SettingButton from "./Components/SettingButton";
-import SettingPage from "./Navigation/Screens/SettingPage";
-import AccountSetting from "./Navigation/Screens/AccountSetting";
-import StorageSetting from "./Navigation/Screens/StorageSetting";
+
+// for setting 
+import SettingButton from './Components/SettingButton';
+import SettingPage from './Navigation/Screens/SettingPage';
+import AccountSetting from './Navigation/Screens/AccountSetting';
+import StorageSetting from './Navigation/Screens/StorageSetting';
+import ChangePasswordScreen from './Navigation/Screens/ChangePasswordScreen';
+
 
 const Stack = createStackNavigator();
 
@@ -58,6 +61,14 @@ export default function App() {
           component={StorageSetting}
           options={{ headerShown: true, headerTitle : 'Storage Settings' }}
         />
+
+        <Stack.Screen
+          name="ChangePasswordScreen"
+          component={ChangePasswordScreen}
+          options={{ headerShown: false }}
+        />
+      
+
       </Stack.Navigator>
     </NavigationContainer>
   );
