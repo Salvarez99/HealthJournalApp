@@ -11,6 +11,7 @@ import { Octicons, Fontisto, Ionicons } from '@expo/vector-icons'; // Ionicons :
 
 //for navigation
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation hook
+import ChangePasswordScreen from './ChangePasswordScreen';
 
 // import on app.js on navigation stack. 
 export default function AccountSetting(){
@@ -19,7 +20,7 @@ export default function AccountSetting(){
    const navigation = useNavigation(); 
 
    const handleChangePassword = () => {
-       navigation.navigate('AccountSetting');
+       navigation.navigate('ChangePasswordScreen');
      };
 
 

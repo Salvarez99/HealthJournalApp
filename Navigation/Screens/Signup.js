@@ -51,7 +51,6 @@ const Singup = () => {
         async function lockScreenOrientation() {
             await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
         }
-
         lockScreenOrientation(); //call function(potrait mode.)
 
         // when component is unmounted, unlock screen, let it as landscape mode. 
@@ -249,7 +248,7 @@ const styles = StyleSheet.create({
     SignInStyleButton : { // for login button style 
         marginTop : 10,
         padding: 15,
-        backgroundColor: '#6495ED',  // dark  navy 
+        backgroundColor: '#1E90FF',
         justifyContent:  'center', // centered
         alignItems: 'center', // horionzontally
         borderRadius:5,// '7px',
@@ -261,7 +260,7 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: '5%', 
         paddingTop: StatusBarHeight,  // Padding top including StatusBar height
-        backgroundColor:'#FAF3E6',// sky blue
+        //backgroundColor:'#FAF3E6',// sky blue
         width : '100%',
         height :'100%',
        },
@@ -279,7 +278,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontWeight: 'bold',
         color: '#000080',
-      //  padding: '10px', // Padding of 10 pixels
        }, 
        
        SubText : { 
@@ -295,18 +293,11 @@ const styles = StyleSheet.create({
        },
 
        TextInputLabel : {
-        // padding: "10px",
+    
         padding: 1,
-        //paddingLeft: "55px",
-       // paddingLeft: 5,
-       // paddingRight: 55,
         borderRadius: 5,
         fontSize: 16,
-        // height: "60px",
         height: 20,
-       // marginVertical: "3px",
-      // marginVertical: 3,
-       // marginBottom: "10px",
         color: "#1F2937",
         minHeight: 10,
        },

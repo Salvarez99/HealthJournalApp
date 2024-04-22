@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     LoginStyleButton : { // for login button style 
         marginTop : 10,
         padding: 15,
-        backgroundColor: '#6495ED',  // dark  navy 
+        backgroundColor: '#1E90FF',
         justifyContent:  'center', // centered
         alignItems: 'center', // horionzontally
         borderRadius: 7, //'7px',
@@ -149,11 +149,10 @@ const styles = StyleSheet.create({
     } , 
     GoogleStyleButton : { // for google login button 
         padding: 2, //'4vh',
-        backgroundColor: '#6495ED',  // dark  navy 
+        backgroundColor: '#1E90FF',
         justifyContent:  'center', // centered
         alignItems: 'center', // horionzontally
         borderRadius: 7, //'7px',
-      //  marginVertical: '5px',
         flexDirection: 'row', 
       
     } , 
@@ -168,7 +167,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: '5%', // Padding of 5% of the screen width
     paddingTop: StatusBarHeight,  // Padding top including StatusBar height
-    backgroundColor:'#FAF3E6',// sky blue
+   // backgroundColor:'#FAF3E6',// sky blue
     width : '100%',
     height :'100%',
    },
@@ -212,18 +211,11 @@ const styles = StyleSheet.create({
 
    },
    TextInputLabel : { //fixed
-       // padding: "10px",
+       
         padding: 3,
-        //paddingLeft: "55px",
-       // paddingLeft: 5,
-       // paddingRight: 55,
         borderRadius: 5,
         fontSize: 16,
-        // height: "60px",
         height: 25,
-       // marginVertical: "3px",
-      // marginVertical: 3,
-       // marginBottom: "10px",
         color: "#1F2937",
         minHeight: 20,
    },

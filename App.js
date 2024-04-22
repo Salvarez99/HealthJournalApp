@@ -12,6 +12,7 @@ import SettingButton from './Components/SettingButton';
 import SettingPage from './Navigation/Screens/SettingPage';
 import AccountSetting from './Navigation/Screens/AccountSetting';
 import StorageSetting from './Navigation/Screens/StorageSetting';
+import ChangePasswordScreen from './Navigation/Screens/ChangePasswordScreen';
 
 const Stack = createStackNavigator();
 
@@ -58,6 +59,12 @@ export default function App() {
         <Stack.Screen
           name="StorageSetting"
           component={StorageSetting}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name="ChangePasswordScreen"
+          component={ChangePasswordScreen}
           options={{ headerShown: false }}
         />
       
