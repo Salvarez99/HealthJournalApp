@@ -1,180 +1,212 @@
-/**
- * Citation to learn agenda and calendar package from expo library.
- * https://blog.logrocket.com/create-customizable-shareable-calendars-react-native/
- */
+// CalendarScreen.js
+import React, { useState , useEffect} from 'react';
+import { View, Text, ScrollView, Platform,StyleSheet} from 'react-native';
+import { Calendar } from 'react-native-calendars';
 
-import React, { useState } from "react";
-import QuickAddButton from "../../Components/QuickAddButton";
-import AddJournalEntryForm from "../../InputForms/AddJournalEntryForm";
-import AddAppointmentForm from "../../InputForms/AddAppointmentForm";
-import AddMedicationForm from "../../InputForms/AddMedicationForm";
+// dummy data to test
+const dummyData = {
+  '2024-04-20': {
+    events: [
+      {
+        name: 'Doctor Appointment',
+        date: '2024-04-20',
+        start: '10:00 AM',
+        end: '11:00 AM',
+        location: 'Ualbany Medical Center'
+      },
+      {
+        name:'Dr. John Carter - Dermatologist',
+        date: '2024-04-20',
+        start: '12:00 PM',
+        end: '1:00 PM',
+        location: 'Skin Health Clinic, 456 Skin Ave., NYC'
+      },
+      {
+        name:'Dr. Laura Casey - Pediatrician',
+        date: '2024-04-20',
+        start: '2:00 PM',
+        end: '4:00 PM',
+        location: 'Family Health Clinic, 789 Child Ln., middletown',
+        
+      },
+      {
+        name: 'Dr. Alan Grant - Ophthalmologist',
+        date: '2024-04-20',
+        start: '4:00 PM',
+        end: '4:40 PM',
+        location: 'Clear Vision Eye Center, 234 Sight St., Lookville'
+      },
+      {
+        name: 'Dr. Emily Stone - Cardiologist',
+        date: '2024-04-20',
+        start: '2:00 PM',
+        end: '4:00 PM',
+        location: 'Heart Care Institute, 101 Heartbeat Blvd., Cardiocity'
+      },
+    ]
+  },
+  '2024-04-21': {
+    events: [
+      {
+        name: 'Dr. Alan Grant - Ophthalmologist',
+        date: '2024-04-21',
+        start: '9:00 AM',
+        end: '12:00 PM',
+        location: 'Clear Vision Eye Center, 234 Sight St., Lookville'
+      },
+      {
+        name: 'Dr. Susan Hill - General Practitioner',
+        date: '2024-04-21',
+        start: '2:00 PM',
+        end: '3:00 PM',
+        location: 'Hill Medical Center, 123 Health St., Cityville'
+      }
+    ]
+  },
+  '2024-04-22': {
+    events: [
+      {
+        name: 'Dr. Laura Casey - Pediatrician',
+        date: '2024-04-22',
+        start: '11:00 AM',
+        end: '1:00 PM',
+        location: 'Family Health Clinic, 789 Child Ln., Smalltown'
+      }
+    ]
+  }
+};
 
-//TODO: Sort out unused imports
-import {
-  View,
-  Text,
-  Button,
-  TextInput,
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-} from "react-native";
-import {
-  Calendar,
-  Agenda,
-  LocaleConfig,
-  CalendarList,
-} from "react-native-calendars";
-import moment from "moment";
+// citation for calendar ondaypress : https://community.draftbit.com/c/code-snippets/low-code-calendar-component
+// overall idea (ex theme, markedDates) :  https://www.npmjs.com/package/react-native-calendars
+export default function CalendarScreen() {
+  const [pickedDate, setPickedDate] = useState(''); // store date from the calendar
+  const [appointmentInfo, setAppointmentInfo] = useState(''); // store fetched appointment data and set its status. 
+  const [hasDataInPickedDate, setHasDataInPickedDate] = useState(false);
 
-//for navigation
-import { useNavigation } from "@react-navigation/native"; // Import useNavigation hook
-import { StatusBar } from "expo-status-bar";
-import {
-  InnerContainer,
-  StyledContainer,
-  TopContainer,
-  WelcomePageContainer,
-} from "../../AppStyles/styles.js";
 
-// import { SafeAreaViewContainer } from '../../AppStyles/calenderStyles.js';
-import styled from "styled-components/native";
-import { setIn } from "formik";
-import {
-  InputContainer,
-  SafeAreaViewContainer,
-  TextInputContainer,
-  ItemContainer,
-} from "../../AppStyles/calenderStyles.js";
-
-export default function CalendarScreen({ navigation }) {
-  const [isModalVisible, setIsModalVisible] = React.useState(false);
-  const [selectedModal, setSelectedModal] = React.useState(null);
-  const [Items, setItems] = React.useState({});
-  const [inputvalue, setInputValue] = React.useState("");
-
-  const handleAddItem = () => {
-    if (inputvalue == null) {
-      return;
+  // same fetech function : fetch from backend API, store in data, else return error 
+  const fetchAppointmentInfo = async () => {
+    try {
+      const response = await fetch('take-backend-api-url'); // Update this with your actual backend API endpoint
+      const data = await response.json();
+      setAppointmentInfo(data);
+    } catch (error) {
+      console.log('Failed to fetch appointment data: ', error);
     }
+  };
 
-    const newItems = { ...Items }; // copy value
-    const selectedDate = "2024-03-25"; // default date
+  useEffect(() => {
+    fetchAppointmentInfo();
+  }, []);
 
-    //check selectedDate - also can use array from https://react.dev/learn/updating-arrays-in-state
-    if (newItems[selectedDate]) {
-      newItems[selectedDate] = [
-        ...newItems[selectedDate],
-        { name: inputvalue },
-      ]; // copy newitem and name value into newItems[selectedDate]
+
+  // check whether clicked date has data - check with actual data from backend 
+  // citation: use useEffect() with if else : https://forum.freecodecamp.org/t/react-useeffect-cleanup-function-within-if-statement/556965
+  useEffect(() => {
+    if (pickedDate &&  appointmentInfo[pickedDate]) {
+      setHasDataInPickedDate(true);
     } else {
-      newItems[selectedDate] = [{ name: inputvalue }];
+      setHasDataInPickedDate(false);
     }
-
-    setItems(newItems);
-    setInputValue("");
+  }, [pickedDate, appointmentInfo]);
+  
+  // create render function to display events informaton. 
+  const renderEvents = () => {
+    if (hasDataInPickedDate) {
+    return (
+      <ScrollView style={styles.eventList}>
+        {appointmentInfo[pickedDate].map((data, index) => (
+          <View key={index} style={styles.eventItem}>
+            <Text style={styles.eventName}>{data.eventName}</Text>
+            <Text style={styles.eventDetail}>Date: {data.date}</Text>
+            <Text style={styles.eventDetail}>Start Time: {data.startTime}</Text>
+            <Text style={styles.eventDetail}>End Time: {data.endTime}</Text>
+            <Text style={styles.eventDetail}>Location: {data.location}</Text>
+          </View>
+        ))}
+      </ScrollView>
+    );
+        } else{
+          return null; 
+        }
   };
 
-  const openModal1 = () => {
-    setSelectedModal("AddAppointmentForm");
-    setIsModalVisible(true);
-  };
-
-  const openModal2 = () => {
-    setSelectedModal("AddMedicationForm");
-    setIsModalVisible(true);
-  };
-
-  const openModal3 = () => {
-    setSelectedModal("AddJournalEntryForm");
-    setIsModalVisible(true);
-  };
-
-  const closeModal = () => {
-    setIsModalVisible(false);
-  };
-
-  // Define modal components with their names
-  const modalComponents = [
-    { name: "Add Appointment", openModal: openModal1 },
-    { name: "Add Medication", openModal: openModal2 },
-    { name: "Add Journal Entry", openModal: openModal3 },
-    // Add more modal components as needed
-  ];
-
-  const renderSelectedModal = () => {
-    switch (selectedModal) {
-      case "AddAppointmentForm":
-        return (
-          <AddAppointmentForm isVisible={isModalVisible} onClose={closeModal} />
-        );
-      case "AddMedicationForm":
-        return (
-          <AddMedicationForm isVisible={isModalVisible} onClose={closeModal} />
-        );
-      case "AddJournalEntryForm":
-        return (
-          <AddJournalEntryForm
-            isVisible={isModalVisible}
-            onClose={closeModal}
-          />
-        );
-      default:
-        return null;
-    }
-  };
-
-  // for agenda renderItem=() used https://medium.com/vectoscalar/setup-calendar-in-a-react-native-project-e0316341ec29
+ // map() :  https://legacy.reactjs.org/docs/lists-and-keys.html, https://medium.com/analytics-vidhya/understanding-the-map-function-in-react-js-1d211916fea7
   return (
-    <SafeAreaViewContainer>
-      {/* Put your content in this view */} 
-      <InputContainer>
-        <TextInputContainer />
-        <Button
-          title="Add Item "
-          style={{ color: "#D3B683",}}
-          onPress={handleAddItem}
-        />
-      </InputContainer>
+    <View style={styles.container}>
+      <Calendar style={styles.calendarContainer}
+            onDayPress={day => { setPickedDate(day.dateString),  console.log('Picked Date', day); }}
+            markedDates={{
+              [pickedDate]: {
+                selected: true,
+              }
+            }}
+            theme={{backgroundColor : 'lightgray', 
+                    calendarBackground : 'lightyellow',
+                    textSectionTitleColor : 'blue',
+                    selectedDayBackgroundColor : 'purple', 
+                    selectedDayTextColor : 'white', 
+                    todayTextColor : 'blue', 
+                    disableTouchEvent: true // disable touch event on picked date.
+                  }}  
+          />
+     <ScrollView style={styles.eventList}>
+      {pickedDate && dummyData[pickedDate] && dummyData[pickedDate].events.map((event, index) => (
+        <View key={index} style={styles.eventItem}>
+          <Text style={styles.eventName}>{event.name}</Text>
+          <Text style={styles.eventDetail}>Date: {event.date}</Text>
+          <Text style={styles.eventDetail}>Start Time: {event.start}</Text>
+          <Text style={styles.eventDetail}>End Time: {event.end}</Text>
+          <Text style={styles.eventDetail}>Location: {event.location}</Text>
+        </View>
+      ))}
+    </ScrollView>
 
-      <Agenda
-        items={Items}
-        renderItem={(item, isFirst) => (
-          <ItemContainer>
-            <Text>{item.name} </Text>
-          </ItemContainer>
-        )}
-      />
-      {/* Your content ends here */}
-
-
-      {/*Below is the quick add button */}
-      <View style={styles.quickAddButtonContainer}>
-        <QuickAddButton modalComponents={modalComponents} />
-      </View>
-
-      {renderSelectedModal()}
-    </SafeAreaViewContainer>
+      
+    </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  container: {
+  container: {  
     flex: 1,
   },
-  mainContent: {
+  calendarContainer : { // calendar styleing. 
+    borderWidth : 2, 
+    padding : 8, 
+    borderColor : 'lightgray', 
+    minHeight : 350,
+  }, 
+
+  eventList: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    paddingTop: 20,
   },
-  title: {
-    fontSize: 26,
-    fontWeight: "bold",
+  eventItem: {
+    paddingLeft : 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    marginBottom: 10,
+    paddingBottom: 10,
   },
-  quickAddButtonContainer: {
-    position: "absolute",
-    bottom: "2%",
-    left: "4%",
+  eventName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    paddingBottom : 5,
+    ...Platform.select({
+      ios: {
+        fontFamily: 'Times New Roman',
+      }
+    }),
   },
+  eventDetail: {
+    fontSize : 15,
+    ...Platform.select({
+      ios: {
+        fontFamily: 'Times New Roman', // Set font family to Times New Roman
+      }
+    }),
+  },
+
 });
+

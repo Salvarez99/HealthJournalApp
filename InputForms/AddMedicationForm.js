@@ -9,31 +9,40 @@ import {
   Platform,
   TextInput,
   KeyboardAvoidingView,
+  ScrollView
 } from "react-native";
-
-import DropDownList from "../Components/DropDownList";
+import Medication from "../Classes/Medication";
+import DropDownList from "../Components/DosageSchedDropDown";
 import WeekDaysButtons from "../Components/WeekdayButtons";
 
 const AddMedicationForm = ({ isVisible, onClose }) => {
-  const [medication, setMedication] = new useState("");
+  const [medicationName, setMedicationName] = new useState("");
   const [dosage, setDosage] = new useState("");
-  const [dosageSchedule, setDosageSchedule] = new useState(null);
-  const [frequency, setFrequency] = useState([]); 
+  const [dosageSchedule, setDosageSchedule] = new useState("Morning");
+  const [frequency, setFrequency] = useState([]);
+  let medication = null;
 
   const clearFields = () => {
-    setMedication("");
+    setMedicationName("");
     setDosage("");
-    setDosageSchedule(null);
+    setDosageSchedule("Morning");
     setFrequency([]);
     onClose();
   };
 
   //TODO: Implement save functionality
   const onSave = () => {
-    console.log("Medication: " + medication);
-    console.log("Dosage: " + dosage);
-    console.log('Dosage Schedule: ' + dosageSchedule);
-    console.log('Frequency: ' + frequency);
+    medication = new Medication(
+      medicationName,
+      dosage,
+      dosageSchedule,
+      frequency
+    );
+    // console.log("Medication: " + medicationName);
+    // console.log("Dosage: " + dosage);
+    // console.log('Dosage Schedule: ' + dosageSchedule);
+    // console.log('Frequency: ' + frequency);
+    console.log(medication.toString());
     clearFields();
     onClose();
   };
@@ -71,8 +80,8 @@ const AddMedicationForm = ({ isVisible, onClose }) => {
                   borderColor: "black",
                   paddingLeft: 5,
                 }}
-                value={medication}
-                onChangeText={setMedication}
+                value={medicationName}
+                onChangeText={setMedicationName}
               />
             </View>
 
@@ -94,13 +103,16 @@ const AddMedicationForm = ({ isVisible, onClose }) => {
             <View>
               <Text style={styles.buttonHeaderText}>Dosage Schedule: </Text>
             </View>
-            <DropDownList setDosageSchedule={setDosageSchedule}/>
+            <DropDownList setDosageSchedule={setDosageSchedule} />
 
             <View>
               <Text style={styles.buttonHeaderText}>Frequency: </Text>
             </View>
 
-            <WeekDaysButtons selectedDays={frequency} setSelectedDays={setFrequency} />
+            <WeekDaysButtons
+              selectedDays={frequency}
+              setSelectedDays={setFrequency}
+            />
 
             <View style={styles.saveButtonContainer}>
               <TouchableOpacity onPress={onSave} style={styles.saveButton}>
@@ -127,7 +139,8 @@ const styles = StyleSheet.create({
     height: "60%",
     borderRadius: 10,
     alignItems: "center",
-    bottom: "12%",
+    position : 'absolute',
+    bottom: "32%",
     ...Platform.select({
       ios: {
         shadowColor: "black",
