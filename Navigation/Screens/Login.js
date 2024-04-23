@@ -240,7 +240,6 @@ const styles = StyleSheet.create({
     paddingBottom: 7,
   },
 
-   },
    TextInputLabel : { //fixed
        
         padding: 3,

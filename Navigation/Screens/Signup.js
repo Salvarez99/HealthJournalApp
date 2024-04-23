@@ -51,85 +51,29 @@ const Singup = () => {
   };
 
   // end of declation variables.
-
-  // initially lock screen as portrait mode ( vertical)
-  useEffect(() => {
-    async function lockScreenOrientation() {
-      await ScreenOrientation.lockAsync(
-        ScreenOrientation.OrientationLock.PORTRAIT
-      );
-    }
-
-    lockScreenOrientation(); //call function(potrait mode.)
-    // end of declation variables. 
-
-    
+ 
     // initially lock screen as portrait mode ( vertical)
     useEffect(() => {
-        async function lockScreenOrientation() {
-            await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
-        }
-        lockScreenOrientation(); //call function(potrait mode.)
+      async function lockScreenOrientation() {
+          await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
+      }
 
-        // when component is unmounted, unlock screen, let it as landscape mode. 
-        return async () => {
-            await ScreenOrientation.unlockAsync();
-        };
-    }, []); // Empty dependency array ensures this effect runs only once when the component mounts
+      lockScreenOrientation(); //call function(potrait mode.)
 
-
-    const handleSignup = () => {
-        navigation.navigate('Login');
+      // when component is unmounted, unlock screen, let it as landscape mode. 
+      return async () => {
+          await ScreenOrientation.unlockAsync();
       };
-
-    
-    // MyTextInput component
-    const MyTextInput = ({ label, icon, isPassword,hidePassword, setHidePassword, isDate, showDatePicker, ...props }) => {
-        // input parameteres. 
-        return (
-            <View>
-                <View style={{ left: '5%', top: '40%',position: 'absolute',zIndex: 1,  }}>
-                    <Octicons name={icon} size={30} color='#000080' />
-                </View>
-                <Text style={styles.TextInputLabel}>{label}</Text>
-                
-                {/* Check. if isDate is true,use touchableopacity onpress for datepicker, else(false) display empty text box   */}
-                {isDate && (
-                    <TouchableOpacity onPress={showDatePicker}>
-                    <TextInput style={styles.textInputStyle} {...props} />
-                    </TouchableOpacity>
-                )}
-                {!isDate && <TextInput style={styles.textInputStyle} {...props} /> }
-
-                {/* To hide password  */}
-                {isPassword && (
-                    <TouchableOpacity style={styles.righticonstyle} onPress={()=> setHidePassword(!hidePassword)}>
-                        <Ionicons name={hidePassword ? 'eye-off' : 'eye'} size={30} color='#9CA3AF' />
-                    </TouchableOpacity>
-
-                )}
-                
-            </View>
-        );
-    };
   }, []); // Empty dependency array ensures this effect runs only once when the component mounts
+
 
   const handleSignup = () => {
     navigation.navigate("Login");
   };
 
-  // MyTextInput component
-  const MyTextInput = ({
-    label,
-    icon,
-    isPassword,
-    hidePassword,
-    setHidePassword,
-    isDate,
-    showDatePicker,
-    ...props
-  }) => {
-    // input parameteres.
+  const MyTextInput = ({ label, icon, isPassword,hidePassword, setHidePassword, isDate, showDatePicker, ...props }) => {
+    // input parameteres. 
+   
     return (
       <View>
         <View
@@ -275,17 +219,8 @@ const Singup = () => {
                 style={styles.SignInStyleButton}
                 onPress={handleSubmit}
               >
-                <Text
-                  style={{
-                    color: "#FAF3E6",
-                    fontSize: 16,
-                    textAlign: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  {" "}
-                  SignUp{" "}
-                </Text>
+                <Text style={{ color: "#FAF3E6",fontSize: 16,  textAlign: "center", justifyContent: "center", }}
+                > SignUp </Text>
               </TouchableOpacity>
               <Text style={styles.horizontalLineStyle}></Text>
 
@@ -297,16 +232,7 @@ const Singup = () => {
                   alignItems: "center",
                 }}
               >
-                <Text
-                  style={{
-                    justifyContent: "center",
-                    alignContent: "center",
-                    color: "#1F2937",
-                    fontSize: 15,
-                  }}
-                >
-                  Already have an account?{" "}
-                </Text>
+                <Text style={{ justifyContent: "center", alignContent: "center",   color: "#1F2937",  fontSize: 15,   }} > Already have an account? </Text>
                 {/*Change screen from signup.js t ologin.js when user click button */}
                 <TouchableOpacity
                   style={{ justifyContent: "center", alignItems: "center" }}
