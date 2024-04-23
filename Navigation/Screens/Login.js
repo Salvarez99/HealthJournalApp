@@ -301,5 +301,9 @@ const styles = StyleSheet.create({
     marginVertical: 3,
     marginBottom: 10,
     color: "#1F2937",
+
+    paddingVertical: 15, // added padding
+    paddingHorizontal: 20, // added padding
+    minWidth : 280, //added min width 
   },
 });
