@@ -239,16 +239,16 @@ const styles = StyleSheet.create({
     textAlign: "center",
     paddingBottom: 7,
   },
-  TextInputLabel: {
-    //fixed
 
-    padding: 3,
-    borderRadius: 5,
-    fontSize: 16,
-    height: 25,
-    color: "#1F2937",
-    minHeight: 20,
-  },
+   TextInputLabel : { //fixed
+       
+        padding: 3,
+        borderRadius: 5,
+        fontSize: 16,
+        height: 25,
+        color: "#1F2937",
+        minHeight: 20,
+   },
 
   LoginTextInButton: {
     color: "#FAF3E6",
