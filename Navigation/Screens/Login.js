@@ -170,41 +170,41 @@ const StatusBarHeight = Platform.OS === "android" ? StatusBar.currentHeight : 0;
 
 // Define styled components -fixed
 const styles = StyleSheet.create({
-    LoginStyleButton : { // for login button style 
-        marginTop : 10,
-        padding: 15,
-        backgroundColor: '#1E90FF',
-        justifyContent:  'center', // centered
-        alignItems: 'center', // horionzontally
-        borderRadius: 7, //'7px',
-       // marginVertical: '5px',
-        height: 48, //'60px', 
-        
-    } , 
-    GoogleStyleButton : { // for google login button 
-        padding: 2, //'4vh',
-        backgroundColor: '#1E90FF',
-        justifyContent:  'center', // centered
-        alignItems: 'center', // horionzontally
-        borderRadius: 7, //'7px',
-        flexDirection: 'row', 
-      
-    } , 
-    // for left , right side icon style 
-    IconStyle : { 
-        left: '5%',
-        top: '40%',
-        position: 'absolute',
-        zIndex: 1,  // stack icon above box component. citation : https://docs.expo.dev/ui-programming/z-index/
-    }, 
-   MainContainer : { 
+  LoginStyleButton: {
+    // for login button style
+    marginTop: 10,
+    padding: 15,
+    backgroundColor: "#1E90FF",
+    justifyContent: "center", // centered
+    alignItems: "center", // horionzontally
+    borderRadius: 7, //'7px',
+    // marginVertical: '5px',
+    height: 48, //'60px',
+  },
+  GoogleStyleButton: {
+    // for google login button
+    padding: 2, //'4vh',
+    backgroundColor: "#1E90FF",
+    justifyContent: "center", // centered
+    alignItems: "center", // horionzontally
+    borderRadius: 7, //'7px',
+    flexDirection: "row",
+  },
+  // for left , right side icon style
+  IconStyle: {
+    left: "5%",
+    top: "40%",
+    position: "absolute",
+    zIndex: 1, // stack icon above box component. citation : https://docs.expo.dev/ui-programming/z-index/
+  },
+  MainContainer: {
     flex: 1,
-    padding: '5%', // Padding of 5% of the screen width
-    paddingTop: StatusBarHeight,  // Padding top including StatusBar height
-   // backgroundColor:'#FAF3E6',// sky blue
-    width : '100%',
-    height :'100%',
-   },
+    padding: "5%", // Padding of 5% of the screen width
+    paddingTop: StatusBarHeight, // Padding top including StatusBar height
+    // backgroundColor:'#FAF3E6',// sky blue
+    width: "100%",
+    height: "100%",
+  },
 
   SmallerContainer: {
     width: "100%",
@@ -239,18 +239,16 @@ const styles = StyleSheet.create({
     textAlign: "center",
     paddingBottom: 7,
   },
+  TextInputLabel: {
+    //fixed
 
-   },
-   TextInputLabel : { //fixed
-       
-        padding: 3,
-        borderRadius: 5,
-        fontSize: 16,
-        height: 25,
-        color: "#1F2937",
-        minHeight: 20,
-   },
-
+    padding: 3,
+    borderRadius: 5,
+    fontSize: 16,
+    height: 25,
+    color: "#1F2937",
+    minHeight: 20,
+  },
 
   LoginTextInButton: {
     color: "#FAF3E6",
