@@ -55,14 +55,7 @@ return(
         </TouchableOpacity>
       </View>
 
-      {/* Exit Button */}
-      <TouchableOpacity
-        style={styles.exitButton}
-        onPress={() => navigation.goBack()}
-      >
-        <Ionicons name="exit-outline" size={24} color="lightblue" />
-        <Text style={styles.exitButtonText}>Exit</Text>
-      </TouchableOpacity>
+      
     </View>
   );
 }
