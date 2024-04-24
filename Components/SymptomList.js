@@ -23,12 +23,11 @@ const Item = ({ item }) => (
   </View>
 );
 
-
 const SymptomList = () => {
   const renderItem = ({ item }) => {
     return <Item item={item} />;
   };
-  
+
   return (
     <View>
       {/* <SearchOverlay></SearchOverlay> */}
