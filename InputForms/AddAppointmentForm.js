@@ -13,7 +13,7 @@ import {
 import DatePicker from "../Components/DatePicker";
 import TimePicker from "../Components/TimePicker";
 import Appointment from "../Classes/Appointment";
-import { writeAppointment } from "../LocalStorage/LocalDatabaseManager";
+import { writeAppointment, openDatabase } from "../LocalStorage/LocalDatabaseManager";
 
 const AddAppointmentForm = ({ isVisible, onClose }) => {
   const [eventName, setEventName] = new useState("");
@@ -51,18 +51,24 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
     onClose();
   };
 
-  // Function to save the appointment
   const onSave = () => {
-    // Create a new Appointment object
-    appointment = new Appointment(eventName, eventDate, eventStartTime, eventEndTime);
-    // Write the appointment to the database
-    writeAppointment(appointment).then(() => {
-      console.log("Appointment saved successfully");
-      clearFields();
-    }).catch((error) => {
-      console.error("Error saving appointment:", error);
-    });
+    // Open the database
+    openDatabase()
+      .then(() => {
+        // Create a new Appointment object
+        appointment = new Appointment(eventName, eventDate, eventStartTime, eventEndTime);
+        // Write the appointment to the database
+        return writeAppointment(appointment);
+      })
+      .then(() => {
+        console.log("Appointment saved successfully");
+        clearFields();
+      })
+      .catch((error) => {
+        console.error("Error saving appointment:", error);
+      });
   };
+  
 
   return (
     <Modal

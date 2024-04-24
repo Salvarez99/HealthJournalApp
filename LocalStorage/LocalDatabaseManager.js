@@ -12,7 +12,7 @@ let db;
  * Copies the database file from the app's bundle to the Library directory.
  * @returns {Promise<Database>} A promise that resolves with the database object if successful, or rejects with an error.
  */
-const openDatabase = () => {
+export const openDatabase = () => {
   return new Promise((resolve, reject) => {
     // Open the database with the specified configuration
     db = SQLite.openDatabase(
@@ -34,7 +34,7 @@ const openDatabase = () => {
  * Closes the connection to the SQLite database if it is open.
  * Sets the database object to null after closing.
  */
-const closeDatabase = () => {
+export const closeDatabase = () => {
   if (db) {
     // Close the database connection
     db.close();
@@ -49,7 +49,7 @@ const closeDatabase = () => {
  * @param {Object} data - The appointment data to be inserted (date, name, time_started, time_ended).
  * @returns {Promise} A promise that resolves with the insertion result if successful, or rejects with an error.
  */
-const writeAppointment = (data) => {
+export const writeAppointment = (data) => {
     return new Promise((resolve, reject) => {
         // Start a database transaction
         db.transaction((tx) => {
@@ -70,7 +70,7 @@ const writeAppointment = (data) => {
  * Reads all appointment records from the Appointments table in the SQLite database.
  * @returns {Promise} A promise that resolves with the appointment records if successful, or rejects with an error.
  */
-const readAppointments = () => {
+export const readAppointments = () => {
     return new Promise((resolve, reject) => {
         // Start a database transaction
         db.transaction((tx) => {
@@ -92,7 +92,7 @@ const readAppointments = () => {
    * @param {Object} data - The illness data to be inserted (date_started, date_ended, illness_name, time_started, time_ended).
    * @returns {Promise} A promise that resolves with the insertion result if successful, or rejects with an error.
    */
-  const writeIllness = (data) => {
+  export const writeIllness = (data) => {
     return new Promise((resolve, reject) => {
       // Start a database transaction
       db.transaction((tx) => {
@@ -112,7 +112,7 @@ const readAppointments = () => {
    * Reads all illness records from the Illnesses table in the SQLite database.
    * @returns {Promise} A promise that resolves with the illness records if successful, or rejects with an error.
    */
-  const readIllnesses = () => {
+  export  const readIllnesses = () => {
     return new Promise((resolve, reject) => {
       // Start a database transaction
       db.transaction((tx) => {
@@ -133,7 +133,7 @@ const readAppointments = () => {
  * @param {Object} data - The medicine data to be inserted (dosage, dosage_schedule, frequency, medicine_name).
  * @returns {Promise} A promise that resolves with the insertion result if successful, or rejects with an error.
  */
-const writeMedicine = (data) => {
+export const writeMedicine = (data) => {
     return new Promise((resolve, reject) => {
       // Start a database transaction
       db.transaction((tx) => {
@@ -152,7 +152,7 @@ const writeMedicine = (data) => {
    * Reads all medicine records from the Medicines table in the SQLite database.
    * @returns {Promise} A promise that resolves with the medicine records if successful, or rejects with an error.
    */
-  const readMedicines = () => {
+  export  const readMedicines = () => {
     return new Promise((resolve, reject) => {
       // Start a database transaction
       db.transaction((tx) => {
@@ -173,7 +173,7 @@ const writeMedicine = (data) => {
    * @param {Object} data - The symptom data to be inserted (date, symptom_name, time).
    * @returns {Promise} A promise that resolves with the insertion result if successful, or rejects with an error.
    */
-  const writeSymptom = (data) => {
+  export   const writeSymptom = (data) => {
     return new Promise((resolve, reject) => {
       // Start a database transaction
       db.transaction((tx) => {
@@ -193,7 +193,7 @@ const writeMedicine = (data) => {
    * Reads all symptom records from the Symptom_Checker table in the SQLite database.
    * @returns {Promise} A promise that resolves with the symptom records if successful, or rejects with an error.
    */
-  const readSymptoms = () => {
+  export  const readSymptoms = () => {
     return new Promise((resolve, reject) => {
       // Start a database transaction
       db.transaction((tx) => {
@@ -214,7 +214,7 @@ const writeMedicine = (data) => {
  * @param {Object} data - The test or labwork data to be inserted (date, test_lab_name, time).
  * @returns {Promise} A promise that resolves with the insertion result if successful, or rejects with an error.
  */
-const writeTestLabwork = (data) => {
+  export const writeTestLabwork = (data) => {
     return new Promise((resolve, reject) => {
       // Start a database transaction
       db.transaction((tx) => {
@@ -234,7 +234,7 @@ const writeTestLabwork = (data) => {
    * Reads all test and labwork records from the Test_and_Labworks table in the SQLite database.
    * @returns {Promise} A promise that resolves with the test and labwork records if successful, or rejects with an error.
    */
-  const readTestLabworks = () => {
+  export const readTestLabworks = () => {
     return new Promise((resolve, reject) => {
       // Start a database transaction
       db.transaction((tx) => {
@@ -255,7 +255,7 @@ const writeTestLabwork = (data) => {
    * @param {Object} data - The user activity data to be inserted (date, journal_entry, time).
    * @returns {Promise} A promise that resolves with the insertion result if successful, or rejects with an error.
    */
-  const writeUserActivity = (data) => {
+  export const writeUserActivity = (data) => {
     return new Promise((resolve, reject) => {
       // Start a database transaction
       db.transaction((tx) => {
@@ -275,7 +275,7 @@ const writeTestLabwork = (data) => {
    * Reads all user activity records from the User_Activity table in the SQLite database.
    * @returns {Promise} A promise that resolves with the user activity records if successful, or rejects with an error.
    */
-  const readUserActivities = () => {
+  export const readUserActivities = () => {
     return new Promise((resolve, reject) => {
       // Start a database transaction
       db.transaction((tx) => {
