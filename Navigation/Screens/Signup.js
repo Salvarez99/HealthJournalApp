@@ -237,7 +237,7 @@ const Signup = () => {
 
 
 
-export default Singup;  // use .js name 
+export default Signup;  // use .js name 
 
 // Get the height of the status bar on the device : https://stackoverflow.com/questions/64926356/paddingtop-platform-os-android-statusbar-currentheight-0
 const StatusBarHeight = Platform.OS === 'android' ? StatusBar.currentHeight : 0;
