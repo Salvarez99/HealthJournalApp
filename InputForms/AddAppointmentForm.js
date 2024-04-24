@@ -131,10 +131,11 @@ const styles = StyleSheet.create({
   modalForm: {
     backgroundColor: "white",
     width: "90%",
-    height: "60%",
+    height: 350,
     borderRadius: 10,
     alignItems: "center",
-    bottom: "12%",
+    position: "absolute",
+    top: 60,
     ...Platform.select({
       ios: {
         shadowColor: "black",
@@ -148,6 +149,7 @@ const styles = StyleSheet.create({
     }),
   },
   modalHeader: {
+    height: 50,
     backgroundColor: "#d7dbe0",
     padding: 12,
     borderTopLeftRadius: 10,
@@ -161,11 +163,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   modalFormContent: {
-    flex: 1,
-    width: "100%",
+    height: 50,
     backgroundColor: "white",
+    width: "100%",
+    height: "90%",
     padding: 18,
-    paddingTop: 10,
+    paddingTop: 5,
     borderBottomRightRadius: 10,
     borderBottomLeftRadius: 10,
   },

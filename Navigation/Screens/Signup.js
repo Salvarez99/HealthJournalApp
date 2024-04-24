@@ -21,7 +21,7 @@ import { useNavigation } from '@react-navigation/native'; // Import useNavigatio
 
 
 // handle Signup 
-const Singup = () => {
+const Signup = () => {
    // init navigation hook.
    const navigation = useNavigation(); 
 
@@ -30,10 +30,11 @@ const Singup = () => {
     const [show, setShow] = useState(false);// show for the datetimepicker
     const [date, setDate] = useState(new Date(2024, 12, 14));// set this date as default
     const auth = FIREBASE_AUTH;
+
     // variable to hold actural date of birth to be sent 
     const [dob, setDob] = useState();
 
-    const register = async ({email, password}) => {
+    const register = async({email,password}) =>{
         try{
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
@@ -46,19 +47,20 @@ const Singup = () => {
             console.log("Error creating user", error.message);
         }
     };
-
+        
     
+
 
     const onChange = (event, selectDate) => {
         const currentDate = selectDate || date; 
         setShow(false); 
         //set date as current date 
-        setDate(currentDate); 
-        setDob(currentDate); 
+        setDate(currentDate || date ); 
+        setDob(currentDate); // ?
     }
 
-    const showDatePicker = () => {
-        setShow('date');
+    const showDatePicker = () => {  
+        setShow(true);
     };
 
     // end of declation variables. 
@@ -85,35 +87,24 @@ const Singup = () => {
 
     
     // MyTextInput component
-    const MyTextInput = ({ label, icon, isPassword,hidePassword, setHidePassword, isDate, showDatePicker, ...props }) => {
-        // input parameteres. 
-        return (
-            <View>
-                <View style={{ left: '5%', top: '40%',position: 'absolute',zIndex: 1,  }}>
-                    <Octicons name={icon} size={30} color='#000080' />
-                </View>
-                <Text style={styles.TextInputLabel}>{label}</Text>
-                
-                {/* Check. if isDate is true,use touchableopacity onpress for datepicker, else(false) display empty text box   */}
-                {isDate && (
-                    <TouchableOpacity onPress={showDatePicker}>
-                    <TextInput style={styles.textInputStyle} {...props} />
-                    </TouchableOpacity>
-                )}
-                {!isDate && <TextInput style={styles.textInputStyle} {...props} /> }
-
-                {/* To hide password  */}
-                {isPassword && (
-                    <TouchableOpacity style={styles.righticonstyle} onPress={()=> setHidePassword(!hidePassword)}>
-                        <Ionicons name={hidePassword ? 'eye-off' : 'eye'} size={30} color='#9CA3AF' />
-                    </TouchableOpacity>
-
-                )}
-                
-            </View>
-        );
-    };
-
+    const MyTextInput = ({ label, icon, isPassword, hidePassword, setHidePassword, ...props }) => {
+      return (
+          <View>
+              <View style={{ left: '5%', top: '40%', position: 'absolute', zIndex: 1 }}>
+                  <Octicons name={icon} size={30} color='#000080' />
+              </View>
+              <Text style={styles.TextInputLabel}>{label}</Text>
+  
+              <TextInput style={styles.textInputStyle} {...props} />
+  
+              {isPassword && (
+                  <TouchableOpacity style={styles.righticonstyle} onPress={() => setHidePassword(!hidePassword)}>
+                      <Ionicons name={hidePassword ? 'eye-off' : 'eye'} size={30} color='#9CA3AF' />
+                  </TouchableOpacity>
+              )}
+          </View>
+      );
+  };
 
     return(
         <View style={styles.MainContainer}>
@@ -168,22 +159,19 @@ const Singup = () => {
                             />
 
 
+                        <Text style={{ fontSize :16, paddingBottom : 1}}>Date of Birth</Text>
+                        <TouchableOpacity onPress={() => setShow(true)} style={styles.textInput}>
+                            <Text style={styles.dateText}>{date.toDateString()}</Text>
+                        </TouchableOpacity>
 
-                            <MyTextInput
-                            // input text box for enterting date of birth 
-                                label="Date of Birth"
-                                icon="calendar"
-                                placeholder="YYYY - MM - DD"
-                                placeholderTextColor= '#9CA3AF'
-                                onChangeText={handleChange('dateOfBirth')}
-                                onBlur={handleBlur('dateOfBirth')}
-                                value={dob ? dob.toDateString() : ''} // if value is pass make dob to datestring else return empty string
-                                isDate={true}
-                                editable={false}
-                                showDatePicker={showDatePicker}
-
-                              
+                        {show && (
+                            <DateTimePicker
+                                value={date}
+                                mode="date"
+                                display="default"
+                                onChange={onChange}
                             />
+                        )}
 
 
                             <MyTextInput
@@ -218,6 +206,7 @@ const Singup = () => {
                                 hidePassword={hidePassword}
                                 setHidePassword = {setHidePassword}
                             />
+                            
                              <Text style={{ textAlign: 'center', fontSize: 20 }}>...</Text>
                             <TouchableOpacity style={styles.SignInStyleButton} onPress={handleSubmit}>
                                 <Text style={{color: '#FAF3E6', fontSize : 16, textAlign : 'center' , justifyContent : 'center' , }}> SignUp </Text>
@@ -353,6 +342,21 @@ const styles = StyleSheet.create({
         color: '#1F2937',
       },
        
+      formContainer: {
+        width: '90%',
+    },
+    textInput: {
+        backgroundColor: '#E5E7EB',
+        padding: 15,
+        borderRadius: 5,
+        marginBottom: 10,
+        minHeight : 10,
+
+    },
+    dateText: {
+        color: '#1F2937',
+        fontSize: 16,
+    },
 
 
 });

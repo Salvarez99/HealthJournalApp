@@ -1,5 +1,5 @@
-import React from 'react';
-import {Ionicons } from '@expo/vector-icons';
+import React from "react";
+import { Ionicons } from "@expo/vector-icons";
 
 import {
   View,
@@ -124,11 +124,13 @@ export default function JournalTitle({ route, navigation }) {
         </View>
 
         {/* Exit Button */}
-        <TouchableOpacity style={styles.exitButton} onPress={() => navigation.goBack()}>
-        <Ionicons name="exit-outline" size={24} color="lightblue" />
+        <TouchableOpacity
+          style={styles.exitButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Ionicons name="exit-outline" size={24} color="lightblue" />
           <Text style={styles.exitButtonText}>Exit</Text>
         </TouchableOpacity>
-     
       </View>
     </ScrollView>
   );
@@ -181,8 +183,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     //minHeight: 300, // set minimum height
 
-    fontFamily: 'Times New Roman',
-    marginBottom : 40,
+    fontFamily: "Times New Roman",
+    marginBottom: 40,
 
     ...Platform.select({
       ios: {
@@ -209,18 +211,16 @@ const styles = StyleSheet.create({
     }),
   },
   exitButton: {
-    position: 'absolute',
+    position: "absolute",
     bottom: -30,
     right: 20,
     backgroundColor: "gray",
     padding: 10,
     borderRadius: 5,
-    alignItems: 'center',
-    minWidth : 60,
+    alignItems: "center",
+    minWidth: 60,
     zIndex: 1,
-    marginBottom : 50,
-   
-
+    marginBottom: 50,
   },
 
   exitButtonText: {
