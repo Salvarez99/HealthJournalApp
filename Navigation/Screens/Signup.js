@@ -35,7 +35,7 @@ const Singup = () => {
         const currentDate = selectDate || date; 
         setShow(false); 
         //set date as current date 
-        setDate(currentDate || date ); 
+        setDate(currentDate); 
         setDob(currentDate); // ?
     }
 
@@ -93,7 +93,7 @@ const Singup = () => {
                 <Text style={styles.Title}>Health Journaling App</Text>
                 <Text style={styles.SubText}>Account Signup</Text>
             
-                {show && (
+                {/* {show && (
                         <DateTimePicker
                         testID="dateTimePicker"
                         value={date}
@@ -105,12 +105,13 @@ const Singup = () => {
                         backgroundColor: 'yellow',
                   }}
                  />
-               )}
+               )} */}
 
                 {/* Use Formik Library to manage form state and handle submission.  */}
                 <Formik
                     initialValues={{ fullName: '',  email: '', dateOfBirth : '', password: '', confirmPassword : '', }}
                     onSubmit={(values) => {
+                        values.dateOfBirth = dob.toLocaleDateString();
                         console.log(values);
                         navigation.navigate('Login');
                     }} // declare properties in initialValues={}
@@ -121,7 +122,7 @@ const Singup = () => {
                             // text input box for entering name 
                                 label="Full Name"
                                 icon="person"
-                                placeholder="Seoyeon Choi"  // default value
+                                placeholder=""  // default value
                                 placeholderTextColor= '#9CA3AF'
                                 onChangeText={handleChange('fullName')}
                                 onBlur={handleBlur('fullName')}
