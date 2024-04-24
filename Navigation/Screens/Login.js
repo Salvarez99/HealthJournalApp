@@ -1,8 +1,5 @@
 import React, { useState, useContext } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { FIREBASE_AUTH } from '../../firebaseConfig';
-//import {GoogleSignIn} from '@react-native-google-signin/google-signin';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider } from 'firebase/auth';
 // citation learned from : https://www.youtube.com/watch?v=BQ-kHwLlhrg
 import styled from 'styled-components/native';
 // import formik
@@ -14,38 +11,35 @@ import { Octicons, Fontisto, Ionicons } from '@expo/vector-icons'; // Ionicons :
 
 //for navigation
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation hook
+import {FIREBASE_AUTH} from '../../firebaseConfig';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 
 
+// handle login 
+// const Login = () => {
 export default function Login(){
     // init navigation hook.
     const navigation = useNavigation(); 
+
     const auth = FIREBASE_AUTH;
+
     // use Usestate hook for pasword 
     const [hidePassword, setHidePassword] = useState(true); //default is true
-    //const[email, setEmail] = useState('');
-    //const[password, setPassword] = useState('');
 
-
-    const handleLogin = async({email, password}) => {
-       
-        
+    const handleLogin = async({email,password}) => {
         try{
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
             navigation.navigate('MainContainer');
-            console.log("Logging in successful! ", user);
+            console.log("Logging in successful!" , user);
         }
         catch(error){
             console.log(email);
             console.log(password);
-            console.log("Error Logging in", error.message);
+            console.log("Error logging in", errror.message);
         }
+        
       };
-
-      const handleGoogleLogin = async({}) => {
-
-
-      }
 
     // MyTextInput component : https://www.youtube.com/watch?v=BQ-kHwLlhrg
     const MyTextInput = ({ label, icon,isPassword,hidePassword, setHidePassword, ...props }) => {
@@ -92,7 +86,6 @@ export default function Login(){
                                 onBlur={handleBlur('email')}
                                 value={values.email}
                                 keyboardType="email-address"
-                                
                             />
                             <MyTextInput
                                 required
@@ -110,11 +103,12 @@ export default function Login(){
                                 hidePassword={hidePassword}
                                 setHidePassword = {setHidePassword}
                             />
-                            <MsgBox>...</MsgBox>
-                            <StyledButton onPress={handleLogin}>
-                                <ButtonText> Login </ButtonText>
-                            </StyledButton>
-                            <Line />
+                            <Text style={{ textAlign: 'center', fontSize: 20 }}>...</Text>
+
+                            <TouchableOpacity style={styles.LoginStyleButton} onPress={handleSubmit}>
+                                <Text style={styles.LoginTextInButton}> Login </Text>
+                            </TouchableOpacity>
+                            <Text style={styles.horizontalLineStyle}></Text>
 
                             <TouchableOpacity style={styles.GoogleStyleButton} google={true} onPress={handleSubmit}>
                                 <Fontisto name="google" color='#FAF3E6' size={20}/>
@@ -304,7 +298,6 @@ const styles = StyleSheet.create({
    
 
 }); 
-
 
 
 
