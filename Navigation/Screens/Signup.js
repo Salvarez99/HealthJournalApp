@@ -34,8 +34,9 @@ const Signup = () => {
     // variable to hold actural date of birth to be sent 
     const [dob, setDob] = useState();
 
-    const register = async({email,password}) =>{
+    const register = async({email,password,dateOfBirth}) =>{
         try{
+            dateOfBirth = dob.toLocaleDateString();
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
             navigation.navigate('Login');
@@ -55,7 +56,7 @@ const Signup = () => {
         const currentDate = selectDate || date; 
         setShow(false); 
         //set date as current date 
-        setDate(currentDate || date ); 
+        setDate(currentDate); 
         setDob(currentDate); // ?
     }
 
@@ -113,7 +114,7 @@ const Signup = () => {
                 <Text style={styles.Title}>Health Journaling App</Text>
                 <Text style={styles.SubText}>Account Signup</Text>
             
-                {show && (
+                {/* {show && (
                         <DateTimePicker
                         testID="dateTimePicker"
                         value={date}
@@ -125,7 +126,7 @@ const Signup = () => {
                         backgroundColor: 'yellow',
                   }}
                  />
-               )}
+               )} */}
 
                 {/* Use Formik Library to manage form state and handle submission.  */}
                 <Formik
@@ -138,7 +139,7 @@ const Signup = () => {
                             // text input box for entering name 
                                 label="Full Name"
                                 icon="person"
-                                placeholder="Seoyeon Choi"  // default value
+                                placeholder=""  // default value
                                 placeholderTextColor= '#9CA3AF'
                                 onChangeText={handleChange('fullName')}
                                 onBlur={handleBlur('fullName')}
