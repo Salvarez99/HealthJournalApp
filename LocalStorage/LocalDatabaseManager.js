@@ -19,7 +19,7 @@ export const openDatabase = () => {
       {
         name: databaseName,
         createFromLocation: '~local.db',
-        location: 'Library',
+        location: 'rC:\Users\Dermi\OneDrive\Desktop\Spring24-classes\localDB',
       },
       // Success callback
       () => resolve(db),

@@ -1,49 +1,52 @@
 import { openDatabase } from 'react-native-sqlite-storage';
-import { readAppointments, readIllnesses, readMedicines, readSymptomChecker, readTestAndLabworks, readUserActivity } from './LocalDatabaseManager';
-
-const db = openDatabase({ name: 'local.db' });
+import { readAppointments, readIllnesses, readMedicines, readSymptoms, readTestLabworks, readUserActivities } from './LocalDatabaseManager';
 
 const fetchLocalData = () => {
   return new Promise((resolve, reject) => {
-    db.transaction((txn) => {
-      txn.executeSql(
-        'SELECT * FROM Appointments',
-        [],
-        (tx, results) => {
-          const appointments = readAppointments(results);
+    openDatabase()
+      .then(db => {
+        db.transaction((txn) => {
           txn.executeSql(
-            'SELECT * FROM Illnesses',
+            'SELECT * FROM Appointments',
             [],
-            (tx, results) => {
-              const illnesses = readIllnesses(results);
+            (_, results) => {
+              const appointments = readAppointments(results.rows);
               txn.executeSql(
-                'SELECT * FROM Medicines',
+                'SELECT * FROM Illnesses',
                 [],
-                (tx, results) => {
-                  const medicines = readMedicines(results);
+                (_, results) => {
+                  const illnesses = readIllnesses(results.rows);
                   txn.executeSql(
-                    'SELECT * FROM SymptomChecker',
+                    'SELECT * FROM Medicines',
                     [],
-                    (tx, results) => {
-                      const symptomChecker = readSymptomChecker(results);
+                    (_, results) => {
+                      const medicines = readMedicines(results.rows);
                       txn.executeSql(
-                        'SELECT * FROM TestAndLabworks',
+                        'SELECT * FROM Symptom_Checker',
                         [],
-                        (tx, results) => {
-                          const testAndLabworks = readTestAndLabworks(results);
+                        (_, results) => {
+                          const symptomChecker = readSymptoms(results.rows);
                           txn.executeSql(
-                            'SELECT * FROM UserActivity',
+                            'SELECT * FROM Test_and_Labworks',
                             [],
-                            (tx, results) => {
-                              const userActivity = readUserActivity(results);
-                              resolve({
-                                appointments,
-                                illnesses,
-                                medicines,
-                                symptomChecker,
-                                testAndLabworks,
-                                userActivity,
-                              });
+                            (_, results) => {
+                              const testAndLabworks = readTestLabworks(results.rows);
+                              txn.executeSql(
+                                'SELECT * FROM User_Activity',
+                                [],
+                                (_, results) => {
+                                  const userActivity = readUserActivities(results.rows);
+                                  resolve({
+                                    appointments,
+                                    illnesses,
+                                    medicines,
+                                    symptomChecker,
+                                    testAndLabworks,
+                                    userActivity,
+                                  });
+                                },
+                                (_, error) => reject(error)
+                              );
                             },
                             (_, error) => reject(error)
                           );
@@ -59,10 +62,9 @@ const fetchLocalData = () => {
             },
             (_, error) => reject(error)
           );
-        },
-        (_, error) => reject(error)
-      );
-    });
+        });
+      })
+      .catch(error => reject(error));
   });
 };
 

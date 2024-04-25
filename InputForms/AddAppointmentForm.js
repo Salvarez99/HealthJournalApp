@@ -52,6 +52,8 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
   };
 
   const onSave = () => {
+    let appointment = null; 
+  
     // Open the database
     openDatabase()
       .then(() => {
@@ -62,12 +64,15 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
       })
       .then(() => {
         console.log("Appointment saved successfully");
+        console.log("Saved Appointment:", appointment); // Add a console.log statement to verify the data
+  
         clearFields();
       })
       .catch((error) => {
         console.error("Error saving appointment:", error);
       });
   };
+  
   
 
   return (
