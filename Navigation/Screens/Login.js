@@ -36,7 +36,7 @@ export default function Login(){
         catch(error){
             console.log(email);
             console.log(password);
-            console.log("Error logging in", errror.message);
+            console.log("Error logging in", error.message);
         }
         
       };
