@@ -11,37 +11,58 @@ import {
 
 import SearchComponent from "../Components/SearchComponent";
 import JournalEntry from "../Classes/JournalEntry";
-import { writeSymptom, writeIllness, writeTest } from "../LocalStorage/LocalDatabaseManager"; // Import writeSymptom, writeIllness, writeTest functions
+import { insertIllness, insertSymptomChecker, insertTestLabwork } from "../LocalStorage/LocalDatabaseManager";
 import { fetchLocalData } from "../LocalStorage/fetchLocal";
+
 const AddJournalEntryForm = ({ isVisible, onClose }) => {
   
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await fetchLocalData();
+      setSymptoms(data.symptomCheckerEntries.map(entry => entry.symptom_name));
+      setIllnesses(data.illnesses.map(illness => illness.illness_name));
+      setTests(data.testLabworkEntries.map(entry => entry.test_lab_name));
+    };
+    fetchData();
+  }, []);
+
   const [symptoms, setSymptoms] = useState([]);
   const [illnesses, setIllnesses] = useState([]);
   const [tests, setTests] = useState([]);
   let journalEntry = null;
 
-  useEffect(() => {
-    // Fetch local data
-    fetchLocalData().then((data) => {
-      setSymptoms(data.symptoms);
-      setIllnesses(data.illnesses);
-      setTests(data.tests);
-    });
-  }, []); // Empty dependency array ensures this effect runs only once
+  const onSave = async () => {
+    // Insert selected symptoms, illnesses, and tests into the database
+    try {
+      for (const symptom of symptoms) {
+        await insertSymptomChecker(symptom, new Date().toISOString(), new Date().toISOString());
+      }
+      for (const illness of illnesses) {
+        await insertIllness(illness, new Date().toISOString(), new Date().toISOString());
+      }
+      for (const test of tests) {
+        await insertTestLabwork(test, new Date().toISOString());
+      }
+    } catch (error) {
+      console.error("Error inserting data:", error);
+      return;
+    }
+
+    printLists();
+    journalEntry = new JournalEntry(symptoms, illnesses, tests);
+    onClose();
+  };
 
   const printLists = () => {
     console.log("Symptoms: \n");
     for (const symptom of symptoms) {
-      console.log(
-        symptom.name + ":" + symptom.startDate + " -> " + symptom.endDate + "\n"
-      );
+      console.log(symptom.name + ":" + symptom.startDate + " -> " + symptom.endDate + "\n");
     }
     console.log("\n");
     console.log("Illnesses: \n");
     for (const illness of illnesses) {
-      console.log(
-        illness.name + ":" + illness.startDate + " -> " + illness.endDate + "\n"
-      );
+      console.log(illness.name + ":" + illness.startDate + " -> " + illness.endDate + "\n");
     }
     console.log("\n");
 
@@ -52,33 +73,6 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
     console.log("\n");
   };
 
-  // Implement save functionality
-  const onSave = () => {
-    // Save symptoms
-    for (const symptom of symptoms) {
-      writeSymptom(symptom.name, symptom.startDate, symptom.endDate)
-        .then(() => console.log("Symptom saved successfully"))
-        .catch((error) => console.error("Error saving symptom:", error));
-    }
-
-    // Save illnesses
-    for (const illness of illnesses) {
-      writeIllness(illness.name, illness.startDate, illness.endDate)
-        .then(() => console.log("Illness saved successfully"))
-        .catch((error) => console.error("Error saving illness:", error));
-    }
-
-    // Save tests
-    for (const test of tests) {
-      writeTest(test.name, test.dateOccured)
-        .then(() => console.log("Test saved successfully"))
-        .catch((error) => console.error("Error saving test:", error));
-    }
-
-    printLists();
-    journalEntry = new JournalEntry(symptoms, illnesses, tests);
-    onClose();
-  };
   return (
     <Modal
       visible={isVisible}
@@ -101,7 +95,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
             </View>
             <View style={{ height: 100 }}>
               <SearchComponent
-                searchData={dummySymptoms}
+                searchData={symptoms}
                 typeDataInputted={"symptoms"}
                 updateList={setSymptoms}
               />
@@ -111,7 +105,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
             </View>
             <View style={{ height: 100 }}>
               <SearchComponent
-                searchData={dummyIllnesses}
+                searchData={illnesses}
                 typeDataInputted={"illnesses"}
                 updateList={setIllnesses}
               />
@@ -121,7 +115,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
             </View>
             <View style={{ height: 100 }}>
               <SearchComponent
-                searchData={dummyTest}
+                searchData={tests}
                 typeDataInputted={"tests"}
                 updateList={setTests}
               />

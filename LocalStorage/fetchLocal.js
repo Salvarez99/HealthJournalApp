@@ -1,71 +1,27 @@
-import { openDatabase } from 'react-native-sqlite-storage';
-import { readAppointments, readIllnesses, readMedicines, readSymptoms, readTestLabworks, readUserActivities } from './LocalDatabaseManager';
+import { getAppointments, getIllnesses, getMedicines, getSymptomCheckerEntries, getTestLabworkEntries, getJournalEntries} from './LocalDatabase';
 
-const fetchLocalData = () => {
-  return new Promise((resolve, reject) => {
-    openDatabase()
-      .then(db => {
-        db.transaction((txn) => {
-          txn.executeSql(
-            'SELECT * FROM Appointments',
-            [],
-            (_, results) => {
-              const appointments = readAppointments(results.rows);
-              txn.executeSql(
-                'SELECT * FROM Illnesses',
-                [],
-                (_, results) => {
-                  const illnesses = readIllnesses(results.rows);
-                  txn.executeSql(
-                    'SELECT * FROM Medicines',
-                    [],
-                    (_, results) => {
-                      const medicines = readMedicines(results.rows);
-                      txn.executeSql(
-                        'SELECT * FROM Symptom_Checker',
-                        [],
-                        (_, results) => {
-                          const symptomChecker = readSymptoms(results.rows);
-                          txn.executeSql(
-                            'SELECT * FROM Test_and_Labworks',
-                            [],
-                            (_, results) => {
-                              const testAndLabworks = readTestLabworks(results.rows);
-                              txn.executeSql(
-                                'SELECT * FROM User_Activity',
-                                [],
-                                (_, results) => {
-                                  const userActivity = readUserActivities(results.rows);
-                                  resolve({
-                                    appointments,
-                                    illnesses,
-                                    medicines,
-                                    symptomChecker,
-                                    testAndLabworks,
-                                    userActivity,
-                                  });
-                                },
-                                (_, error) => reject(error)
-                              );
-                            },
-                            (_, error) => reject(error)
-                          );
-                        },
-                        (_, error) => reject(error)
-                      );
-                    },
-                    (_, error) => reject(error)
-                  );
-                },
-                (_, error) => reject(error)
-              );
-            },
-            (_, error) => reject(error)
-          );
-        });
-      })
-      .catch(error => reject(error));
-  });
+const fetchLocalData = async () => {
+    try {
+        const appointments = await getAppointments();
+        const illnesses = await getIllnesses();
+        const medicines = await getMedicines();
+        const symptomCheckerEntries = await getSymptomCheckerEntries();
+        const testLabworkEntries = await getTestLabworkEntries();
+        const Journal_Entry = await getJournalEntries();
+
+
+        return {
+            appointments,
+            illnesses,
+            medicines,
+            symptomCheckerEntries,
+            testLabworkEntries,
+            Journal_Entry
+        };
+    } catch (error) {
+        console.error('Error fetching local data:', error);
+        return null;
+    }
 };
 
-export default fetchLocalData;
+export { fetchLocalData };

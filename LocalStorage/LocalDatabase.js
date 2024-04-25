@@ -52,44 +52,45 @@ const createTables = async () => {
         await executeStatement(`
             CREATE TABLE IF NOT EXISTS Illnesses (
                 id INTEGER PRIMARY KEY,
+                illness_name TEXT,
                 date_started TEXT,
                 date_ended TEXT,
-                illness_name TEXT,
-                time_started TEXT,
-                time_ended TEXT
             );
         `);
         await executeStatement(`
             CREATE TABLE IF NOT EXISTS Medicines (
                 id INTEGER PRIMARY KEY,
+                medicine_name TEXT
                 dosage TEXT,
                 dosage_schedule TEXT,
                 frequency TEXT,
-                medicine_name TEXT
+                
             );
         `);
         await executeStatement(`
             CREATE TABLE IF NOT EXISTS Symptom_Checker (
                 id INTEGER PRIMARY KEY,
-                date TEXT,
                 symptom_name TEXT,
-                time TEXT
+                start_date TEXT,
+                end_date TEXT
             );
         `);
         await executeStatement(`
             CREATE TABLE IF NOT EXISTS Test_and_Labworks (
                 id INTEGER PRIMARY KEY,
-                date TEXT,
                 test_lab_name TEXT,
-                time TEXT
+                date TEXT
             );
         `);
         await executeStatement(`
-            CREATE TABLE IF NOT EXISTS User_Activity (
+            CREATE TABLE IF NOT EXISTS Journal_Entry (
                 id INTEGER PRIMARY KEY,
-                date TEXT,
-                journal_entry TEXT,
-                time TEXT
+                symptom_checker_id INTEGER,
+                illness_id INTEGER,
+                test_labworks_id INTEGER,
+                FOREIGN KEY(symptom_checker_id) REFERENCES Symptom_Checker(id),
+                FOREIGN KEY(illness_id) REFERENCES Illnesses(id),
+                FOREIGN KEY(test_labworks_id) REFERENCES Test_and_Labworks(id)
             );
         `);
         console.log('Tables created successfully');
@@ -97,5 +98,7 @@ const createTables = async () => {
         console.error('Error creating tables:', error);
     }
 };
+
+
 
 export { openData, closeData, createTables, executeStatement };

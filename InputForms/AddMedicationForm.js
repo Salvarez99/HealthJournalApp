@@ -14,7 +14,7 @@ import {
 import Medication from "../Classes/Medication";
 import DropDownList from "../Components/DosageSchedDropDown";
 import WeekDaysButtons from "../Components/WeekdayButtons";
-import { writeMedicine } from "../LocalStorage/LocalDatabaseManager";
+import { insertMedicine } from "../LocalStorage/LocalDatabaseManager";
 
 const AddMedicationForm = ({ isVisible, onClose }) => {
   const [medicationName, setMedicationName] = new useState("");
@@ -39,17 +39,19 @@ const AddMedicationForm = ({ isVisible, onClose }) => {
       dosageSchedule,
       frequency
     );
-    writeMedicine({   // Use writeMedicine function to save medication data
-      dosage: medication.dosage,
-      dosage_schedule: medication.dosageSchedule,  // Updated field name
-      frequency: medication.frequency,
-      medicine_name: medication.name
-    }).then(() => {
-      console.log("Medication saved successfully");
-      clearFields();
-    }).catch((error) => {
-      console.error("Error saving medication:", error);
-    });
+    insertMedicine(
+      medication.name,
+      medication.dosage,
+      medication.dosageSchedule,
+      medication.frequency
+    )
+      .then(() => {
+        //console.log("Medication saved successfully");
+        clearFields();
+      })
+      .catch((error) => {
+        console.error("Error saving medication:", error);
+      });
   };
 
   return (
