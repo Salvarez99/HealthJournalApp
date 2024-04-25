@@ -24,13 +24,8 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
   let appointment = null;
 
   const handleDateChange = (selectedDate) => {
-    const formattedDate = selectedDate.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    });
-    setEventDate(formattedDate);
-    // console.log(formattedDate);
+    setEventDate(selectedDate);
+    // console.log(selectedDate);
   };
 
   const handleStartTimeChange = (startTime) => {
@@ -52,14 +47,15 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
     onClose();
   };
 
-  const onSave = async () => {
-    appointment = new Appointment(eventName, eventDate, eventStartTime, eventEndTime);
-    try {
-      await insertAppointment(appointment);
-      console.log('Appointment saved successfully');
-    } catch (error) {
-      console.error('Error saving appointment:', error);
-    }
+  //TODO: Implement save functionality
+  const onSave = () => {
+    appointment = new Appointment(
+      eventName,
+      eventDate,
+      eventStartTime,
+      eventEndTime
+    );
+    console.log(appointment.toString());
     clearFields();
   };
   return (
