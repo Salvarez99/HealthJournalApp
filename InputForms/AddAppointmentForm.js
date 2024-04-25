@@ -1,5 +1,5 @@
 import Ionicons from "react-native-vector-icons/Ionicons";
-import React, { useState } from "react";
+import React, { useState} from "react";
 import {
   View,
   Text,
@@ -13,7 +13,8 @@ import {
 import DatePicker from "../Components/DatePicker";
 import TimePicker from "../Components/TimePicker";
 import Appointment from "../Classes/Appointment";
-import { writeAppointment, openDatabase } from "../LocalStorage/LocalDatabaseManager";
+import { insertAppointment } from "../LocalStorage/LocalDatabaseManager";
+
 
 const AddAppointmentForm = ({ isVisible, onClose }) => {
   const [eventName, setEventName] = new useState("");
@@ -51,30 +52,16 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
     onClose();
   };
 
-  const onSave = () => {
-    let appointment = null; 
-  
-    // Open the database
-    openDatabase()
-      .then(() => {
-        // Create a new Appointment object
-        appointment = new Appointment(eventName, eventDate, eventStartTime, eventEndTime);
-        // Write the appointment to the database
-        return writeAppointment(appointment);
-      })
-      .then(() => {
-        console.log("Appointment saved successfully");
-        console.log("Saved Appointment:", appointment); // Add a console.log statement to verify the data
-  
-        clearFields();
-      })
-      .catch((error) => {
-        console.error("Error saving appointment:", error);
-      });
+  const onSave = async () => {
+    appointment = new Appointment(eventName, eventDate, eventStartTime, eventEndTime);
+    try {
+      await insertAppointment(appointment);
+      console.log('Appointment saved successfully');
+    } catch (error) {
+      console.error('Error saving appointment:', error);
+    }
+    clearFields();
   };
-  
-  
-
   return (
     <Modal
       visible={isVisible}

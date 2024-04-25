@@ -12,6 +12,8 @@ import AddJournalEntryForm from "../../InputForms/AddJournalEntryForm";
 import AddAppointmentForm from "../../InputForms/AddAppointmentForm";
 import AddMedicationForm from "../../InputForms/AddMedicationForm";
 import JournalTitle from "./JournalTitle";
+import { AppState } from 'react-native';
+import { openData, closeData } from "../../LocalStorage/LocalDatabase";
 
 // for testing
 import PlaceholderForm from "../../InputForms/PlaceholderForm";
@@ -19,6 +21,32 @@ import PlaceholderForm from "../../InputForms/PlaceholderForm";
 export default function JournalScreen({ navigation }) {
   const [isModalVisible, setIsModalVisible] = React.useState(false); // vsible or not
   const [selectedModal, setSelectedModal] = React.useState(null); // track which model should displayed.
+
+  let appStateSubscription = null;
+  const [appState, setAppState] = useState(AppState.currentState);
+
+useEffect(() => {
+    const handleAppStateChange = (nextAppState) => {
+        if (appState.match(/inactive|background/) && nextAppState === 'active') {
+            // App has come to the foreground
+            openData(); // Reopen the database
+        } else if (appState === 'active' && nextAppState.match(/inactive|background/)) {
+            // App has gone to the background
+            closeData(); // Close the database
+        }
+        setAppState(nextAppState);
+    };
+
+    appStateSubscription = AppState.addEventListener('change', handleAppStateChange);
+
+    return () => {
+        if (appStateSubscription) {
+            appStateSubscription.remove();
+        }
+        // Close the database when the app is being destroyed
+        closeData();
+    };
+}, [appState]);
 
   //const [appointmentData, setAppointmentData] = React.useState(null); // for data fetched from backend url take input from addappointmentFrom.js
   const [appointments, setAppointments] = useState([]); // hook. for dummy datas
