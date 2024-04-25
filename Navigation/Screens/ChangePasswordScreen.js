@@ -1,5 +1,9 @@
 import React, { useState, useContext } from "react";
 import { StatusBar } from "expo-status-bar";
+import {FIREBASE_AUTH} from '../../firebaseConfig';
+import {FIREBASE_APP} from '../../firebaseConfig';
+
+import { reauthenticateWithCredential, updatePassword, EmailAuthProvider, EmailAuthCredential } from 'firebase/auth';
 // citation learned from : https://www.youtube.com/watch?v=BQ-kHwLlhrg
 import styled from "styled-components/native";
 // import formik
@@ -24,6 +28,9 @@ import { useNavigation } from "@react-navigation/native"; // Import useNavigatio
 import SettingPage from "./SettingPage";
 // import on app.js on navigation stack.
 
+const auth = FIREBASE_AUTH;
+const app = FIREBASE_APP;
+
 // overall design idea : https://www.rnexamples.com/react-native-examples/bN/Change-password-form
 export default function AccountSetting() {
   // init navigation hook.
@@ -34,14 +41,25 @@ export default function AccountSetting() {
   const [newPassword, setNewPassword] = useState(null);
   const [retypePassword, setRetypePassword] = useState(null);
 
-  // check wheter newpassword matches wit hretypePassword
-  const resetPassword = (value) => {
-    if (value.newPassword !== value.retypePassword) {
+ 
+
+  // check wheter newpassword matches with retypePassword
+  const resetPassword = async({currentPassword, newPassword,retypePassword}) => {
+    if (newPassword !== retypePassword) {
       Alert.alert("Error", "Your password doesn't match!");
     } else {
-      console.log(value); // Ideally, replace this with a call to your backend
-      Alert.alert("Success", "Password Changed!");
-      // navigation.navigate('SettingPage');
+      try{
+        var cred = EmailAuthProvider.credential(auth.currentUser.email, currentPassword);
+        await reauthenticateWithCredential(auth.currentUser, cred);
+        updatePassword(auth.currentUser, newPassword);
+        //console.log(values);
+        Alert.alert("Success", "Password Changed!");
+        navigation.navigate('SettingPage');
+      }
+      catch(error){
+        Alert.alert("Error",error.message);
+        console.log("Error changing password,",error.message);
+      }
     }
   };
 
@@ -118,7 +136,7 @@ export default function AccountSetting() {
 
               <TouchableOpacity
                 style={styles.submitButton}
-                onPress={resetPassword}
+                onPress={handleSubmit}
               >
                 <Text style={styles.TextInButton}> Change password </Text>
               </TouchableOpacity>
