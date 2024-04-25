@@ -5,16 +5,20 @@ import styled from 'styled-components/native';
 // import formik
 import { Formik } from 'formik';
 import {  Platform, Button, View, StyleSheet, TouchableOpacity, Image, Text, TextInput } from 'react-native';
-
+//import { GoogleSignIn, GoogleSigninButton, statusCodes} from '@react-native-google-signin/google-signin';
 // icon
 import { Octicons, Fontisto, Ionicons } from '@expo/vector-icons'; // Ionicons : for isPassword , Fontisto : for goole icon
 
 //for navigation
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation hook
-import {FIREBASE_AUTH} from '../../firebaseConfig';
+import {FIREBASE_AUTH, GOOGLE_WEB_CLIENT_ID} from '../../firebaseConfig';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 
-
+/*
+GoogleSignIn.configure({
+    webClientId: '410912398218-m6m62b5tm65eqt9doql9h0h8umrddu09.apps.googleusercontent.com',
+});
+*/
 // handle login 
 // const Login = () => {
 export default function Login(){
@@ -40,7 +44,33 @@ export default function Login(){
         }
         
       };
+/*
+      const handleGoogleSignIn = async() => {
+        try{
+            await GoogleSignIn.hasPlayServices();
+            const userInfo = await GoogleSignIn.signIn();
 
+            const googleCredential = auth.GoogleAuthProvider.credential(userInfo.idToken);
+            const userCredential = await signInWithCredential(auth, googleCredential);
+
+            navigation.navigate('MainContainer');
+        }
+        catch(error){
+            if(error.code === statusCodes.SIGN_IN_CANCELLED){
+                console.log("Google sign-in cancelled");
+            }
+            else if(error.code === statusCodes.IN_PROGRESS){
+                console.log("Google sign-in in progress already");
+            }
+            else if(error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE){
+                console.log("Google play services not available");
+            }
+            else{
+                console.error("Google sign-in error", error.message);
+            }
+        }
+      }
+*/
     // MyTextInput component : https://www.youtube.com/watch?v=BQ-kHwLlhrg
     const MyTextInput = ({ label, icon,isPassword,hidePassword, setHidePassword, ...props }) => {
         return (
@@ -110,7 +140,7 @@ export default function Login(){
                             </TouchableOpacity>
                             <Text style={styles.horizontalLineStyle}></Text>
 
-                            <TouchableOpacity style={styles.GoogleStyleButton} google={true} onPress={handleSubmit}>
+                            <TouchableOpacity style={styles.GoogleStyleButton} google={true} onPress={() => navigation.navigate('MainContainer')}>
                                 <Fontisto name="google" color='#FAF3E6' size={20}/>
                                 <Text style={styles.GoogleTextInButton}>
                                     Sign in with Google
