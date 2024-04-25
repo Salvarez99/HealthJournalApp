@@ -17,24 +17,34 @@ const openData = async () => {
     }
 };
 
-const closeData = () => {
+const closeData = async () =>{
     if (database) {
         database.close();
         //console.log('Database closed');
     }
 };
 
-const executeStatement = (sql, params = []) => {
-    return new Promise((resolve, reject) => {
-        database.transaction((tx) => {
-            tx.executeSql(
-                sql,
-                params,
-                (_, result) => resolve(result),
-                (_, error) => reject(error)
-            );
+const executeStatement = async (sql, params = []) => {
+    if (!database) {
+        throw new Error('Database not initialized');
+    }
+
+    try {
+        const result = await new Promise((resolve, reject) => {
+            database.transaction((tx) => {
+                tx.executeSql(
+                    sql,
+                    params,
+                    (_, result) => resolve(result),
+                    (_, error) => reject(error)
+                );
+            });
         });
-    });
+        return result;
+    } catch (error) {
+        console.error('Error executing statement:', error);
+        //throw error;
+    }
 };
 
 // Function to create tables

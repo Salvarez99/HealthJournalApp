@@ -4,6 +4,7 @@ import QuickAddButton from "../../Components/QuickAddButton";
 import AddJournalEntryForm from "../../InputForms/AddJournalEntryForm";
 import AddAppointmentForm from "../../InputForms/AddAppointmentForm";
 import AddMedicationForm from "../../InputForms/AddMedicationForm";
+import { fetchLocalData } from "../../LocalStorage/fetchLocal";
 // define backend API >> fetch data from backend ex fetch >> parse and set data to display
 
 export default function MedicationScreen({ navigation }) {
@@ -12,78 +13,15 @@ export default function MedicationScreen({ navigation }) {
   //  for handleing medicatoin input information that retrived from addmedicationform.js >> backend >> medicationscree.js
   const [medications, setMedications] = useState([]);
 
-  //Dummy datat for testing
+  // Fetch local data
   useEffect(() => {
-    // const value
-    const dummyMedications = [
-      {
-        id: 1,
-        name: "Medicine 1",
-        dosage: "10mg",
-        dosageSchedule: ["Morning", "Evening"],
-        frequency: [1, 3, 5],
-      },
-
-      {
-        id: 2,
-        name: "Medicine 2",
-        dosage: "20mg",
-        dosageSchedule: ["Morning", "Midday", "Evening"],
-        frequency: [1, 3, 5],
-      },
-      {
-        id: 3,
-        name: "Medicine 3",
-        dosage: "30mg",
-        dosageSchedule: ["Morning", "Midday", "Evening"],
-        frequency: [0, 1, 3, 5],
-      },
-      {
-        id: 4,
-        name: "Medicine 4",
-        dosage: "40mg",
-        dosageSchedule: ["Morning", "Midday", "Evening"],
-        frequency: [2, 4, 6],
-      },
-      {
-        id: 5,
-        name: "Medicine 5",
-        dosage: "50mg",
-        dosageSchedule: ["Morning", "Midday", "Evening"],
-        frequency: [1, 3, 5],
-      },
-      {
-        id: 6,
-        name: "Medicine 6",
-        dosage: "60mg",
-        dosageSchedule: ["Morning", "Midday", "Evening"],
-        frequency: [1, 3, 5],
-      },
-      {
-        id: 7,
-        name: "Medicine 7",
-        dosage: "70mg",
-        dosageSchedule: ["Morning", "Midday", "Evening"],
-        frequency: [1, 5],
-      },
-      {
-        id: 8,
-        name: "Medicine 8",
-        dosage: "80mg",
-        dosageSchedule: ["Morning", "Midday", "Evening"],
-        frequency: [1],
-      },
-      {
-        id: 9,
-        name: "Medicine 9",
-        dosage: "90mg",
-        dosageSchedule: ["Morning", "Midday", "Evening"],
-        frequency: [1, 2, 3, 4, 5, 6],
-      },
-    ];
-
-    // set medications
-    setMedications(dummyMedications);
+    const fetchData = async () => {
+      const data = await fetchLocalData();
+      if (data) {
+        setMedications(data.medicines);
+      }
+    };
+    fetchData();
   }, []);
 
   // define fetchMeidcationData() function
@@ -98,13 +36,6 @@ export default function MedicationScreen({ navigation }) {
       console.log("fail to fatch medication data : ", error);
     }
   };
-
-  // for later fetch data from backend API
-  useEffect(() => {
-    // citation :  https://www.guvi.in/blog/how-to-fetch-data-using-api-in-react/
-    // fetch data from backend API
-    fetchMedicationData(); // call asyn fucntion
-  }, []);
 
   const openModal1 = () => {
     setSelectedModal("AddAppointmentForm");
@@ -168,16 +99,11 @@ export default function MedicationScreen({ navigation }) {
   // create what we are going to render / display to screen.
   const renderMedicationItem = ({ item }) => (
     <View style={styles.medicationItem}>
-      <Text style={styles.medicationName}>{item.name}</Text>
-
+      <Text style={styles.medicationName}>{item.medicine_name}</Text>
       <View style={styles.rightContent}>
         <Text style={styles.medicationDetail}>{`Dosage: ${item.dosage}`}</Text>
-        <Text style={styles.medicationDetail}>{`${item.dosageSchedule.join(
-          ", "
-        )}`}</Text>
-        <Text style={styles.medicationDetail}>{`${convertFrequencyList(
-          item.frequency
-        )}`}</Text>
+        <Text style={styles.medicationDetail}>{`Dosage Schedule: ${item.dosage_schedule}`}</Text>
+        <Text style={styles.medicationDetail}>{`Frequency: ${item.frequency}`}</Text>
       </View>
     </View>
   );

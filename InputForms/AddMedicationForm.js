@@ -21,7 +21,7 @@ const AddMedicationForm = ({ isVisible, onClose }) => {
   const [dosage, setDosage] = new useState("");
   const [dosageSchedule, setDosageSchedule] = new useState("Morning");
   const [frequency, setFrequency] = useState([]);
-  let medication = null;
+
 
   const clearFields = () => {
     setMedicationName("");
@@ -32,26 +32,27 @@ const AddMedicationForm = ({ isVisible, onClose }) => {
   };
 
   
-  const onSave = () => {
-    medication = new Medication(
-      medicationName,
-      dosage,
-      dosageSchedule,
-      frequency
-    );
-    insertMedicine(
-      medication.name,
-      medication.dosage,
-      medication.dosageSchedule,
-      medication.frequency
-    )
-      .then(() => {
-        //console.log("Medication saved successfully");
-        clearFields();
-      })
-      .catch((error) => {
-        console.error("Error saving medication:", error);
-      });
+  const onSave = async () => {
+    try {
+      const medication = new Medication(
+        medicationName,
+        dosage,
+        dosageSchedule,
+        frequency
+      );
+      await insertMedicine(
+        medication.name,
+        medication.dosage,
+        medication.dosageSchedule,
+        medication.frequency
+      );
+      // Medication saved successfully
+      clearFields();
+    } catch (error) {
+      // Error saving medication
+      console.error("Error saving medication:", error);
+      // Handle error (e.g., show error message to user)
+    }
   };
 
   return (

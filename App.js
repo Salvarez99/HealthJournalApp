@@ -15,10 +15,46 @@ import AccountSetting from './Navigation/Screens/AccountSetting';
 import StorageSetting from './Navigation/Screens/StorageSetting';
 import ChangePasswordScreen from './Navigation/Screens/ChangePasswordScreen';
 
+import { useRef, useEffect, useState } from 'react';
+import { AppState } from 'react-native';
+import { openData, closeData } from "./LocalStorage/LocalDatabase";
+
 
 const Stack = createStackNavigator();
 
 export default function App() {
+
+  let appStateSubscription = null;
+const [appState, setAppState] = useState(AppState.currentState);
+
+useEffect(() => {
+    const handleAppStateChange = (nextAppState) => {
+        if (appState.match(/inactive|background/) && nextAppState === 'active') {
+            // App has come to the foreground
+            openData(); // Reopen the database
+        } else if (appState === 'active' && nextAppState.match(/inactive|background/)) {
+            // App has gone to the background
+            closeData(); // Close the database
+        }
+        setAppState(nextAppState);
+    };
+
+    appStateSubscription = AppState.addEventListener('change', handleAppStateChange);
+
+    return () => {
+        if (appStateSubscription) {
+            appStateSubscription.remove();
+        }
+        // Close the database when the app is being destroyed
+        closeData();
+    };
+}, []); // Removed appState from the dependency array
+
+// Add console log to check if appState is changing
+useEffect(() => {
+    console.log('App state changed:', appState);
+}, [appState]);
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
