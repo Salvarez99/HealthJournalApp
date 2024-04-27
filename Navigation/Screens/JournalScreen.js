@@ -264,7 +264,7 @@ export default function JournalScreen({ navigation }) {
 };
 
   // render appointment item (prepare for displaying)
-const renderAppointmentItem = ({ item }) => {
+const renderJournalItem = ({ item }) => {
  
   // Determine the source of data (dummy or fetched appointments)
   const sourceAppointments = appointments.length > 0 ? appointments : dummyAppointments;
