@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView, Platform, StyleSheet } from "react-native";
 import { Calendar } from "react-native-calendars";
+import QuickAddButton from "../../Components/QuickAddButton";
 
 // dummy data to test
 const dummyData = {
@@ -145,11 +146,11 @@ export default function CalendarScreen() {
         }}
         theme={{
           backgroundColor: "lightgray",
-          calendarBackground: "lightyellow",
-          textSectionTitleColor: "blue",
-          selectedDayBackgroundColor: "purple",
+          calendarBackground: "#f9f9f9",
+          textSectionTitleColor: "#2c72a3",
+          selectedDayBackgroundColor: "#2c72a3",
           selectedDayTextColor: "white",
-          todayTextColor: "blue",
+          todayTextColor: "purple",
           disableTouchEvent: true, // disable touch event on picked date.
         }}
       />
@@ -175,7 +176,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   calendarContainer: {
-    // calendar styleing.
+    // calendar styling.
     borderWidth: 2,
     padding: 8,
     borderColor: "lightgray",
@@ -210,5 +211,10 @@ const styles = StyleSheet.create({
         fontFamily: "Times New Roman", // Set font family to Times New Roman
       },
     }),
+  },
+  quickAddButtonContainer: {
+    position: "absolute",
+    bottom: "2%",
+    left: "4%",
   },
 });
