@@ -176,6 +176,7 @@ const styles = StyleSheet.create({
         fontFamily: "Times New Roman", // Set font family to Times New Roman
       },
     }),
+    
   },
   entryTitle: {
     fontSize: 16,
@@ -201,6 +202,7 @@ const styles = StyleSheet.create({
     minWidth: 60,
     zIndex: 1,
     marginBottom: 50,
+    
   },
 
   exitButtonText: {
