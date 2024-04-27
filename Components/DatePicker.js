@@ -10,7 +10,7 @@ const DatePicker = ({ name, onDateChange }) => {
     const currentDate = selectedDate || date;
     setShow(false);
     setDate(currentDate);
-    onDateChange(currentDate.toLocaleDateString());
+    onDateChange(formatDate(currentDate));
   };
 
   const showDatePicker = () => {
@@ -18,7 +18,7 @@ const DatePicker = ({ name, onDateChange }) => {
   };
 
   return (
-    <View style={styles.containter}>
+    <View style={styles.container}>
       {show && (
         <DateTimePicker
           testID="dateTimePicker"
@@ -38,7 +38,7 @@ const DatePicker = ({ name, onDateChange }) => {
 };
 
 const styles = StyleSheet.create({
-  containter: {
+  container: {
     paddingTop: 4,
   },
   dateText: {
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
   dateInput: {
     borderWidth: 1,
     borderColor: "black",
-    width: "50%",
+    width: 150,
     padding: 4,
     borderRadius: 5,
   },

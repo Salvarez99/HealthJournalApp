@@ -221,7 +221,7 @@ export default function JournalScreen({ navigation }) {
         });
 
         // Log the sorted Symptom array (for debugging)
-        console.log(item.Symptom);
+        // console.log(item.Symptom);
       return item.Symptom[0].startDate;
 
     } 
@@ -236,7 +236,7 @@ export default function JournalScreen({ navigation }) {
     });
 
         // Log the sorted Illness array (for debugging)
-        console.log(item.Illness);
+        // console.log(item.Illness);
       return item.Illness[0].startDate;
     } 
     
@@ -249,7 +249,7 @@ export default function JournalScreen({ navigation }) {
       });
   
       // Return the dateOccurred of the first item in TestsAndLabWorks array
-      console.log(item.TestsAndLabWorks);
+      // console.log(item.TestsAndLabWorks);
       return item.TestsAndLabWorks[0].dateOccurred;
     }
   
