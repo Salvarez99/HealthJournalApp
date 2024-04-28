@@ -56,14 +56,15 @@ export default function Login() {
       console.log(email);
       console.log(password);
       console.log("Error logging in", error.message);
-      Toast.show({
-        type: "error",
-        position: "top",
-        text1: "Login Error",
-        text2: "Incorrect email or password",
-        visibilityTime: 3000,
-        zIndex : 2
-      });
+      alert('Incorrect email or password')
+      // Toast.show({
+      //   type: "error",
+      //   position: "top",
+      //   text1: "Login Error",
+      //   text2: "Incorrect email or password",
+      //   visibilityTime: 3000,
+      //   zIndex : 2
+      // });
     }
   };
   /*
