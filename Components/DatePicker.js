@@ -10,7 +10,7 @@ const DatePicker = ({ name, onDateChange }) => {
     const currentDate = selectedDate || date;
     setShow(false);
     setDate(currentDate);
-    onDateChange(formatDate(currentDate));
+    onDateChange(currentDate);
   };
 
   const showDatePicker = () => {

@@ -14,15 +14,24 @@ import Illness from "../Classes/Illness";
 import TestAndLabwork from "../Classes/TestAndLabwork";
 import DisplayItems from "./DisplayItems";
 import DatePicker from "./DatePicker";
-import { typeOf } from "react-is";
 
 const SearchComponent = ({ searchData, typeDataInputted, updateList }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  const [dateOccured, setDateOccured] = useState(new Date());
   const [items, setItems] = useState([]); //List of data stored from user input
   const [showList, setShowList] = useState(true);
+
+  const onStartDateChange = (newDate) => {
+    setStartDate(newDate);
+    // console.log("New Start Date: ", newDate);
+  };
+  
+  const onEndDateChange = (newDate) => {
+    // console.log("New End Date: ", newDate);
+    setEndDate(newDate);
+  };
+  
 
   const addItem = (name, startDate, endDate) => {
     let item;
@@ -77,10 +86,7 @@ const SearchComponent = ({ searchData, typeDataInputted, updateList }) => {
     : [];
 
   const onChange = () => {
-    const item = searchQuery;
-    const start = startDate;
-    const end = endDate;
-    addItem(item, start, end);
+    addItem(searchQuery, startDate, endDate);
   };
 
   const onItemPress = (item) => {
@@ -115,12 +121,12 @@ const SearchComponent = ({ searchData, typeDataInputted, updateList }) => {
 
       {typeDataInputted === "symptoms" || typeDataInputted === "illnesses" ? (
         <View style={styles.datePickerContainer}>
-          <DatePicker name={"Start Date"} onDateChange={setStartDate} />
-          <DatePicker name={"End Date"} onDateChange={setEndDate} />
+          <DatePicker name={"Start Date"} onDateChange={onStartDateChange} />
+          <DatePicker name={"End Date"} onDateChange={onEndDateChange} />
         </View>
       ) : (
         <View style={styles.datePickerContainer}>
-          <DatePicker name={"Date Occured"} onDateChange={setStartDate} />
+          <DatePicker name={"Date Occured"} onDateChange={onStartDateChange} />
         </View>
       )}
 

@@ -119,7 +119,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
               <SearchComponent
                 searchData={dummyTest}
                 typeDataInputted={"tests"}
-                updateList={setSymptoms}
+                updateList={setTests}
               />
             </View>
             <View style={styles.saveButtonContainer}>
