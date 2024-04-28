@@ -64,17 +64,16 @@ const createTables = async () => {
                 id INTEGER PRIMARY KEY,
                 illness_name TEXT,
                 date_started TEXT,
-                date_ended TEXT,
+                date_ended TEXT
             );
         `);
         await executeStatement(`
             CREATE TABLE IF NOT EXISTS Medicines (
                 id INTEGER PRIMARY KEY,
-                medicine_name TEXT
+                medicine_name TEXT,
                 dosage TEXT,
                 dosage_schedule TEXT,
-                frequency TEXT,
-                
+                frequency TEXT
             );
         `);
         await executeStatement(`
