@@ -1,5 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
+import { FIREBASE_AUTH } from '../../firebaseConfig';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 // citation learned from : https://www.youtube.com/watch?v=BQ-kHwLlhrg
 
 // import formik
@@ -19,17 +21,36 @@ import { useNavigation } from '@react-navigation/native'; // Import useNavigatio
 
 
 // handle Signup 
-const Singup = () => {
+const Signup = () => {
    // init navigation hook.
    const navigation = useNavigation(); 
 
     // use Usestate hook for pasword 
     const [hidePassword, setHidePassword] = useState(true); //default is true
     const [show, setShow] = useState(false);// show for the datetimepicker
-    const [date, setDate] = useState(new Date());// set this date as default
+    const [date, setDate] = useState(new Date(2024, 12, 14));// set this date as default
+    const auth = FIREBASE_AUTH;
 
     // variable to hold actural date of birth to be sent 
-    const [dob, setDob] = useState(''); //?
+    const [dob, setDob] = useState();
+
+    const register = async({email,password,dateOfBirth}) =>{
+        try{
+            dateOfBirth = dob.toLocaleDateString();
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+            navigation.navigate('Login');
+            console.log("Registration successful! ", user);
+        }
+        catch(error){
+            console.log(email);
+            console.log(password);
+            console.log("Error creating user", error.message);
+        }
+    };
+        
+    
+
 
     const onChange = (event, selectDate) => {
         const currentDate = selectDate || date; 
@@ -110,11 +131,7 @@ const Singup = () => {
                 {/* Use Formik Library to manage form state and handle submission.  */}
                 <Formik
                     initialValues={{ fullName: '',  email: '', dateOfBirth : '', password: '', confirmPassword : '', }}
-                    onSubmit={(values) => {
-                        values.dateOfBirth = dob.toLocaleDateString();
-                        console.log(values);
-                        navigation.navigate('Login');
-                    }} // declare properties in initialValues={}
+                    onSubmit={register} // declare properties in initialValues={}
                 >
                     {({ handleChange, handleBlur, handleSubmit, values }) => (
                         <View style={{width: '85%'}}>
@@ -221,7 +238,7 @@ const Singup = () => {
 
 
 
-export default Singup;  // use .js name 
+export default Signup;  // use .js name 
 
 // Get the height of the status bar on the device : https://stackoverflow.com/questions/64926356/paddingtop-platform-os-android-statusbar-currentheight-0
 const StatusBarHeight = Platform.OS === 'android' ? StatusBar.currentHeight : 0;
