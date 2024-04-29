@@ -1,10 +1,7 @@
 // creating setting button component
 import React from "react";
-import { TouchableOpacity, View, StyleSheet, Text } from "react-native";
+import { TouchableOpacity } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-
-import SettingPage from "../Navigation/Screens/SettingPage";
-//for navigation
 import { useNavigation } from "@react-navigation/native"; // Import useNavigation hook
 
 const SettingButton = () => {
@@ -18,10 +15,9 @@ const SettingButton = () => {
   return (
     <TouchableOpacity
       onPress={handleClick}
-      style={{ flexDirection: "row", alignItems: "center", paddingRight: 10 }}
+      style={{ paddingRight: 15 }}
     >
-      <Ionicons name="settings" size={30} color="#2196F3" />
-      <Text style={{ marginLeft: 5, fontSize: 14 }}>Setting</Text>
+      <Ionicons name="settings-outline" size={30} color={'#2c72a3'} />
     </TouchableOpacity>
   );
 };

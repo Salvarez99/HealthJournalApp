@@ -10,7 +10,7 @@ const DisplayItems = ({ data }) => {
 
   return (
     <View
-      style={{ flex: 3, backgroundColor: "#d7dbe0", borderWidth: 1, zIndex: 1 }}
+      style={{ flex: 3, marginTop : 10, backgroundColor: "#d7dbe0", borderWidth: 1, zIndex: 1 }}
     >
       <FlatList
         data={data}
