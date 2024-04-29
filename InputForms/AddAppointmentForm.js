@@ -17,8 +17,8 @@ import Appointment from "../Classes/Appointment";
 const AddAppointmentForm = ({ isVisible, onClose }) => {
   const [eventName, setEventName] = new useState("");
   const [eventDate, setEventDate] = new useState(new Date());
-  const [eventStartTime, setEventStartTime] = new useState(null);
-  const [eventEndTime, setEventEndTime] = new useState(null);
+  const [eventStartTime, setEventStartTime] = new useState('');
+  const [eventEndTime, setEventEndTime] = new useState('');
   let appointment = null;
 
   const handleDateChange = (selectedDate) => {
@@ -51,9 +51,14 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
     const eDate = eventDate;
     const eStartTime = eventStartTime;
     const eEndTime = eventEndTime;
-    appointment = new Appointment(eName, eventDate.toLocaleDateString(), eStartTime, eEndTime);
-    console.log(appointment.toString());
-    clearFields();
+
+    if(!/^\s*$/.test(eName) && eStartTime != null && eEndTime != null){
+      appointment = new Appointment(eName, eventDate, eStartTime, eEndTime);
+      console.log(appointment.toString());
+      clearFields();
+    }else{
+      alert('Required fields missing.\nRequired fields contains \'*\'.')
+    }
   };
 
   return (
@@ -81,7 +86,7 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
 
           <View style={styles.modalFormContent}>
             <View style={styles.inputEventName}>
-              <Text style={styles.buttonHeaderText}>Event Name: </Text>
+              <Text style={styles.buttonHeaderText}>*Event Name: </Text>
               <TextInput
                 style={{
                   borderWidth: 1,
@@ -97,11 +102,8 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
 
             <DatePicker name={"Date"} onDateChange={handleDateChange} />
 
-            <TimePicker
-              name={"Start time"}
-              onTimeChange={handleStartTimeChange}
-            />
-            <TimePicker name={"End time"} onTimeChange={handleEndTimeChange} />
+            <TimePicker name={"*Start time"} onTimeChange={handleStartTimeChange}/>
+            <TimePicker name={"*End time"} onTimeChange={handleEndTimeChange} />
 
             <View style={styles.saveButtonContainer}>
               <TouchableOpacity onPress={onSave} style={styles.saveButton}>

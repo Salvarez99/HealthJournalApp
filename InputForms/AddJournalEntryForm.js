@@ -50,14 +50,14 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
     console.log("Symptoms: \n");
     for (const symptom of symptoms) {
       console.log(
-        symptom.name + ":" + symptom.startDate + " -> " + symptom.endDate + "\n"
+        symptom.name + ": " + symptom.startDate + " -> " + symptom.endDate + "\n"
       );
     }
     console.log("\n");
     console.log("Illnesses: \n");
     for (const illness of illnesses) {
       console.log(
-        illness.name + ":" + illness.startDate + " -> " + illness.endDate + "\n"
+        illness.name + ": " + illness.startDate + " -> " + illness.endDate + "\n"
       );
     }
     console.log("\n");
@@ -93,7 +93,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
 
           <View style={styles.modalFormContent}>
             <View>
-              <Text style={styles.SearchComponentHeader}>Symptoms:</Text>
+              <Text style={styles.SearchComponentHeader}>*Symptoms:</Text>
             </View>
             <View style={{ height: 180 }}>
               <SearchComponent
@@ -103,7 +103,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
               />
             </View>
             <View>
-              <Text style={styles.SearchComponentHeader}>Illnesses:</Text>
+              <Text style={styles.SearchComponentHeader}>*Illnesses:</Text>
             </View>
             <View style={{ height: 180 }}>
               <SearchComponent
@@ -113,7 +113,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
               />
             </View>
             <View>
-              <Text style={styles.SearchComponentHeader}>Tests:</Text>
+              <Text style={styles.SearchComponentHeader}>*Tests:</Text>
             </View>
             <View style={{ height: 180 }}>
               <SearchComponent

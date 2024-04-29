@@ -38,13 +38,21 @@ const AddMedicationForm = ({ isVisible, onClose }) => {
       dosageSchedule,
       frequency
     );
+    if (
+      !/^\s*$/.test(medication.name) &&
+      medication.dosage != "" &&
+      medication.frequency.length != 0
+    ) {
+      console.log(medication.toString());
+      clearFields();
+      onClose();
+    } else {
+      alert('Required fields missing.\nRequired fields contains \'*\'.')
+    }
     // console.log("Medication: " + medicationName);
     // console.log("Dosage: " + dosage);
     // console.log('Dosage Schedule: ' + dosageSchedule);
     // console.log('Frequency: ' + frequency);
-    console.log(medication.toString());
-    clearFields();
-    onClose();
   };
 
   return (
@@ -72,7 +80,7 @@ const AddMedicationForm = ({ isVisible, onClose }) => {
 
           <View style={styles.modalFormContent}>
             <View>
-              <Text style={styles.buttonHeaderText}>Medication Name: </Text>
+              <Text style={styles.buttonHeaderText}>*Medication Name: </Text>
               <TextInput
                 style={{
                   borderWidth: 1,
@@ -86,7 +94,7 @@ const AddMedicationForm = ({ isVisible, onClose }) => {
             </View>
 
             <View>
-              <Text style={styles.buttonHeaderText}>Dosage: </Text>
+              <Text style={styles.buttonHeaderText}>*Dosage: </Text>
               <TextInput
                 style={{
                   borderWidth: 1,
@@ -106,7 +114,7 @@ const AddMedicationForm = ({ isVisible, onClose }) => {
             <DropDownList setDosageSchedule={setDosageSchedule} />
 
             <View>
-              <Text style={styles.buttonHeaderText}>Frequency: </Text>
+              <Text style={styles.buttonHeaderText}>*Frequency: </Text>
             </View>
 
             <WeekDaysButtons

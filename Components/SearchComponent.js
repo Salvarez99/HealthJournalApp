@@ -86,7 +86,13 @@ const SearchComponent = ({ searchData, typeDataInputted, updateList }) => {
     : [];
 
   const onChange = () => {
-    addItem(searchQuery, startDate, endDate);
+
+    if(!/^\s*$/.test(searchQuery)){
+      addItem(searchQuery, startDate, endDate);
+    }else{
+      alert('Required fields missing.\nRequired fields contains \'*\'.')
+      return
+    }
   };
 
   const onItemPress = (item) => {
