@@ -2,6 +2,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import React, { useState } from "react";
 import {
   View,
+  ScrollView,
   Text,
   TouchableOpacity,
   Modal,
@@ -94,7 +95,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
             <View>
               <Text style={styles.SearchComponentHeader}>Symptoms:</Text>
             </View>
-            <View style={{ height: 100 }}>
+            <View style={{ height: 180 }}>
               <SearchComponent
                 searchData={dummySymptoms}
                 typeDataInputted={"symptoms"}
@@ -102,9 +103,9 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
               />
             </View>
             <View>
-              <Text style={styles.SearchComponentHeader}>Illnesses: </Text>
+              <Text style={styles.SearchComponentHeader}>Illnesses:</Text>
             </View>
-            <View style={{ height: 100 }}>
+            <View style={{ height: 180 }}>
               <SearchComponent
                 searchData={dummyIllnesses}
                 typeDataInputted={"illnesses"}
@@ -112,16 +113,15 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
               />
             </View>
             <View>
-              <Text style={styles.SearchComponentHeader}>Test & Labworks:</Text>
+              <Text style={styles.SearchComponentHeader}>Tests:</Text>
             </View>
-            <View style={{ height: 100 }}>
+            <View style={{ height: 180 }}>
               <SearchComponent
                 searchData={dummyTest}
                 typeDataInputted={"tests"}
                 updateList={setTests}
               />
             </View>
-
             <View style={styles.saveButtonContainer}>
               <TouchableOpacity onPress={onSave} style={styles.saveButton}>
                 <Text>Save</Text>
@@ -144,11 +144,10 @@ const styles = StyleSheet.create({
   modalForm: {
     backgroundColor: "white",
     width: "90%",
-    height: 470,
+    height: 700,
     borderRadius: 10,
     alignItems: "center",
-    position: "absolute",
-    top: 60,
+    top : 15,
     ...Platform.select({
       ios: {
         shadowColor: "black",
@@ -194,7 +193,7 @@ const styles = StyleSheet.create({
   saveButtonContainer: {
     position: "absolute",
     right: 15,
-    bottom: 10,
+    bottom: 5,
   },
   closeButton: {
     position: "absolute",

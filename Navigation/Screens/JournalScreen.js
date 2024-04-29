@@ -221,7 +221,7 @@ export default function JournalScreen({ navigation }) {
         });
 
         // Log the sorted Symptom array (for debugging)
-        console.log(item.Symptom);
+        // console.log(item.Symptom);
       return item.Symptom[0].startDate;
 
     } 
@@ -236,7 +236,7 @@ export default function JournalScreen({ navigation }) {
     });
 
         // Log the sorted Illness array (for debugging)
-        console.log(item.Illness);
+        // console.log(item.Illness);
       return item.Illness[0].startDate;
     } 
     
@@ -249,7 +249,7 @@ export default function JournalScreen({ navigation }) {
       });
   
       // Return the dateOccurred of the first item in TestsAndLabWorks array
-      console.log(item.TestsAndLabWorks);
+      // console.log(item.TestsAndLabWorks);
       return item.TestsAndLabWorks[0].dateOccurred;
     }
   
@@ -264,7 +264,7 @@ export default function JournalScreen({ navigation }) {
 };
 
   // render appointment item (prepare for displaying)
-const renderAppointmentItem = ({ item }) => {
+const renderJournalItem = ({ item }) => {
  
   // Determine the source of data (dummy or fetched appointments)
   const sourceAppointments = appointments.length > 0 ? appointments : dummyAppointments;
@@ -282,15 +282,13 @@ const renderAppointmentItem = ({ item }) => {
   // render return with touchable opacity >> linked to journaltitle.js 
   return (
     <TouchableOpacity
-    style={styles.appointmetnItem}
-    onPress={() => handleAppointmentPress(item)}
+      style={styles.journalButtonStyle}
+      onPress={() => handleAppointmentPress(item)}
     >
-    <View style={styles.appointmentInfo}>
       <Text style={styles.JournalTitle}>{`Journal ${item.id}`}</Text>
       <Text style={styles.JournalDate}>{displayStartDate(item)}</Text>
-    </View>
-    <Text style={styles.horizontalLine}></Text>
-  </TouchableOpacity>
+      <View style={styles.horizontalLine}></View>
+    </TouchableOpacity>
   );
 };
 
@@ -300,13 +298,11 @@ const renderAppointmentItem = ({ item }) => {
     { name: "Add Appointment", openModal: openModal1 },
     { name: "Add Medication", openModal: openModal2 },
     { name: "Add Journal Entry", openModal: openModal3 },
-    // Add more modal components as needed
   ];
 
   const renderSelectedModal = () => {
     switch (selectedModal) {
       case "AddAppointmentForm":
-        //return <PlaceholderForm isVisible={isModalVisible} onClose={closeModal} />;    // for testing
         return (
           <AddAppointmentForm isVisible={isModalVisible} onClose={closeModal} />
         );
@@ -321,7 +317,6 @@ const renderAppointmentItem = ({ item }) => {
             onClose={closeModal}
           />
         );
-
       default:
         return null;
     }
@@ -332,14 +327,11 @@ const renderAppointmentItem = ({ item }) => {
       <View style={styles.mainContent}>
         {/* Put your content in this view */}
 
-        {/* display add appointment data */}
-
         {/** show list of saved appointment records */}
         <FlatList
           data={appointments}
-          renderItem={renderAppointmentItem}
+          renderItem={renderJournalItem}
           keyExtractor={(item) => item.id.toString()}
-          contentContainerStyle={styles.horizontalListContent}
           showsVerticalScrollIndicator={false}
         />
       </View>
@@ -355,69 +347,23 @@ const renderAppointmentItem = ({ item }) => {
 }
 
 const styles = StyleSheet.create({
-  // add scrollContent style!
-
   container: {
     flex: 1,
   },
   mainContent: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingBottom: 50,
-  },
-  title: {
-    paddingTop: 10,
-    fontSize: 26,
-    fontWeight: "bold",
   },
   quickAddButtonContainer: {
     position: "absolute",
     bottom: "2%",
     left: "4%",
   },
-  //
-  appointmentDataContainer: {
-    paddingLeft: 20,
-    marginTop: 20,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: "gray",
-    borderRadius: 5,
-    paddingHorizontal: 20, // Add horizontal padding
-  },
-  appointmentList: {
-    flex: 1,
-    horizontal: "100%",
-    paddingVertical: 20, // put paddding in vertical way
-  },
-  appointmentItem: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+  journalButtonStyle: {
     flexDirection: "row", // Align children horizontally
-    // alignItems: 'flex-start', // Align children vertically
-    paddingRight: 100,
     justifyContent: "space-between", // Align children evenly
+    padding: 30,
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
-  },
-
-  // horizontal line
-  horizontalLine: {
-    flex: 1, // take full screen
-    height: 1,
-    backgroundColor: "#000000",
-    marginTop: 10,
-    marginBottom: 10,
-  },
-  // Journal# size
-  appointmentInfo: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingTop: 25,
-    paddingBottom: 25,
-    paddingRight: 7,
     ...Platform.select({
       ios: {
         fontFamily: "Times New Roman", // Set font family to Times New Roman
@@ -425,10 +371,9 @@ const styles = StyleSheet.create({
     }),
   },
   JournalTitle: {
-    fontSize: 17,
+    fontSize: 16,
     fontWeight: "bold",
     paddingLeft: 20,
-
     ...Platform.select({
       ios: {
         fontFamily: "Times New Roman", // Set font family to Times New Roman
@@ -437,19 +382,13 @@ const styles = StyleSheet.create({
   },
   JournalDate: {
     fontSize: 14,
+    paddingTop : 3,
     paddingLeft: 150,
-    paddingRight: 20,
     color: "#555",
     ...Platform.select({
       ios: {
         fontFamily: "Times New Roman", // Set font family to Times New Roman
       },
     }),
-  },
-  horizontalListContent: {
-    horizontal: "100%",
-    width: "100",
-    marginTop: 10,
-    marginBottom: 10,
   },
 });

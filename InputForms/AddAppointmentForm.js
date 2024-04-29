@@ -51,7 +51,7 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
     const eDate = eventDate;
     const eStartTime = eventStartTime;
     const eEndTime = eventEndTime;
-    appointment = new Appointment(eName, eDate, eStartTime, eEndTime);
+    appointment = new Appointment(eName, eventDate.toLocaleDateString(), eStartTime, eEndTime);
     console.log(appointment.toString());
     clearFields();
   };
