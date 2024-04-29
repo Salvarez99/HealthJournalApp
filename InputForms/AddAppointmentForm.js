@@ -49,12 +49,11 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
 
   //TODO: Implement save functionality
   const onSave = () => {
-    appointment = new Appointment(
-      eventName,
-      eventDate,
-      eventStartTime,
-      eventEndTime
-    );
+    const eName = eventName;
+    const eDate = eventDate;
+    const eStartTime = eventStartTime;
+    const eEndTime = eventEndTime;
+    appointment = new Appointment(eName, eDate, eStartTime, eEndTime);
     console.log(appointment.toString());
     clearFields();
   };

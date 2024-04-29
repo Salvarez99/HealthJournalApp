@@ -15,10 +15,6 @@ import AccountSetting from './Navigation/Screens/AccountSetting';
 import StorageSetting from './Navigation/Screens/StorageSetting';
 import ChangePasswordScreen from './Navigation/Screens/ChangePasswordScreen';
 
-import { useRef, useEffect, useState } from 'react';
-import { AppState } from 'react-native';
-import { openData, closeData } from "./LocalStorage/LocalDatabase";
-
 
 const Stack = createStackNavigator();
 
@@ -83,28 +79,26 @@ useEffect(() => {
         <Stack.Screen
           name="SettingPage"
           component={SettingPage}
-          options={{ headerShown: true,  headerTitle : 'Settings'}}
+          options={{ headerShown: true, headerTitle: "Settings" }}
         />
 
         <Stack.Screen
           name="AccountSetting"
           component={AccountSetting}
-          options={{ headerShown: true, headerTitle : 'Account Setting' }}
+          options={{ headerShown: true, headerTitle: "Account Setting" }}
         />
 
         <Stack.Screen
           name="StorageSetting"
           component={StorageSetting}
-          options={{ headerShown: true, headerTitle : 'Storage Settings' }}
+          options={{ headerShown: true, headerTitle: "Storage Settings" }}
         />
 
         <Stack.Screen
           name="ChangePasswordScreen"
           component={ChangePasswordScreen}
-          options={{ headerShown: false }}
+          options={{ headerShown: true, headerTitle: "Change Password" }}
         />
-      
-
       </Stack.Navigator>
     </NavigationContainer>
   );

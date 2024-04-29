@@ -9,7 +9,6 @@ import {
   ScrollView,
   Platform,
 } from "react-native";
-import { useAnimatedGestureHandler } from "react-native-reanimated";
 
 //Goal : Distinguish between different type of entries ( symptom, illness, test and labworks) from fetched data.
 // display details + exit button ( go back to journalscreen.js )
@@ -20,42 +19,36 @@ export default function JournalTitle({ route, navigation }) {
 
   // used switch statement to display symtop, illness and test and labwork.
   // citation for switch statement : https://simplefrontend.com/switch-statement-in-react/
-  const renderEntry = (entry, araytype) => {
-    switch (araytype) {
+  const renderEntry = (entry, arraytype) => {
+    switch (arraytype) {
       case "Symptom":
         return (
-          <>
-            <View sytle={styles.entryContainer}>
-              <Text style={styles.entryTitle}>Symptom Name: {entry.name}</Text>
-              <Text syle={styles.entryDate}>
-                Start Date: {entry.startDate} End Date: {entry.endDate}
-              </Text>
+          <View sytle={styles.entryContainer}>
+            <Text style={styles.entryTitle}>Symptom Name: {entry.name}</Text>
+            <View style={styles.dateContainer}>
+              <Text>Start Date: {entry.startDate}</Text>
+              <Text>End Date: {entry.endDate}</Text>
             </View>
-          </>
+          </View>
         );
       case "Illness":
         return (
-          <>
-            <View sytle={styles.entryContainer}>
-              <Text style={styles.entryTitle}>Illness Name: {entry.name} </Text>
-              <Text syle={styles.entryDate}>
-                Start Date: {entry.startDate} End Date: {entry.endDate}
-              </Text>
+          <View sytle={styles.entryContainer}>
+            <Text style={styles.entryTitle}>Illness Name: {entry.name} </Text>
+            <View style={styles.dateContainer}>
+              <Text>Start Date: {entry.startDate}</Text>
+              <Text>End Date: {entry.endDate}</Text>
             </View>
-          </>
+          </View>
         );
       case "TestsAndLabWorks":
         return (
-          <>
-            <View sytle={styles.entryContainer}>
-              <Text style={styles.entryTitle}>
-                Test & Labwork Name: {entry.name}
-              </Text>
-              <Text syle={styles.entryDate}>
-                Date Occurred: {entry.dateOccurred}
-              </Text>
-            </View>
-          </>
+          <View sytle={styles.entryContainer}>
+            <Text style={styles.entryTitle}>
+              Test & Labwork Name: {entry.name}
+            </Text>
+            <Text>Date Occurred: {entry.dateOccurred}</Text>
+          </View>
         );
       default:
         return null;
@@ -145,9 +138,9 @@ const styles = StyleSheet.create({
   mainIdContainer: {
     // display Journal #number
     fontSize: 30,
-    fontWeight: "bold",
-    marginTop: 50,
+    marginTop: 30,
     alignContent: "center", // vertically
+    fontWeight: "bold",
     textAlign: "center", // center horizontally
     ...Platform.select({
       ios: {
@@ -162,15 +155,11 @@ const styles = StyleSheet.create({
   },
 
   sectionTitle: {
-    // display gray box symtom, illness, test and labworks.
-    backgroundColor: "lightgray",
     padding: 10,
-    borderRadius: 10,
-    textAlign: "center",
-
+    marginTop: 20,
+    borderBottomWidth: 1,
     fontSize: 20,
     fontWeight: "bold",
-    marginTop: 20,
     ...Platform.select({
       ios: {
         fontFamily: "Times New Roman", // Set font family to Times New Roman
@@ -180,12 +169,8 @@ const styles = StyleSheet.create({
   entryContainer: {
     marginTop: 10,
     padding: 20,
-    justifyContent: "center",
-    //minHeight: 300, // set minimum height
-
-    fontFamily: "Times New Roman",
     marginBottom: 40,
-
+    justifyContent: "center",
     ...Platform.select({
       ios: {
         fontFamily: "Times New Roman", // Set font family to Times New Roman
@@ -202,14 +187,9 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  entryDate: {
-    fontSize: 18,
-    marginTop: 10,
-    ...Platform.select({
-      ios: {
-        fontFamily: "Times New Roman", // Set font family to Times New Roman
-      },
-    }),
+  dateContainer: {
+    justifyContent: "space-between",
+    flexDirection: "row",
   },
   exitButton: {
     position: "absolute",

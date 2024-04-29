@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView, Platform, StyleSheet } from "react-native";
 import { Calendar } from "react-native-calendars";
+import QuickAddButton from "../../Components/QuickAddButton";
 
 // dummy data to test
 const dummyData = {
@@ -73,6 +74,24 @@ const dummyData = {
       },
     ],
   },
+  "2024-04-29": {
+    events: [
+      {
+        name: "Dr. Alan Grant - Ophthalmologist",
+        date: "2024-04-29",
+        start: "9:00 AM",
+        end: "12:00 PM",
+        location: "Clear Vision Eye Center, 234 Sight St., Lookville",
+      },
+      {
+        name: "Dr. Susan Hill - General Practitioner",
+        date: "2024-04-29",
+        start: "2:00 PM",
+        end: "3:00 PM",
+        location: "Hill Medical Center, 123 Health St., Cityville",
+      },
+    ],
+  },
 };
 
 // citation for calendar ondaypress : https://community.draftbit.com/c/code-snippets/low-code-calendar-component
@@ -109,25 +128,33 @@ export default function CalendarScreen() {
 
   // create render function to display events informaton.
   const renderEvents = () => {
-    if (hasDataInPickedDate) {
-      return (
-        <ScrollView style={styles.eventList}>
-          {appointmentInfo[pickedDate].map((data, index) => (
-            <View key={index} style={styles.eventItem}>
-              <Text style={styles.eventName}>{data.eventName}</Text>
-              <Text style={styles.eventDetail}>Date: {data.date}</Text>
-              <Text style={styles.eventDetail}>
-                Start Time: {data.startTime}
-              </Text>
-              <Text style={styles.eventDetail}>End Time: {data.endTime}</Text>
-              <Text style={styles.eventDetail}>Location: {data.location}</Text>
-            </View>
-          ))}
-        </ScrollView>
-      );
-    } else {
-      return null;
+   
+    // if fetching from backend was successful use appointmentInfo arrya, else usse dummydata. 
+    let eventsData = [];
+
+    if (appointmentInfo[pickedDate]) {
+        if (appointmentInfo[pickedDate].length > 0) {  // // citation : https://www.squash.io/accessing-array-length-in-thisstate-in-reactjs/
+            eventsData = appointmentInfo[pickedDate];
+        }
+    } else if (dummyData[pickedDate] && dummyData[pickedDate].events) {
+        eventsData = dummyData[pickedDate].events;
     }
+
+
+
+    return (
+      <ScrollView style={styles.eventList}>
+        {eventsData.map((event, index) => (
+          <View key={index} style={styles.eventItem}>
+            <Text style={styles.eventName}>{event.name}</Text>
+            <Text style={styles.eventDetail}>Date: {event.date}</Text>
+            <Text style={styles.eventDetail}>Start Time: {event.start}</Text>
+            <Text style={styles.eventDetail}>End Time: {event.end}</Text>
+            <Text style={styles.eventDetail}>Location: {event.location}</Text>
+          </View>
+        ))}
+      </ScrollView>
+    );
   };
 
   // map() :  https://legacy.reactjs.org/docs/lists-and-keys.html, https://medium.com/analytics-vidhya/understanding-the-map-function-in-react-js-1d211916fea7
@@ -145,27 +172,15 @@ export default function CalendarScreen() {
         }}
         theme={{
           backgroundColor: "lightgray",
-          calendarBackground: "lightyellow",
-          textSectionTitleColor: "blue",
-          selectedDayBackgroundColor: "purple",
+          calendarBackground: "#f9f9f9",
+          textSectionTitleColor: "#2c72a3",
+          selectedDayBackgroundColor: "#2c72a3",
           selectedDayTextColor: "white",
-          todayTextColor: "blue",
+          todayTextColor: "purple",
           disableTouchEvent: true, // disable touch event on picked date.
         }}
       />
-      <ScrollView style={styles.eventList}>
-        {pickedDate &&
-          dummyData[pickedDate] &&
-          dummyData[pickedDate].events.map((event, index) => (
-            <View key={index} style={styles.eventItem}>
-              <Text style={styles.eventName}>{event.name}</Text>
-              <Text style={styles.eventDetail}>Date: {event.date}</Text>
-              <Text style={styles.eventDetail}>Start Time: {event.start}</Text>
-              <Text style={styles.eventDetail}>End Time: {event.end}</Text>
-              <Text style={styles.eventDetail}>Location: {event.location}</Text>
-            </View>
-          ))}
-      </ScrollView>
+     {renderEvents()}
     </View>
   );
 }
@@ -175,7 +190,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   calendarContainer: {
-    // calendar styleing.
+    // calendar styling.
     borderWidth: 2,
     padding: 8,
     borderColor: "lightgray",
@@ -210,5 +225,10 @@ const styles = StyleSheet.create({
         fontFamily: "Times New Roman", // Set font family to Times New Roman
       },
     }),
+  },
+  quickAddButtonContainer: {
+    position: "absolute",
+    bottom: "2%",
+    left: "4%",
   },
 });

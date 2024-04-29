@@ -13,15 +13,78 @@ export default function MedicationScreen({ navigation }) {
   //  for handleing medicatoin input information that retrived from addmedicationform.js >> backend >> medicationscree.js
   const [medications, setMedications] = useState([]);
 
-  // Fetch local data
+  //Dummy datat for testing
   useEffect(() => {
-    const fetchData = async () => {
-      const data = await fetchLocalData();
-      if (data) {
-        setMedications(data.medicines);
-      }
-    };
-    fetchData();
+    // const value
+    const dummyMedications = [
+      {
+        id: 1,
+        name: "Medicine 1",
+        dosage: "10mg",
+        dosageSchedule: ["Morning", "Evening"],
+        frequency: [1, 3, 5],
+      },
+
+      {
+        id: 2,
+        name: "Medicine 2",
+        dosage: "20mg",
+        dosageSchedule: ["Morning", "Midday", "Evening"],
+        frequency: [1, 3, 5],
+      },
+      {
+        id: 3,
+        name: "Medicine 3",
+        dosage: "30mg",
+        dosageSchedule: ["Morning", "Midday", "Evening"],
+        frequency: [0, 1, 3, 5],
+      },
+      {
+        id: 4,
+        name: "Medicine 4",
+        dosage: "40mg",
+        dosageSchedule: ["Morning", "Midday", "Evening"],
+        frequency: [2, 4, 6],
+      },
+      {
+        id: 5,
+        name: "Medicine 5",
+        dosage: "50mg",
+        dosageSchedule: ["Morning", "Midday", "Evening"],
+        frequency: [1, 3, 5],
+      },
+      {
+        id: 6,
+        name: "Medicine 6",
+        dosage: "60mg",
+        dosageSchedule: ["Morning", "Midday", "Evening"],
+        frequency: [1, 3, 5],
+      },
+      {
+        id: 7,
+        name: "Medicine 7",
+        dosage: "70mg",
+        dosageSchedule: ["Morning", "Midday", "Evening"],
+        frequency: [1, 5],
+      },
+      {
+        id: 8,
+        name: "Medicine 8",
+        dosage: "80mg",
+        dosageSchedule: ["Morning", "Midday", "Evening"],
+        frequency: [1],
+      },
+      {
+        id: 9,
+        name: "Medicine 9",
+        dosage: "90mg",
+        dosageSchedule: ["Morning", "Midday", "Evening"],
+        frequency: [1, 2, 3, 4, 5, 6],
+      },
+    ];
+
+    // set medications
+    setMedications(dummyMedications);
   }, []);
 
   // define fetchMeidcationData() function
@@ -108,6 +171,30 @@ export default function MedicationScreen({ navigation }) {
     </View>
   );
 
+  // const check whether we successfully fetched data, else use dummy data to render 
+  const renderOutput = () => { 
+    let dataArray =[];
+    
+    if (medications.length > 0) {
+      dataArray = medications;
+    }else{
+      setMedications(dummyMedications); 
+      dataArray = dummyMedications; 
+    }
+
+    return(
+      <FlatList
+          data={medications}
+          renderItem={renderMedicationItem}
+          keyExtractor={(item) => item.id.toString()}
+          style={styles.flatListContainer} // use scroll view style.
+          horizontal={false} // don't move horizontally
+          showsVerticalScrollIndicator={false}
+        />
+    )
+
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.mainContent}>
@@ -116,14 +203,7 @@ export default function MedicationScreen({ navigation }) {
         {/* display add medication data */}
 
         {/** show list of saved medication records using rendermedicdationItem()  */}
-        <FlatList
-          data={medications}
-          renderItem={renderMedicationItem}
-          keyExtractor={(item) => item.id.toString()}
-          style={styles.flatListContainer} // use scroll view style.
-          horizontal={false} // don't move horizontally
-          showsVerticalScrollIndicator={false}
-        />
+        {renderOutput()}
       </View>
       {/* Your content ends here */}
 
