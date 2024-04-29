@@ -12,9 +12,16 @@ import AddJournalEntryForm from "../../InputForms/AddJournalEntryForm";
 import AddAppointmentForm from "../../InputForms/AddAppointmentForm";
 import AddMedicationForm from "../../InputForms/AddMedicationForm";
 import JournalTitle from "./JournalTitle";
-
+import * as SQLite from 'expo-sqlite';
+//import { openData, closeData } from "./LocalStorage/LocalDatabase";
+import { AppState } from "react-native";
+import * as Sharing from 'expo-sharing';
+import * as FileSystem from 'expo-file-system';
+import * as DocumentPicker from 'expo-document-picker';
+import { fetchAppointments, clearAppointments } from "../../LocalStorage/LocalDatabase";
 // for testing
 import PlaceholderForm from "../../InputForms/PlaceholderForm";
+
 
 export default function JournalScreen({ navigation }) {
   const [isModalVisible, setIsModalVisible] = React.useState(false); // vsible or not
@@ -23,10 +30,31 @@ export default function JournalScreen({ navigation }) {
   //const [appointmentData, setAppointmentData] = React.useState(null); // for data fetched from backend url take input from addappointmentFrom.js
   const [appointments, setAppointments] = useState([]); // hook. for dummy datas
 
+
+
   // create useEffect() and use dummy data for now
   useEffect(() => {
     // think of fetching appointments variable from the backend side
+    const fetchAppointmentsFromDB = async()=> {
+      try{ 
+        const appointmentsFromDB = await fetchAppointments();
+        setAppointments(appointmentsFromDB);
+        console.log("Appointments successfully fetched?");
+      } catch(error){
+        console.error('Error fetching appointments', error);
+      }
+    };
 
+    const clearAllData = async () => {
+      try {
+        const rowsAffected = await clearAppointments();
+        console.log('Number of rows affected:', rowsAffected);
+      } catch (error) {
+        console.error('Error clearing appointments:', error);
+      }
+    };
+    
+    /*
     const dummyAppointments = [
       //dummy data 1
       {
@@ -222,6 +250,9 @@ export default function JournalScreen({ navigation }) {
 
     // set appointments state
     setAppointments(dummyAppointments);
+    */
+
+    fetchAppointmentsFromDB();
   }, []);
 
   // define fetchAppointmetnData() function with async
@@ -265,7 +296,7 @@ export default function JournalScreen({ navigation }) {
 
   // handle input data parameter from AddJournalEntryForm.js
   const saveAppointmentData = (data) => {
-    setAppointments(data); // setAppointmentData(data)
+    fetchAppointmentData(); // setAppointmentData(data)
     setIsModalVisible(false);
   };
 
@@ -285,19 +316,23 @@ export default function JournalScreen({ navigation }) {
     }
   };
 
+  const displayAppointmentDetails = (item) => {
+    return `${item.eventDate}`;
+  };
+
   // render appointment item (prepare for displaying)
   const renderAppointmentItem = ({ item }) => (
     <TouchableOpacity
-      style={styles.appointmetnItem}
-      onPress={() => handleAppointmentPress(item)}
-    >
-      <View style={styles.appointmentInfo}>
-        <Text style={styles.JournalTitle}>{`Journal ${item.id}`}</Text>
-        <Text style={styles.JournalDate}>{displayStartDate(item)}</Text>
-      </View>
-      <Text style={styles.horizontalLine}></Text>
-    </TouchableOpacity>
-  );
+    style={styles.appointmentItem}
+    onPress={() => handleAppointmentPress(item)}
+  >
+    <View style={styles.appointmentInfo}>
+      <Text style={styles.JournalTitle}>{`Journal: ${item.id}`}</Text>
+      <Text style={styles.JournalDate}>{displayAppointmentDetails(item)}</Text>
+    </View>
+    <Text style={styles.horizontalLine}></Text>
+  </TouchableOpacity>
+);
 
   // Define modal components with their names
   const modalComponents = [
@@ -312,7 +347,7 @@ export default function JournalScreen({ navigation }) {
       case "AddAppointmentForm":
         //return <PlaceholderForm isVisible={isModalVisible} onClose={closeModal} />;    // for testing
         return (
-          <AddAppointmentForm isVisible={isModalVisible} onClose={closeModal} />
+          <AddAppointmentForm isVisible={isModalVisible} onClose={closeModal} navigation={navigation} />
         );
       case "AddMedicationForm":
         return (

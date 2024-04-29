@@ -14,11 +14,27 @@ import SettingPage from './Navigation/Screens/SettingPage';
 import AccountSetting from './Navigation/Screens/AccountSetting';
 import StorageSetting from './Navigation/Screens/StorageSetting';
 import ChangePasswordScreen from './Navigation/Screens/ChangePasswordScreen';
+import { initializeDatabase, exportDb } from "./LocalStorage/LocalDatabase";
+import * as SQLite from 'expo-sqlite';
+import { openData, closeData } from "./LocalStorage/LocalDatabase";
+import {useRef, useEffect, useState} from 'react';
+import { AppState } from "react-native";
+import * as Sharing from 'expo-sharing';
+import * as FileSystem from 'expo-file-system';
+import * as DocumentPicker from 'expo-document-picker';
+import AddAppointmentForm from "./InputForms/AddAppointmentForm";
+import JournalScreen from "./Navigation/Screens/JournalScreen";
 
 
 const Stack = createStackNavigator();
 
+
+
+
 export default function App() {
+  useEffect(() =>{
+    initializeDatabase();
+  }, []);
   return (
     <NavigationContainer>
       <Stack.Navigator>
@@ -30,6 +46,16 @@ export default function App() {
         <Stack.Screen
           name="MainContainer"
           component={MainContainer}
+          options={{ headerShown: false }}
+        />
+         <Stack.Screen
+          name="JournalScreen"
+          component={JournalScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="AddAppointmentForm"
+          component={AddAppointmentForm}
           options={{ headerShown: false }}
         />
         <Stack.Screen

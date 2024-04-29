@@ -13,8 +13,9 @@ import {
 import DatePicker from "../Components/DatePicker";
 import TimePicker from "../Components/TimePicker";
 import Appointment from "../Classes/Appointment";
+import {addAppointment, clearAppointments} from "../LocalStorage/LocalDatabase";
 
-const AddAppointmentForm = ({ isVisible, onClose }) => {
+const AddAppointmentForm = ({ isVisible, onClose, navigation }) => {
   const [eventName, setEventName] = new useState("");
   const [eventDate, setEventDate] = new useState(new Date());
   const [eventStartTime, setEventStartTime] = new useState(null);
@@ -46,14 +47,17 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
   };
 
   //TODO: Implement save functionality
-  const onSave = () => {
-    const eName = eventName;
-    const eDate = eventDate;
-    const eStartTime = eventStartTime;
-    const eEndTime = eventEndTime;
-    appointment = new Appointment(eName, eDate, eStartTime, eEndTime);
-    console.log(appointment.toString());
-    clearFields();
+  const onSave = async () => {
+    try{
+    await addAppointment(eventName,eventDate,eventStartTime,eventEndTime);
+    //For testing purposes, if you wish to wipe the entries clean uncomment this
+    //await clearAppointments();
+    onClose();
+    navigation.navigate('JournalScreen');
+    }
+    catch (error){
+      console.error('Error adding appointment', error);
+    }
   };
 
   return (
