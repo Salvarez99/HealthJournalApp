@@ -9,6 +9,7 @@ import JournalTitle from "./Navigation/Screens/JournalTitle";
 
 
 // for setting 
+import Toast from "react-native-toast-message";
 import SettingButton from './Components/SettingButton';
 import SettingPage from './Navigation/Screens/SettingPage';
 import AccountSetting from './Navigation/Screens/AccountSetting';
@@ -73,28 +74,26 @@ export default function App() {
         <Stack.Screen
           name="SettingPage"
           component={SettingPage}
-          options={{ headerShown: true,  headerTitle : 'Settings'}}
+          options={{ headerShown: true, headerTitle: "Settings" }}
         />
 
         <Stack.Screen
           name="AccountSetting"
           component={AccountSetting}
-          options={{ headerShown: true, headerTitle : 'Account Setting' }}
+          options={{ headerShown: true, headerTitle: "Account Setting" }}
         />
 
         <Stack.Screen
           name="StorageSetting"
           component={StorageSetting}
-          options={{ headerShown: true, headerTitle : 'Storage Settings' }}
+          options={{ headerShown: true, headerTitle: "Storage Settings" }}
         />
 
         <Stack.Screen
           name="ChangePasswordScreen"
           component={ChangePasswordScreen}
-          options={{ headerShown: false }}
+          options={{ headerShown: true, headerTitle: "Change Password" }}
         />
-      
-
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -13,7 +13,7 @@ export default function MedicationScreen({ navigation }) {
   const [medications, setMedications] = useState([]);
 
   //Dummy datat for testing
-  useEffect(() => {
+ // useEffect(() => {
     // const value
     const dummyMedications = [
       {
@@ -80,11 +80,26 @@ export default function MedicationScreen({ navigation }) {
         dosageSchedule: ["Morning", "Midday", "Evening"],
         frequency: [1, 2, 3, 4, 5, 6],
       },
+      {
+        id: 10,
+        name: "Medicine 10",
+        dosage: "90mg",
+        dosageSchedule: ["Morning", "Midday", "Evening"],
+        frequency: [1, 2, 3, 4, 5, 6],
+      },
+      {
+        id: 11,
+        name: "Medicine 11",
+        dosage: "90mg",
+        dosageSchedule: ["Morning", "Midday", "Evening"],
+        frequency: [ 4, 5, 6],
+      },
     ];
 
     // set medications
-    setMedications(dummyMedications);
-  }, []);
+    //setMedications(dummyMedications);
+ // }, []);
+  
 
   // define fetchMeidcationData() function
   const fetchMedicationData = async () => {
@@ -182,6 +197,30 @@ export default function MedicationScreen({ navigation }) {
     </View>
   );
 
+  // const check whether we successfully fetched data, else use dummy data to render 
+  const renderOutput = () => { 
+    let dataArray =[];
+    
+    if (medications.length > 0) {
+      dataArray = medications;
+    }else{
+      setMedications(dummyMedications); 
+      dataArray = dummyMedications; 
+    }
+
+    return(
+      <FlatList
+          data={medications}
+          renderItem={renderMedicationItem}
+          keyExtractor={(item) => item.id.toString()}
+          style={styles.flatListContainer} // use scroll view style.
+          horizontal={false} // don't move horizontally
+          showsVerticalScrollIndicator={false}
+        />
+    )
+
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.mainContent}>
@@ -190,14 +229,7 @@ export default function MedicationScreen({ navigation }) {
         {/* display add medication data */}
 
         {/** show list of saved medication records using rendermedicdationItem()  */}
-        <FlatList
-          data={medications}
-          renderItem={renderMedicationItem}
-          keyExtractor={(item) => item.id.toString()}
-          style={styles.flatListContainer} // use scroll view style.
-          horizontal={false} // don't move horizontally
-          showsVerticalScrollIndicator={false}
-        />
+        {renderOutput()}
       </View>
       {/* Your content ends here */}
 
