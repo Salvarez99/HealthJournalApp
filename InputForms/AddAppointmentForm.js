@@ -13,10 +13,8 @@ import {
 import DatePicker from "../Components/DatePicker";
 import TimePicker from "../Components/TimePicker";
 import Appointment from "../Classes/Appointment";
-import { insertAppointment } from "../LocalStorage/LocalDatabaseManager";
 
-
-const AddAppointmentForm = ({ isVisible, onClose }) => {
+const AddAppointmentForm = ({ isVisible, onClose, navigation }) => {
   const [eventName, setEventName] = new useState("");
   const [eventDate, setEventDate] = new useState(new Date());
   const [eventStartTime, setEventStartTime] = new useState(null);
@@ -53,7 +51,7 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
     const eDate = eventDate;
     const eStartTime = eventStartTime;
     const eEndTime = eventEndTime;
-    appointment = new Appointment(eName, eDate, eStartTime, eEndTime);
+    appointment = new Appointment(eName, eventDate.toLocaleDateString(), eStartTime, eEndTime);
     console.log(appointment.toString());
     clearFields();
   };
