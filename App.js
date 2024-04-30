@@ -59,6 +59,11 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
+          name="AddJournalEntryForm"
+          component={AddAppointmentForm}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
           name="Signup"
           component={SignUp}
           options={{ headerShown: false }}

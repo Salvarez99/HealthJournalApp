@@ -18,7 +18,8 @@ import { AppState } from "react-native";
 import * as Sharing from 'expo-sharing';
 import * as FileSystem from 'expo-file-system';
 import * as DocumentPicker from 'expo-document-picker';
-import { fetchAppointments, clearAppointments } from "../../LocalStorage/LocalDatabase";
+import { fetchAppointments, clearAppointments, fetchJournals } from "../../LocalStorage/LocalDatabase";
+import { useFocusEffect} from "@react-navigation/native";
 // for testing
 import PlaceholderForm from "../../InputForms/PlaceholderForm";
 
@@ -29,8 +30,18 @@ export default function JournalScreen({ navigation }) {
 
   //const [appointmentData, setAppointmentData] = React.useState(null); // for data fetched from backend url take input from addappointmentFrom.js
   const [appointments, setAppointments] = useState([]); // hook. for dummy datas
+  const [journals, setJournals] = useState([]);
 
 
+  const fetchJournalsFromDB = async () => {
+    try {
+      const journalsFromDB = await fetchJournals();
+      setJournals(journalsFromDB);
+      console.log("journals successfully fetched?");
+    } catch (error) {
+      console.error('Error fetching journals', error);
+    }
+  };
 
   // create useEffect() and use dummy data for now
   useEffect(() => {
@@ -45,6 +56,16 @@ export default function JournalScreen({ navigation }) {
       }
     };
 
+    const fetchJournalsFromDB = async()=> {
+      try{ 
+        const journalsFromDB = await fetchJournals();
+        setJournals(journalsFromDB);
+        console.log("journals successfully fetched?");
+      } catch(error){
+        console.error('Error fetching journals', error);
+      }
+    };
+
     const clearAllData = async () => {
       try {
         const rowsAffected = await clearAppointments();
@@ -53,6 +74,8 @@ export default function JournalScreen({ navigation }) {
         console.error('Error clearing appointments:', error);
       }
     };
+
+    
     
     /*
     const dummyAppointments = [
@@ -252,8 +275,26 @@ export default function JournalScreen({ navigation }) {
     setAppointments(dummyAppointments);
     */
 
-    fetchAppointmentsFromDB();
+    fetchJournalsFromDB();
   }, []);
+
+  useFocusEffect(
+    
+    React.useCallback(() => {
+
+      const fetchJournalsFromDB = async()=> {
+        try{ 
+          const journalsFromDB = await fetchJournals();
+          setJournals(journalsFromDB);
+          console.log("journals successfully fetched?");
+        } catch(error){
+          console.error('Error fetching journals', error);
+        }
+      };
+
+      fetchJournalsFromDB(); // Fetch journals data when screen is focused
+    }, [])
+  );
 
   // define fetchAppointmetnData() function with async
   const fetchAppointmentData = async () => {
@@ -317,7 +358,7 @@ export default function JournalScreen({ navigation }) {
   };
 
   const displayAppointmentDetails = (item) => {
-    return `${item.eventDate}`;
+    return `${item.symptomName}`;
   };
 
   // render appointment item (prepare for displaying)
@@ -358,6 +399,10 @@ export default function JournalScreen({ navigation }) {
           <AddJournalEntryForm
             isVisible={isModalVisible}
             onClose={closeModal}
+            navigation={navigation}
+            onSaveSuccess={()=> {
+              fetchJournalsFromDB();
+            }}
           />
         );
 
@@ -375,7 +420,7 @@ export default function JournalScreen({ navigation }) {
 
         {/** show list of saved appointment records */}
         <FlatList
-          data={appointments}
+          data={journals}
           renderItem={renderAppointmentItem}
           keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={styles.horizontalListContent}

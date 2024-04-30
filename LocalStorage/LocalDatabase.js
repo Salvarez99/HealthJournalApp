@@ -42,8 +42,8 @@ export const initializeDatabase = () => {
           );`,
           [],
           (_, result) => {
-            // Resolve if the illness table creation is successful
-            console.log("Illness table created successfully");
+            // Resolve if the Journal table creation is successful
+            console.log("Journal table created successfully");
           },
           (_, error) => {
             reject(error); // Reject with the error if table creation fails
@@ -167,7 +167,7 @@ export const addAppointment = (eventName, eventDate, eventStartTime, eventEndTim
     return new Promise((resolve, reject) => {
       db.transaction((tx) => {
         tx.executeSql(
-          `SELECT * FROM journals;`,
+          `SELECT * FROM journal;`,
           [],
           (_, result) => {
             const journals = result.rows._array;
@@ -191,6 +191,62 @@ export const addAppointment = (eventName, eventDate, eventStartTime, eventEndTim
             // After deleting all records, reset the primary key sequence
             tx.executeSql(
               `DELETE FROM sqlite_sequence WHERE name = 'appointments';`,
+              [],
+              () => {
+                // Resolve with the number of rows affected (should be 0 or more)
+                resolve(result.rowsAffected);
+              },
+              (_, error) => {
+                reject(error); // Reject with the error if resetting the sequence fails
+              }
+            );
+          },
+          (_, error) => {
+            reject(error); // Reject with the error if deletion fails
+          }
+        );
+      });
+    });
+  };
+
+  export const clearJournals = () => {
+    return new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+        tx.executeSql(
+          `DELETE FROM journal;`,
+          [],
+          (_, result) => {
+            // After deleting all records, reset the primary key sequence
+            tx.executeSql(
+              `DELETE FROM sqlite_sequence WHERE name = 'journal';`,
+              [],
+              () => {
+                // Resolve with the number of rows affected (should be 0 or more)
+                resolve(result.rowsAffected);
+              },
+              (_, error) => {
+                reject(error); // Reject with the error if resetting the sequence fails
+              }
+            );
+          },
+          (_, error) => {
+            reject(error); // Reject with the error if deletion fails
+          }
+        );
+      });
+    });
+  };
+
+  export const clearMedications = () => {
+    return new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+        tx.executeSql(
+          `DELETE FROM medications;`,
+          [],
+          (_, result) => {
+            // After deleting all records, reset the primary key sequence
+            tx.executeSql(
+              `DELETE FROM sqlite_sequence WHERE name = 'medications';`,
               [],
               () => {
                 // Resolve with the number of rows affected (should be 0 or more)

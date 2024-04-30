@@ -14,6 +14,7 @@ import {
 import Medication from "../Classes/Medication";
 import DropDownList from "../Components/DosageSchedDropDown";
 import WeekDaysButtons from "../Components/WeekdayButtons";
+import { addMedicine } from "../LocalStorage/LocalDatabase";
 
 const AddMedicationForm = ({ isVisible, onClose }) => {
   const [medicationName, setMedicationName] = new useState("");
@@ -38,6 +39,7 @@ const AddMedicationForm = ({ isVisible, onClose }) => {
       dosageSchedule,
       frequency
     );
+    addMedicine(medication.medicationName, medication.dosage, medication.dosageSchedule, medication.frequency);
     // console.log("Medication: " + medicationName);
     // console.log("Dosage: " + dosage);
     // console.log('Dosage Schedule: ' + dosageSchedule);

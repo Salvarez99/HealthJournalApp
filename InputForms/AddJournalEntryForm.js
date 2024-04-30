@@ -12,8 +12,9 @@ import {
 
 import SearchComponent from "../Components/SearchComponent";
 import JournalEntry from "../Classes/JournalEntry";
+import { addJournal } from "../LocalStorage/LocalDatabase";
 
-const AddJournalEntryForm = ({ isVisible, onClose }) => {
+const AddJournalEntryForm = ({ isVisible, onClose, navigation, onSaveSuccess }) => {
   let dummySymptoms = [
     "Cough",
     "Headache",
@@ -44,8 +45,19 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
   const [symptoms, setSymptoms] = useState([]);
   const [illnesses, setIllnesses] = useState([]);
   const [tests, setTests] = useState([]);
+  /*
+  const [currentSymptom, setSymptom] = new useState("");
+  const [currentSymptomStartDate, setSymptomStartDate] = new Date();
+  const [currentSymptomEndDate, setSymptomEndDate] = new Date();
+  const [currentIllness, setIllness] = new useState("");
+  const [currentIllnessStartDate, setIllnessStartDate] = new Date();
+  const [currentIllnessEndDate, setIllnessEndDate] = new Date();
+  const [testName, setTestName] = new useState("");
+  const [testDate, setTestDate] = new Date();
+*/
   let journalEntry = null;
 
+  //This is utterly fucking retarded
   const printLists = () => {
     console.log("Symptoms: \n");
     for (const symptom of symptoms) {
@@ -73,7 +85,16 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
   const onSave = () => {
     printLists();
     journalEntry = new JournalEntry(symptoms, illnesses, tests);
-    onClose();
+    addJournal(symptoms.name, symptoms.startDate, symptoms.endDate, illnesses.name, illnesses.startDate, illnesses.endDate, tests.name, tests.dateOccured)
+      .then((insertId) => {
+        console.log(`Journal entry added successfully with ID: ${insertId}`);
+        onClose(); // Close the modal after saving
+        //navigation.navigate('MainContainer');
+        onSaveSuccess();
+      })
+      .catch((error) => {
+        console.error('Error adding journal entry:', error);
+      });
   };
   return (
     <Modal
