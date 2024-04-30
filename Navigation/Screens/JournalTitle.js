@@ -14,7 +14,7 @@ import {
 // display details + exit button ( go back to journalscreen.js )
 
 export default function JournalTitle({ route, navigation }) {
-  const { arryOfAppointmentInfo } = route.params; // used navigation parameter to get data from journalscreen.js // citation needed
+  const { arryOfAppointmentInfo, item } = route.params; // used navigation parameter to get data from journalscreen.js // citation needed
   // citation for route.params : https://reactnavigation.org/docs/params/
 
   // used switch statement to display symtop, illness and test and labwork.
@@ -23,7 +23,7 @@ export default function JournalTitle({ route, navigation }) {
     switch (arraytype) {
       case "Symptom":
         return (
-          <View sytle={styles.entryContainer}>
+          <View style={styles.entryContainer}>
             <Text style={styles.entryTitle}>Symptom Name: {entry.name}</Text>
             <View style={styles.dateContainer}>
               <Text>Start Date: {entry.startDate}</Text>
@@ -79,6 +79,7 @@ export default function JournalTitle({ route, navigation }) {
 
   //  Check if arrayOfAppointmentInfo exists
   const checkPassedInfo = (arryOfAppointmentInfo) => {
+    console.log(item.id);
     if (!arryOfAppointmentInfo) {
       return <Text>No information available</Text>;
     }
@@ -93,28 +94,25 @@ export default function JournalTitle({ route, navigation }) {
         {checkPassedInfo(arryOfAppointmentInfo)}
 
         <Text style={styles.mainIdContainer}>
-          Journal {arryOfAppointmentInfo.id.toString()}
+          Journal {item.id.toString()}
         </Text>
         {/* Render Symptoms */}
         <Text style={styles.sectionTitle}>Symptom</Text>
-        <View style={styles.innerContainer}>
-          {renderIfExists(arryOfAppointmentInfo.Symptom, "Symptom")}
-        </View>
+        <Text style={styles.innerContainer}>
+            {item.symptomName}
+        </Text>
 
         {/* Render Illnesses */}
         <Text style={styles.sectionTitle}>Illnesses</Text>
-        <View style={styles.innerContainer}>
-          {renderIfExists(arryOfAppointmentInfo.Illness, "Illness")}
-        </View>
+        <Text style={styles.innerContainer}>
+          {item.illnessName}
+        </Text>
 
         {/* Render Tests & Labworks */}
         <Text style={styles.sectionTitle}>Tests & Labworks</Text>
-        <View style={styles.innerContainer}>
-          {renderIfExists(
-            arryOfAppointmentInfo.TestsAndLabWorks,
-            "TestsAndLabWorks"
-          )}
-        </View>
+        <Text style={styles.innerContainer}>
+          {item.testName}
+        </Text>
 
         {/* Exit Button */}
         <TouchableOpacity

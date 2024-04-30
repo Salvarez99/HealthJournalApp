@@ -74,207 +74,6 @@ export default function JournalScreen({ navigation }) {
         console.error('Error clearing appointments:', error);
       }
     };
-
-    
-    
-    /*
-    const dummyAppointments = [
-      //dummy data 1
-      {
-        id: 1,
-        Symptom: [
-          { name: "Fever", startDate: "04-08-2024", endDate: "04-09-2024" },
-          { name: "Headache", startDate: "04-03-2024", endDate: "04-19-2024" },
-          { name: "Tired", startDate: "04-08-2024", endDate: "04-29-2024" },
-        ],
-        Illness: [
-          { name: "Cold", startDate: "04-01-2024", endDate: "04-09-2024" },
-          { name: "Dizziness", startDate: "04-01-2024", endDate: "04-09-2024" },
-          { name: "Fever", startDate: "04-01-2024", endDate: "04-09-2024" },
-          {
-            name: "Sore throat",
-            startDate: "04-01-2024",
-            endDate: "04-09-2024",
-          },
-          {
-            name: "Stomach ache",
-            startDate: "04-01-2024",
-            endDate: "04-09-2024",
-          },
-        ],
-        TestsAndLabWorks: [
-          { name: "Blood Test", dateOccurred: "04-10-2024" },
-          { name: "X-Ray", dateOccurred: "04-10-2024" },
-        ],
-      },
-
-      {
-        id: 2,
-        Symptom: [],
-        Illness: [
-          {
-            name: "Common Cold",
-            startDate: "04-01-2024",
-            endDate: "04-09-2024",
-          },
-        ],
-        TestsAndLabWorks: [
-          { name: "Blood Test", dateOccurred: "04-10-2024" },
-          { name: "X-Ray", dateOccurred: "04-10-2024" },
-        ],
-      },
-
-      {
-        id: 3,
-        Symptom: [],
-        Illness: [],
-        TestsAndLabWorks: [
-          { name: "Blood Test", dateOccurred: "04-10-2024" },
-          { name: "X-Ray", dateOccurred: "04-10-2024" },
-        ],
-      },
-
-      {
-        id: 4,
-        Symptom: [],
-        Illness: [
-          {
-            name: "Common Cold",
-            startDate: "04-01-2024",
-            endDate: "04-09-2024",
-          },
-        ],
-        TestsAndLabWorks: [],
-      },
-
-      {
-        id: 5,
-        Symptom: [
-          { name: "Back Pain", startDate: "04-24-2024", endDate: "04-09-2024" },
-          { name: "Headache", startDate: "04-01-2024", endDate: "04-09-2024" },
-        ],
-        Illness: [
-          {
-            name: "Common Cold",
-            startDate: "04-01-2024",
-            endDate: "04-09-2024",
-          },
-        ],
-        TestsAndLabWorks: [
-          { name: "Blood Test", dateOccurred: "04-10-2024" },
-          { name: "X-Ray", dateOccurred: "04-10-2024" },
-        ],
-      },
-
-      {
-        id: 6,
-        Symptom: [
-          { name: "Back Pain", startDate: "04-15-2024", endDate: "04-09-2024" },
-          { name: "Headache", startDate: "04-01-2024", endDate: "04-09-2024" },
-        ],
-        Illness: [
-          {
-            name: "Common Cold",
-            startDate: "04-01-2024",
-            endDate: "04-09-2024",
-          },
-        ],
-        TestsAndLabWorks: [
-          { name: "Blood Test", dateOccurred: "04-10-2024" },
-          { name: "X-Ray", dateOccurred: "04-10-2024" },
-        ],
-      },
-
-      {
-        id: 7,
-        Symptom: [
-          { name: "Back Pain", startDate: "04-18-2024", endDate: "04-09-2024" },
-        ],
-        Illness: [],
-        TestsAndLabWorks: [
-          { name: "Blood Test", dateOccurred: "04-10-2024" },
-          { name: "X-Ray", dateOccurred: "04-10-2024" },
-        ],
-      },
-
-      // test
-      {
-        id: 8,
-        Symptom: [
-          { name: "Back Pain", startDate: "05-13-2024", endDate: "04-09-2024" },
-          { name: "Headache", startDate: "04-01-2024", endDate: "04-09-2024" },
-        ],
-        Illness: [
-          {
-            name: "Common Cold",
-            startDate: "04-01-2024",
-            endDate: "04-09-2024",
-          },
-        ],
-        TestsAndLabWorks: [
-          { name: "Blood Test", dateOccurred: "04-10-2024" },
-          { name: "X-Ray", dateOccurred: "04-10-2024" },
-        ],
-      },
-      // pass this entire array as arrayofinformationdata to journaltitle.js and distinguish there
-      {
-        id: 9,
-        Symptom: [
-          { name: "Back Pain", startDate: "05-18-2024", endDate: "04-09-2024" },
-          { name: "Headache", startDate: "04-01-2024", endDate: "04-09-2024" },
-        ],
-        Illness: [
-          {
-            name: "Common Cold",
-            startDate: "04-01-2024",
-            endDate: "04-09-2024",
-          },
-        ],
-        TestsAndLabWorks: [
-          { name: "Blood Test", dateOccurred: "04-10-2024" },
-          { name: "X-Ray", dateOccurred: "04-10-2024" },
-        ],
-      },
-
-      {
-        id: 10,
-        Symptom: [
-          { name: "Back Pain", startDate: "05-28-2024", endDate: "04-09-2024" },
-          { name: "Headache", startDate: "04-01-2024", endDate: "04-09-2024" },
-        ],
-        Illness: [
-          {
-            name: "Common Cold",
-            startDate: "04-01-2024",
-            endDate: "04-09-2024",
-          },
-        ],
-        TestsAndLabWorks: [
-          { name: "Blood Test", dateOccurred: "04-10-2024" },
-          { name: "X-Ray", dateOccurred: "04-10-2024" },
-        ],
-      },
-
-      {
-        id: 11,
-        Symptom: [
-          { name: "Back Pain", startDate: "06-08-2024", endDate: "04-09-2024" },
-          { name: "Headache", startDate: "04-01-2024", endDate: "04-09-2024" },
-        ],
-        Illness: [],
-        TestsAndLabWorks: [
-          { name: "Blood Test", dateOccurred: "04-10-2024" },
-          { name: "X-Ray", dateOccurred: "04-10-2024" },
-        ],
-      },
-
-      // add more data as needed list of string symptom, illness , test and labworks.
-    ];
-
-    // set appointments state
-    setAppointments(dummyAppointments);
-    */
-
     fetchJournalsFromDB();
   }, []);
 
@@ -342,8 +141,9 @@ export default function JournalScreen({ navigation }) {
   };
 
   // handel when user click journal screen entry >> display JournalTitle.js page
-  const handleAppointmentPress = (arryOfAppointmentInfo) => {
-    navigation.navigate("JournalTitle", { arryOfAppointmentInfo }); //https://youtu.be/oBAOr1OswkQ?si=NQ_XdTnzKk3t8xGd
+  const handleAppointmentPress = (arryOfAppointmentInfo, item) => {
+    console.log(item.id);
+    navigation.navigate("JournalTitle", { arryOfAppointmentInfo, item }); //https://youtu.be/oBAOr1OswkQ?si=NQ_XdTnzKk3t8xGd
   };
 
   // render journal date on journal screen.
@@ -365,7 +165,7 @@ export default function JournalScreen({ navigation }) {
   const renderAppointmentItem = ({ item }) => (
     <TouchableOpacity
     style={styles.appointmentItem}
-    onPress={() => handleAppointmentPress(item)}
+    onPress={() => handleAppointmentPress(item,item)}
   >
     <View style={styles.appointmentInfo}>
       <Text style={styles.JournalTitle}>{`Journal: ${item.id}`}</Text>
