@@ -21,7 +21,6 @@ import * as DocumentPicker from 'expo-document-picker';
 import { fetchAppointments, clearAppointments } from "../../LocalStorage/LocalDatabase";
 // for testing
 import PlaceholderForm from "../../InputForms/PlaceholderForm";
-import Symptom from "../../Classes/Symptom";
 
 
 export default function JournalScreen({ navigation }) {
@@ -61,32 +60,38 @@ export default function JournalScreen({ navigation }) {
       {
         id: 1,
         Symptom: [
-          { name: "Fever", startDate: "04-01-2024", endDate: "04-09-2024" },
+          { name: "Fever", startDate: "04-08-2024", endDate: "04-09-2024" },
           { name: "Headache", startDate: "04-03-2024", endDate: "04-19-2024" },
-          { name: "Tired", startDate: "04-15-2024", endDate: "04-29-2024" },
+          { name: "Tired", startDate: "04-08-2024", endDate: "04-29-2024" },
         ],
         Illness: [
-          { name: "Cold", startDate: "04-05-2024", endDate: "04-09-2024" },
+          { name: "Cold", startDate: "04-01-2024", endDate: "04-09-2024" },
           { name: "Dizziness", startDate: "04-01-2024", endDate: "04-09-2024" },
-          { name: "Fever", startDate: "04-03-2024", endDate: "04-09-2024" },
-          { name: "Fever", startDate: "04-12-2024", endDate: "04-09-2024" },
-         
+          { name: "Fever", startDate: "04-01-2024", endDate: "04-09-2024" },
+          {
+            name: "Sore throat",
+            startDate: "04-01-2024",
+            endDate: "04-09-2024",
+          },
+          {
+            name: "Stomach ache",
+            startDate: "04-01-2024",
+            endDate: "04-09-2024",
+          },
         ],
         TestsAndLabWorks: [
           { name: "Blood Test", dateOccurred: "04-10-2024" },
-          { name: "X-Ray", dateOccurred: "04-17-2024" },
+          { name: "X-Ray", dateOccurred: "04-10-2024" },
         ],
       },
 
       {
         id: 2,
-        Symptom: [
-          
-        ],
+        Symptom: [],
         Illness: [
           {
             name: "Common Cold",
-            startDate: "03-01-2024",
+            startDate: "04-01-2024",
             endDate: "04-09-2024",
           },
         ],
@@ -101,8 +106,8 @@ export default function JournalScreen({ navigation }) {
         Symptom: [],
         Illness: [],
         TestsAndLabWorks: [
-          { name: "Blood Test", dateOccurred: "04-23-2024" },
-          { name: "X-Ray", dateOccurred: "04-24-2024" },
+          { name: "Blood Test", dateOccurred: "04-10-2024" },
+          { name: "X-Ray", dateOccurred: "04-10-2024" },
         ],
       },
 
@@ -112,71 +117,133 @@ export default function JournalScreen({ navigation }) {
         Illness: [
           {
             name: "Common Cold",
-            startDate: "04-11-2024",
-            endDate: "04-17-2024",
+            startDate: "04-01-2024",
+            endDate: "04-09-2024",
           },
         ],
         TestsAndLabWorks: [],
       },
+
       {
         id: 5,
-        Symptom: [],
+        Symptom: [
+          { name: "Back Pain", startDate: "04-24-2024", endDate: "04-09-2024" },
+          { name: "Headache", startDate: "04-01-2024", endDate: "04-09-2024" },
+        ],
         Illness: [
           {
             name: "Common Cold",
-            startDate: "04-26-2024",
-            endDate: "04-17-2024",
+            startDate: "04-01-2024",
+            endDate: "04-09-2024",
           },
-        ],
-        TestsAndLabWorks: [],
-      },
-      {
-        id: 6,
-        Symptom: [
-          { name: "Fever", startDate: "04-30-2024", endDate: "04-09-2024" },
-          { name: "Headache", startDate: "04-03-2024", endDate: "04-19-2024" },
-          { name: "Tired", startDate: "04-02-2024", endDate: "04-29-2024" },
-        ],
-        Illness: [
-          { name: "Cold", startDate: "04-05-2024", endDate: "04-09-2024" },
-          { name: "Dizziness", startDate: "04-01-2024", endDate: "04-09-2024" },
-          { name: "Fever", startDate: "04-03-2024", endDate: "04-09-2024" },
-          { name: "Fever", startDate: "04-12-2024", endDate: "04-09-2024" },
-         
         ],
         TestsAndLabWorks: [
           { name: "Blood Test", dateOccurred: "04-10-2024" },
-          { name: "X-Ray", dateOccurred: "04-17-2024" },
+          { name: "X-Ray", dateOccurred: "04-10-2024" },
+        ],
+      },
+
+      {
+        id: 6,
+        Symptom: [
+          { name: "Back Pain", startDate: "04-15-2024", endDate: "04-09-2024" },
+          { name: "Headache", startDate: "04-01-2024", endDate: "04-09-2024" },
+        ],
+        Illness: [
+          {
+            name: "Common Cold",
+            startDate: "04-01-2024",
+            endDate: "04-09-2024",
+          },
+        ],
+        TestsAndLabWorks: [
+          { name: "Blood Test", dateOccurred: "04-10-2024" },
+          { name: "X-Ray", dateOccurred: "04-10-2024" },
         ],
       },
 
       {
         id: 7,
         Symptom: [
-          { name: "Fever", startDate: "01-01-2024", endDate: "04-09-2024" },
-          { name: "Headache", startDate: "03-03-2024", endDate: "04-19-2024" },
-          { name: "Tired", startDate: "03-15-2024", endDate: "04-29-2024" },
+          { name: "Back Pain", startDate: "04-18-2024", endDate: "04-09-2024" },
         ],
-        Illness: [
-          { name: "Cold", startDate: "04-05-2024", endDate: "04-09-2024" },
-          { name: "Dizziness", startDate: "04-01-2024", endDate: "04-09-2024" },
-          { name: "Fever", startDate: "04-03-2024", endDate: "04-09-2024" },
-          { name: "Fever", startDate: "04-12-2024", endDate: "04-09-2024" },
-         
-        ],
+        Illness: [],
         TestsAndLabWorks: [
           { name: "Blood Test", dateOccurred: "04-10-2024" },
-          { name: "X-Ray", dateOccurred: "04-17-2024" },
+          { name: "X-Ray", dateOccurred: "04-10-2024" },
         ],
       },
 
-      
+      // test
+      {
+        id: 8,
+        Symptom: [
+          { name: "Back Pain", startDate: "05-13-2024", endDate: "04-09-2024" },
+          { name: "Headache", startDate: "04-01-2024", endDate: "04-09-2024" },
+        ],
+        Illness: [
+          {
+            name: "Common Cold",
+            startDate: "04-01-2024",
+            endDate: "04-09-2024",
+          },
+        ],
+        TestsAndLabWorks: [
+          { name: "Blood Test", dateOccurred: "04-10-2024" },
+          { name: "X-Ray", dateOccurred: "04-10-2024" },
+        ],
+      },
+      // pass this entire array as arrayofinformationdata to journaltitle.js and distinguish there
+      {
+        id: 9,
+        Symptom: [
+          { name: "Back Pain", startDate: "05-18-2024", endDate: "04-09-2024" },
+          { name: "Headache", startDate: "04-01-2024", endDate: "04-09-2024" },
+        ],
+        Illness: [
+          {
+            name: "Common Cold",
+            startDate: "04-01-2024",
+            endDate: "04-09-2024",
+          },
+        ],
+        TestsAndLabWorks: [
+          { name: "Blood Test", dateOccurred: "04-10-2024" },
+          { name: "X-Ray", dateOccurred: "04-10-2024" },
+        ],
+      },
 
-     
+      {
+        id: 10,
+        Symptom: [
+          { name: "Back Pain", startDate: "05-28-2024", endDate: "04-09-2024" },
+          { name: "Headache", startDate: "04-01-2024", endDate: "04-09-2024" },
+        ],
+        Illness: [
+          {
+            name: "Common Cold",
+            startDate: "04-01-2024",
+            endDate: "04-09-2024",
+          },
+        ],
+        TestsAndLabWorks: [
+          { name: "Blood Test", dateOccurred: "04-10-2024" },
+          { name: "X-Ray", dateOccurred: "04-10-2024" },
+        ],
+      },
 
-
-
-  
+      {
+        id: 11,
+        Symptom: [
+          { name: "Back Pain", startDate: "06-08-2024", endDate: "04-09-2024" },
+          { name: "Headache", startDate: "04-01-2024", endDate: "04-09-2024" },
+        ],
+        Illness: [],
+        TestsAndLabWorks: [
+          { name: "Blood Test", dateOccurred: "04-10-2024" },
+          { name: "X-Ray", dateOccurred: "04-10-2024" },
+        ],
+      },
 
       // add more data as needed list of string symptom, illness , test and labworks.
     ];
@@ -239,48 +306,12 @@ export default function JournalScreen({ navigation }) {
   };
 
   // render journal date on journal screen.
-  // sort date in each symptom list , illnes list, test and labwork list.
   const displayStartDate = (item) => {
     if (item.Symptom && item.Symptom.length > 0) {
-      // citation: sorting https://stackoverflow.com/questions/47071623/sort-by-closest-date-to-dates-which-have-occured-and-will-occur
-      // compare starting date 
-      item.Symptom.sort(function(a, b) {
-            //a.startDate is string type , conver to Date object. 
-            const dateA = new Date(a.startDate);
-            const dateB = new Date(b.startDate);
-            return Math.abs(Date.now() - dateA) - Math.abs(Date.now() - dateB);
-        });
-
-        // Log the sorted Symptom array (for debugging)
-        // console.log(item.Symptom);
       return item.Symptom[0].startDate;
-
-    } 
-    
-    if (item.Illness && item.Illness.length > 0) {
-
-      item.Illness.sort(function(a, b) {
-        //a.startDate is string type , conver to Date object. 
-        const dateA = new Date(a.startDate);
-        const dateB = new Date(b.startDate);
-        return Math.abs(Date.now() - dateA) - Math.abs(Date.now() - dateB);
-    });
-
-        // Log the sorted Illness array (for debugging)
-        // console.log(item.Illness);
+    } else if (item.Illness && item.Illness.length > 0) {
       return item.Illness[0].startDate;
-    } 
-    
-    if (item.TestsAndLabWorks && item.TestsAndLabWorks.length > 0) {
-      // Sort TestsAndLabWorks array based on dateOccurred
-      item.TestsAndLabWorks.sort((a, b) => {
-        const dateA = new Date(a.dateOccurred);
-        const dateB = new Date(b.dateOccurred);
-        return Math.abs(Date.now() - dateA) - Math.abs(Date.now() - dateB);
-      });
-  
-      // Return the dateOccurred of the first item in TestsAndLabWorks array
-      // console.log(item.TestsAndLabWorks);
+    } else if (item.TestsAndLabWorks && item.TestsAndLabWorks.length > 0) {
       return item.TestsAndLabWorks[0].dateOccurred;
     }
   };
@@ -290,23 +321,7 @@ export default function JournalScreen({ navigation }) {
   };
 
   // render appointment item (prepare for displaying)
-const renderJournalItem = ({ item }) => {
- 
-  // Determine the source of data (dummy or fetched appointments)
-  const sourceAppointments = appointments.length > 0 ? appointments : dummyAppointments;
-
-  // Sort the appointments based on date difference
-  // citation : https://stackoverflow.com/questions/47071623/sort-by-closest-date-to-dates-which-have-occured-and-will-occur
-  sourceAppointments.sort((a, b) => {
-   
-    // Calculate date difference for both items
-    const differenceA = calculateDateDifference(displayStartDate(a));
-    const differenceB = calculateDateDifference(displayStartDate(b));
-    return differenceA - differenceB; // sort by ascending order , nearest item fist comes.
-  });
-
-  // render return with touchable opacity >> linked to journaltitle.js 
-  return (
+  const renderAppointmentItem = ({ item }) => (
     <TouchableOpacity
     style={styles.appointmentItem}
     onPress={() => handleAppointmentPress(item)}
@@ -324,11 +339,13 @@ const renderJournalItem = ({ item }) => {
     { name: "Add Appointment", openModal: openModal1 },
     { name: "Add Medication", openModal: openModal2 },
     { name: "Add Journal Entry", openModal: openModal3 },
+    // Add more modal components as needed
   ];
 
   const renderSelectedModal = () => {
     switch (selectedModal) {
       case "AddAppointmentForm":
+        //return <PlaceholderForm isVisible={isModalVisible} onClose={closeModal} />;    // for testing
         return (
           <AddAppointmentForm isVisible={isModalVisible} onClose={closeModal} navigation={navigation} />
         );
@@ -343,6 +360,7 @@ const renderJournalItem = ({ item }) => {
             onClose={closeModal}
           />
         );
+
       default:
         return null;
     }
@@ -353,11 +371,14 @@ const renderJournalItem = ({ item }) => {
       <View style={styles.mainContent}>
         {/* Put your content in this view */}
 
+        {/* display add appointment data */}
+
         {/** show list of saved appointment records */}
         <FlatList
           data={appointments}
-          renderItem={renderJournalItem}
+          renderItem={renderAppointmentItem}
           keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={styles.horizontalListContent}
           showsVerticalScrollIndicator={false}
         />
       </View>
@@ -373,23 +394,69 @@ const renderJournalItem = ({ item }) => {
 }
 
 const styles = StyleSheet.create({
+  // add scrollContent style!
+
   container: {
     flex: 1,
   },
   mainContent: {
     flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingBottom: 50,
+  },
+  title: {
+    paddingTop: 10,
+    fontSize: 26,
+    fontWeight: "bold",
   },
   quickAddButtonContainer: {
     position: "absolute",
     bottom: "2%",
     left: "4%",
   },
-  journalButtonStyle: {
+  //
+  appointmentDataContainer: {
+    paddingLeft: 20,
+    marginTop: 20,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: "gray",
+    borderRadius: 5,
+    paddingHorizontal: 20, // Add horizontal padding
+  },
+  appointmentList: {
+    flex: 1,
+    horizontal: "100%",
+    paddingVertical: 20, // put paddding in vertical way
+  },
+  appointmentItem: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     flexDirection: "row", // Align children horizontally
+    // alignItems: 'flex-start', // Align children vertically
+    paddingRight: 100,
     justifyContent: "space-between", // Align children evenly
-    padding: 30,
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
+  },
+
+  // horizontal line
+  horizontalLine: {
+    flex: 1, // take full screen
+    height: 1,
+    backgroundColor: "#000000",
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  // Journal# size
+  appointmentInfo: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingTop: 25,
+    paddingBottom: 25,
+    paddingRight: 7,
     ...Platform.select({
       ios: {
         fontFamily: "Times New Roman", // Set font family to Times New Roman
@@ -397,9 +464,10 @@ const styles = StyleSheet.create({
     }),
   },
   JournalTitle: {
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: "bold",
     paddingLeft: 20,
+
     ...Platform.select({
       ios: {
         fontFamily: "Times New Roman", // Set font family to Times New Roman
@@ -408,13 +476,19 @@ const styles = StyleSheet.create({
   },
   JournalDate: {
     fontSize: 14,
-    paddingTop : 3,
     paddingLeft: 150,
+    paddingRight: 20,
     color: "#555",
     ...Platform.select({
       ios: {
         fontFamily: "Times New Roman", // Set font family to Times New Roman
       },
     }),
+  },
+  horizontalListContent: {
+    horizontal: "100%",
+    width: "100",
+    marginTop: 10,
+    marginBottom: 10,
   },
 });
