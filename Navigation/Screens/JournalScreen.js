@@ -31,7 +31,7 @@ export default function JournalScreen({ navigation }) {
   //const [appointmentData, setAppointmentData] = React.useState(null); // for data fetched from backend url take input from addappointmentFrom.js
   const [appointments, setAppointments] = useState([]); // hook. for dummy datas
   const [journals, setJournals] = useState([]);
-
+  
 
   const fetchJournalsFromDB = async () => {
     try {
@@ -305,7 +305,7 @@ export default function JournalScreen({ navigation }) {
       const data = await response.json(); // store response in data
       setAppointments(data); // pass retrived data
     } catch (error) {
-      console.log("fail to fetch data from appointment database : ", error);
+      //console.log("fail to fetch data from appointment database : ", error);
     }
   };
 

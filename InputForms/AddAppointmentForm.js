@@ -16,15 +16,30 @@ import Appointment from "../Classes/Appointment";
 import {addAppointment, clearAppointments} from "../LocalStorage/LocalDatabase";
 
 const AddAppointmentForm = ({ isVisible, onClose, navigation }) => {
-  const [eventName, setEventName] = new useState("");
-  const [eventDate, setEventDate] = new useState(new Date());
-  const [eventStartTime, setEventStartTime] = new useState(null);
-  const [eventEndTime, setEventEndTime] = new useState(null);
+  const [eventName, setEventName] = useState("");
+  const [eventDate, setEventDate] = useState(new Date());
+  const [eventStartTime, setEventStartTime] = useState(null);
+  const [eventEndTime, setEventEndTime] = useState(null);
   let appointment = null;
 
+  const convertDateFormat = (dateString) => {
+    const parts = dateString.split('-');
+    const year = parts[0];
+    const month = parts[1];
+    const day = parts[2];
+    return `${month}-${day}-${year}`;
+  };
+
   const handleDateChange = (selectedDate) => {
-    setEventDate(selectedDate);
-    // console.log(selectedDate);
+    const dateObj = new Date(selectedDate);
+
+    const year = dateObj.getFullYear();
+    const month = (dateObj.getMonth()+1).toString().padStart(2,'0');
+    const day = dateObj.getDate().toString().padStart(2, '0');
+
+    const formattedDate = `${year}-${month}-${day}`;
+    setEventDate(formattedDate);
+    console.log(formattedDate);
   };
 
   const handleStartTimeChange = (startTime) => {
@@ -53,7 +68,7 @@ const AddAppointmentForm = ({ isVisible, onClose, navigation }) => {
     //For testing purposes, if you wish to wipe the entries clean uncomment this
     //await clearAppointments();
     onClose();
-    navigation.navigate('JournalScreen');
+    //navigation.navigate('JournalScreen');
     }
     catch (error){
       console.error('Error adding appointment', error);

@@ -4,7 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import styled from 'styled-components/native';
 // import formik
 import { Formik } from 'formik';
-import {  Platform, Button, View, StyleSheet, TouchableOpacity, Image, Text, TextInput } from 'react-native';
+import {  Platform, Button, View, StyleSheet, TouchableOpacity, Image, Text, TextInput, Alert } from 'react-native';
 //import { GoogleSignIn, GoogleSigninButton, statusCodes} from '@react-native-google-signin/google-signin';
 // icon
 import { Octicons, Fontisto, Ionicons } from '@expo/vector-icons'; // Ionicons : for isPassword , Fontisto : for goole icon
@@ -40,7 +40,7 @@ export default function Login(){
         catch(error){
             console.log(email);
             console.log(password);
-            console.log("Error logging in", error.message);
+            Alert.alert("Error logging in", error.message);
         }
         
       };

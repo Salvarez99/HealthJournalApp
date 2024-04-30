@@ -1,9 +1,8 @@
-// CalendarScreen.js
 import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView, Platform, StyleSheet } from "react-native";
 import { Calendar } from "react-native-calendars";
 import QuickAddButton from "../../Components/QuickAddButton";
-
+import { fetchAppointments } from "../../LocalStorage/LocalDatabase";
 // dummy data to test
 const dummyData = {
   "2024-04-20": {
@@ -104,9 +103,9 @@ export default function CalendarScreen() {
   // same fetech function : fetch from backend API, store in data, else return error
   const fetchAppointmentInfo = async () => {
     try {
-      const response = await fetch("take-backend-api-url"); // Update this with your actual backend API endpoint
-      const data = await response.json();
+      const data = await fetchAppointments();
       setAppointmentInfo(data);
+      console.log(appointmentInfo[0]);
     } catch (error) {
       console.log("Failed to fetch appointment data: ", error);
     }
@@ -119,7 +118,7 @@ export default function CalendarScreen() {
   // check whether clicked date has data - check with actual data from backend
   // citation: use useEffect() with if else : https://forum.freecodecamp.org/t/react-useeffect-cleanup-function-within-if-statement/556965
   useEffect(() => {
-    if (pickedDate && appointmentInfo[pickedDate]) {
+    if (pickedDate && appointmentInfo[0]) {
       setHasDataInPickedDate(true);
     } else {
       setHasDataInPickedDate(false);
@@ -132,13 +131,16 @@ export default function CalendarScreen() {
     // if fetching from backend was successful use appointmentInfo arrya, else usse dummydata. 
     let eventsData = [];
 
-    if (appointmentInfo[pickedDate]) {
-        if (appointmentInfo[pickedDate].length > 0) {  // // citation : https://www.squash.io/accessing-array-length-in-thisstate-in-reactjs/
-            eventsData = appointmentInfo[pickedDate];
+    if (appointmentInfo[0]) {
+        if (appointmentInfo[0].length > 0) {  // // citation : https://www.squash.io/accessing-array-length-in-thisstate-in-reactjs/
+            eventsData = appointmentInfo[0];
         }
-    } else if (dummyData[pickedDate] && dummyData[pickedDate].events) {
+    } 
+    /*
+    else if (dummyData[pickedDate] && dummyData[pickedDate].events) {
         eventsData = dummyData[pickedDate].events;
     }
+*/
 
 
 
@@ -146,11 +148,11 @@ export default function CalendarScreen() {
       <ScrollView style={styles.eventList}>
         {eventsData.map((event, index) => (
           <View key={index} style={styles.eventItem}>
-            <Text style={styles.eventName}>{event.name}</Text>
-            <Text style={styles.eventDetail}>Date: {event.date}</Text>
-            <Text style={styles.eventDetail}>Start Time: {event.start}</Text>
-            <Text style={styles.eventDetail}>End Time: {event.end}</Text>
-            <Text style={styles.eventDetail}>Location: {event.location}</Text>
+            <Text style={styles.eventName}>{appointmentInfo[0].eventName}</Text>
+            <Text style={styles.eventDetail}>Date: {appointmentInfo[0].eventDate}</Text>
+            <Text style={styles.eventDetail}>Start Time: {appointmentInfo[0].eventStartTime}</Text>
+            <Text style={styles.eventDetail}>End Time: {appointmentInfo[0].eventEndTime}</Text>
+            <Text style={styles.eventDetail}>Location: {"PlaceHolder"}</Text>
           </View>
         ))}
       </ScrollView>
@@ -163,7 +165,7 @@ export default function CalendarScreen() {
       <Calendar
         style={styles.calendarContainer}
         onDayPress={(day) => {
-          setPickedDate(day.dateString), console.log("Picked Date", day);
+          setPickedDate(day.dateString), console.log("Picked Date", day.dateString);
         }}
         markedDates={{
           [pickedDate]: {

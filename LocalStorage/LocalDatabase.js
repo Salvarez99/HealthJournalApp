@@ -79,7 +79,7 @@ export const addAppointment = (eventName, eventDate, eventStartTime, eventEndTim
           `INSERT INTO appointments (eventName, eventDate, eventStartTime, eventEndTime) VALUES (?, ?, ?, ?);`,
           [eventName, eventDate, eventStartTime, eventEndTime],
           (_, result) => {
-            console.log("Insert Successful ID: ", result.insertId)
+            console.log("Insert Successful ID: ", result.insertId, eventName, eventDate);
             resolve(result.insertId); // Resolve with the ID of the newly inserted appointment
           },
           (_, error) => {
@@ -115,7 +115,7 @@ export const addAppointment = (eventName, eventDate, eventStartTime, eventEndTim
           `INSERT INTO journal (symptomName, symptomStartDate, symptomEndDate, illnessName, illnessStartDate, illnessEndDate, testName, testDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?);`,
           [symptomName, symptomStartDate, symptomEndDate, illnessName, illnessStartDate, illnessEndDate, testName, testDate],
           (_, result) => {
-            console.log("Insert Successful ID: ", result.insertId)
+            console.log("Insert Successful ID: ", result.insertId, symptomName, illnessName, testName);
             resolve(result.insertId); // Resolve with the ID of the newly inserted journal
           },
           (_, error) => {

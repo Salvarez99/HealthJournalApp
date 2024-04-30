@@ -13,6 +13,7 @@ import {
 import SearchComponent from "../Components/SearchComponent";
 import JournalEntry from "../Classes/JournalEntry";
 import { addJournal } from "../LocalStorage/LocalDatabase";
+import { TextInput } from "react-native-gesture-handler";
 
 const AddJournalEntryForm = ({ isVisible, onClose, navigation, onSaveSuccess }) => {
   let dummySymptoms = [
@@ -45,6 +46,9 @@ const AddJournalEntryForm = ({ isVisible, onClose, navigation, onSaveSuccess }) 
   const [symptoms, setSymptoms] = useState([]);
   const [illnesses, setIllnesses] = useState([]);
   const [tests, setTests] = useState([]);
+  const [symptom, setSymptom] = useState("");
+  const [illness, setIllness] = useState("");
+  const [test, setTest] = useState("");
   /*
   const [currentSymptom, setSymptom] = new useState("");
   const [currentSymptomStartDate, setSymptomStartDate] = new Date();
@@ -57,7 +61,7 @@ const AddJournalEntryForm = ({ isVisible, onClose, navigation, onSaveSuccess }) 
 */
   let journalEntry = null;
 
-  //This is utterly fucking retarded
+  
   const printLists = () => {
     console.log("Symptoms: \n");
     for (const symptom of symptoms) {
@@ -81,11 +85,22 @@ const AddJournalEntryForm = ({ isVisible, onClose, navigation, onSaveSuccess }) 
     console.log("\n");
   };
 
+  const handleSymptomNameChange = (symptomName) => {
+    setSymptom(symptomName);
+  };
+
+  const illnessNameChange = (illnessName) => {
+    setIllness(illnessName);
+  };
+
+  const handleTestNameChange = (testName) => {
+    setTest(testName);
+  };
   //TODO: Implement save functionality
   const onSave = () => {
     printLists();
     journalEntry = new JournalEntry(symptoms, illnesses, tests);
-    addJournal(symptoms.name, symptoms.startDate, symptoms.endDate, illnesses.name, illnesses.startDate, illnesses.endDate, tests.name, tests.dateOccured)
+    addJournal(symptom, "Placeholder", "Placeholder", illness, "Placeholder", "Placeholder", test, "Placeholder")
       .then((insertId) => {
         console.log(`Journal entry added successfully with ID: ${insertId}`);
         onClose(); // Close the modal after saving
@@ -117,30 +132,42 @@ const AddJournalEntryForm = ({ isVisible, onClose, navigation, onSaveSuccess }) 
               <Text style={styles.SearchComponentHeader}>Symptoms:</Text>
             </View>
             <View style={{ height: 180 }}>
-              <SearchComponent
-                searchData={dummySymptoms}
-                typeDataInputted={"symptoms"}
-                updateList={setSymptoms}
+              <TextInput
+              style={{
+                borderWidth: 1,
+                borderRadius: 5,
+                borderColor: "black",
+                paddingLeft: 5,
+              }}
+                onChangeText={handleSymptomNameChange}
               />
             </View>
             <View>
               <Text style={styles.SearchComponentHeader}>Illnesses:</Text>
             </View>
             <View style={{ height: 180 }}>
-              <SearchComponent
-                searchData={dummyIllnesses}
-                typeDataInputted={"illnesses"}
-                updateList={setIllnesses}
+              <TextInput
+              style={{
+                borderWidth: 1,
+                borderRadius: 5,
+                borderColor: "black",
+                paddingLeft: 5,
+              }}
+                onChangeText={illnessNameChange}
               />
             </View>
             <View>
               <Text style={styles.SearchComponentHeader}>Tests:</Text>
             </View>
             <View style={{ height: 180 }}>
-              <SearchComponent
-                searchData={dummyTest}
-                typeDataInputted={"tests"}
-                updateList={setTests}
+              <TextInput
+              style={{
+                borderWidth: 1,
+                borderRadius: 5,
+                borderColor: "black",
+                paddingLeft: 5,
+              }}
+                onChangeText={handleTestNameChange}
               />
             </View>
             <View style={styles.saveButtonContainer}>
