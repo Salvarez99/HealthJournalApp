@@ -1,3 +1,15 @@
+/***************************************************************************************
+ * Authors: Stephen Alvarez
+ * Date: 5/1/2024
+ * Code Version: 1.0
+ * 
+ * Description:
+ *  Renders a search component. Consist of a searchbar and handles functionality of when 
+ * the user inputs data and saves the item. Items will be displayed from the DisplayItems
+ * component
+ * 
+ * 
+ ***************************************************************************************/
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -8,13 +20,20 @@ import {
   StyleSheet,
   Platform,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons"; //Vector Icons are used for button icons
 import Symptom from "../Classes/Symptom";
 import Illness from "../Classes/Illness";
 import TestAndLabwork from "../Classes/TestAndLabwork";
 import DisplayItems from "./DisplayItems";
 import DatePicker from "./DatePicker";
 
+/**
+ * 
+ * @param {List} param0 list of strings that are to be displayed when user searches for an item
+ * @param {String} param1 string that indicates the type of data that is being inputted and should be passed back to parent component
+ * @param {List} param2 passthrough function from parent component that updates the parent's list
+ * @returns 
+ */
 const SearchComponent = ({ searchData, typeDataInputted, updateList }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [startDate, setStartDate] = useState(new Date());
@@ -32,7 +51,13 @@ const SearchComponent = ({ searchData, typeDataInputted, updateList }) => {
     setEndDate(newDate);
   };
   
-
+  /**
+   * 
+   * @param {String} name 
+   * @param {Date} startDate 
+   * @param {Date} endDate 
+   * @returns 
+   */
   const addItem = (name, startDate, endDate) => {
     let item;
 
@@ -42,6 +67,7 @@ const SearchComponent = ({ searchData, typeDataInputted, updateList }) => {
     if (endDate instanceof Date) {
       endDate = endDate.toLocaleDateString();
     }
+
     switch (typeDataInputted) {
       case "symptoms":
         item = new Symptom(name, startDate, endDate);
@@ -56,12 +82,13 @@ const SearchComponent = ({ searchData, typeDataInputted, updateList }) => {
         console.error("Unknown Type: " + typeDataInputted);
         return;
     }
-    setItems((prevItems) => [...prevItems, item]);
+    setItems((prevItems) => [...prevItems, item]); //update local list of items
   };
 
+  //Updates parents list when items is used
   useEffect(() => {
     updateList(items);
-  }, [items]); // Only call updateList when items changes
+  }, [items]);
 
   useEffect(() => {
     // Update the visibility based on the search query
@@ -79,6 +106,7 @@ const SearchComponent = ({ searchData, typeDataInputted, updateList }) => {
     }
   }, [searchQuery]);
 
+  //Filter the list based on current searchQuery
   const filteredList = searchQuery
     ? searchData.filter((item) =>
         item.toLowerCase().includes(searchQuery.toLowerCase())
@@ -86,7 +114,7 @@ const SearchComponent = ({ searchData, typeDataInputted, updateList }) => {
     : [];
 
   const onChange = () => {
-
+    //Checks if searchQuery is not just whitespace
     if(!/^\s*$/.test(searchQuery)){
       addItem(searchQuery, startDate, endDate);
     }else{
@@ -120,11 +148,13 @@ const SearchComponent = ({ searchData, typeDataInputted, updateList }) => {
             borderRadius: 5,
           }}
         />
+        {/**TouchableOpacity when pressed adds item to list */}
         <TouchableOpacity style={styles.addButton} onPress={onChange}>
           <Ionicons name="add" size={20} />
         </TouchableOpacity>
       </View>
-
+      
+      {/**If type of data is either symptoms or illness; render 2 datePickers. Otherwise render one datePicker */}
       {typeDataInputted === "symptoms" || typeDataInputted === "illnesses" ? (
         <View style={styles.datePickerContainer}>
           <DatePicker name={"Start Date"} onDateChange={onStartDateChange} />
@@ -136,6 +166,7 @@ const SearchComponent = ({ searchData, typeDataInputted, updateList }) => {
         </View>
       )}
 
+      {/**Shows list of items when user is typing into textInput */}
       {showList && (
         <View style={styles.listContainer}>
           <FlatList
@@ -146,6 +177,7 @@ const SearchComponent = ({ searchData, typeDataInputted, updateList }) => {
           />
         </View>
       )}
+      {/** Shows data collected from user input. i.e. Symptoms data*/}
       <DisplayItems data={items} />
     </View>
   );

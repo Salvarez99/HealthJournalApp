@@ -1,7 +1,6 @@
 import React, { useState, useContext } from "react";
 import { StatusBar } from "expo-status-bar";
 // citation learned from : https://www.youtube.com/watch?v=BQ-kHwLlhrg
-import styled from "styled-components/native";
 // import formik
 import { Formik } from "formik";
 import {
@@ -16,7 +15,6 @@ import {
 //import { GoogleSignIn, GoogleSigninButton, statusCodes} from '@react-native-google-signin/google-signin';
 // icon
 import { Octicons, Fontisto, Ionicons } from "@expo/vector-icons"; // Ionicons : for isPassword , Fontisto : for goole icon
-import Toast from "react-native-toast-message";
 
 //for navigation
 import { useNavigation } from "@react-navigation/native"; // Import useNavigation hook
@@ -57,14 +55,6 @@ export default function Login() {
       console.log(password);
       console.log("Error logging in", error.message);
       alert('Incorrect email or password')
-      // Toast.show({
-      //   type: "error",
-      //   position: "top",
-      //   text1: "Login Error",
-      //   text2: "Incorrect email or password",
-      //   visibilityTime: 3000,
-      //   zIndex : 2
-      // });
     }
   };
   /*
@@ -129,7 +119,6 @@ export default function Login() {
   // most of container components are defined in style.js
   return (
     <View style={styles.MainContainer}>
-      <Toast ref={(ref) => Toast.setRef(ref)} />
       <StatusBar style="dark" />
       <View style={styles.SmallerContainer}>
         <Image

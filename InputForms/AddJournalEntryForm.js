@@ -1,8 +1,18 @@
-import Ionicons from "react-native-vector-icons/Ionicons";
+/***************************************************************************************
+ * Authors: Stephen Alvarez
+ * Date: 5/1/2024
+ * Code Version: 1.0
+ * 
+ * Description:
+ *  Renders a form that takes user input to fill out fields required for Journal Entries
+ * 
+ * 
+ * 
+ ***************************************************************************************/
+import Ionicons from "react-native-vector-icons/Ionicons"; //Vector Icons are used for button icons
 import React, { useState } from "react";
 import {
   View,
-  ScrollView,
   Text,
   TouchableOpacity,
   Modal,
@@ -10,7 +20,7 @@ import {
   Platform,
 } from "react-native";
 
-import SearchComponent from "../Components/SearchComponent";
+import SearchComponent from "../Components/SearchComponent"; 
 import JournalEntry from "../Classes/JournalEntry";
 
 const AddJournalEntryForm = ({ isVisible, onClose }) => {
@@ -70,11 +80,17 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
   };
 
   //TODO: Implement save functionality
+  /**
+   * Takes collected user data and pushes the data either to local or cloud
+   * storage, depends if user has cloud storage active
+   * 
+   */
   const onSave = () => {
     printLists();
     journalEntry = new JournalEntry(symptoms, illnesses, tests);
     onClose();
   };
+
   return (
     <Modal
       visible={isVisible}
@@ -92,6 +108,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
           </View>
 
           <View style={styles.modalFormContent}>
+            {/**Form content goes in this scope */}
             <View>
               <Text style={styles.SearchComponentHeader}>*Symptoms:</Text>
             </View>
@@ -122,6 +139,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
                 updateList={setTests}
               />
             </View>
+            {/**Save button that calls onSave function */}
             <View style={styles.saveButtonContainer}>
               <TouchableOpacity onPress={onSave} style={styles.saveButton}>
                 <Text>Save</Text>

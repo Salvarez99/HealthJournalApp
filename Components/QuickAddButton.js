@@ -1,7 +1,22 @@
+/***************************************************************************************
+ * Authors: Stephen Alvarez
+ * Date: 5/1/2024
+ * Code Version: 1.0
+ * 
+ * Description:
+ *  Renders a button. When clicked expandes into 3 buttons that are linked to respected modal forms
+ * 
+ * 
+ ***************************************************************************************/
 import React, { useState } from "react";
 import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons"; //Vector Icons are used for button icons
 
+/**
+ * 
+ * @param {List} modalComponents list of modalComponents, each item consist of {name, function}
+ * @returns 
+ */
 export default function QuickAddButton({ modalComponents }) {
   const [showButtons, setShowButtons] = useState(false);
 
@@ -23,8 +38,10 @@ export default function QuickAddButton({ modalComponents }) {
         />
       </TouchableOpacity>
 
+      {/**If showButtons is true, render the buttons from the map of modal components */}
       {showButtons && (
         <View style={styles.buttonContainer}>
+          {/**Create a button for each modalComponent in the map */}
           {modalComponents.map(({ name, openModal }, index) => (
             <TouchableOpacity
               key={index}

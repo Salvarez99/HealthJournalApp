@@ -293,7 +293,7 @@ const renderJournalItem = ({ item }) => {
 };
 
 
-  // Define modal components with their names
+  // Defined modal components with their names
   const modalComponents = [
     { name: "Add Appointment", openModal: openModal1 },
     { name: "Add Medication", openModal: openModal2 },

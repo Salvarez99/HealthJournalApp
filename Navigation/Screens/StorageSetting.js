@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  Platform,
   View,
   StyleSheet,
   TouchableOpacity,
@@ -16,15 +15,15 @@ export default function StorageSetting() {
       ? alert("Cloud Storage Enabled")
       : alert("Cloud Storage Disabled");
 
-    //db logic goes here
+    //TODO: db logic goes here
   };
   const removeJournals = () => {
-    //db logic goes here
+    //TODO: db logic goes here
     alert("Removed Journals from cloud.");
   };
 
   const removeMedications = () => {
-    //db logic goes here
+    //TODO: db logic goes here
     alert("Removed medications from cloud.");
   };
 

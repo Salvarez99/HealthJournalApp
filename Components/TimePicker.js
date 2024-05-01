@@ -1,7 +1,25 @@
+/***************************************************************************************
+ * Authors: Stephen Alvarez
+ * Date: 5/1/2024
+ * Code Version: 1.0
+ * 
+ * Description:
+ *  Renders a Time picker. Passes gathered data up to parent component.
+ * 
+ * Source: 
+ *  https://github.com/react-native-datetimepicker/datetimepicker
+ * 
+ ***************************************************************************************/
 import React, { useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
+/**
+ * 
+ * @param {String} name name displayed on top of touchableOpacity
+ * @param {function} onTimeChange passthrough parent function, used to update parents variables with time gathered
+ * @returns 
+ */
 const TimePicker = ({ name, onTimeChange }) => {
   const [time, setTime] = useState("");
   const [show, setShow] = useState(false);
@@ -23,6 +41,7 @@ const TimePicker = ({ name, onTimeChange }) => {
       <TouchableOpacity style={styles.timeInput} onPress={showTimePicker}>
         <Text>{time ? formatTime(time) : ""}</Text>
       </TouchableOpacity>
+      {/**show the picker if show is true; Otherwise picker is hidden*/}
       {show && (
         <DateTimePicker
           testID="timePicker"
