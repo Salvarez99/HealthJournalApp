@@ -27,29 +27,50 @@ export const initializeDatabase = () => {
           }
         );
   
-        // Create the illness table
         tx.executeSql(
-          `CREATE TABLE IF NOT EXISTS journal (
+          `CREATE TABLE IF NOT EXISTS illness (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            symptomName TEXT,
-            symptomStartDate TEXT,
-            symptomEndDate TEXT,
-            illnessName TEXT,
-            illnessStartDate TEXT,
-            illnessEndDate TEXT,
-            testName TEXT,
-            testDate TEXT
+            name TEXT
           );`,
           [],
           (_, result) => {
-            // Resolve if the Journal table creation is successful
-            console.log("Journal table created successfully");
+            console.log("Illness table created successfully");
           },
           (_, error) => {
-            reject(error); // Reject with the error if table creation fails
+            reject(error);
           }
         );
-  
+
+        // Create the symptom table
+        tx.executeSql(
+          `CREATE TABLE IF NOT EXISTS symptom (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT
+          );`,
+          [],
+          (_, result) => {
+            console.log("Symptom table created successfully");
+          },
+          (_, error) => {
+            reject(error);
+          }
+        );
+
+        // Create the test table
+        tx.executeSql(
+          `CREATE TABLE IF NOT EXISTS test (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT
+          );`,
+          [],
+          (_, result) => {
+            console.log("Test table created successfully");
+          },
+          (_, error) => {
+            reject(error);
+          }
+        );
+
         // Create the medicine table
         tx.executeSql(
           `CREATE TABLE IF NOT EXISTS medicine (
@@ -61,17 +82,64 @@ export const initializeDatabase = () => {
           );`,
           [],
           (_, result) => {
-            // Resolve if the medicine table creation is successful
             console.log("Medicine table created successfully");
           },
           (_, error) => {
-            reject(error); // Reject with the error if table creation fails
+            reject(error);
           }
         );
+
+        // Create the journal table with foreign key constraints
+        tx.executeSql(
+          `CREATE TABLE IF NOT EXISTS journal (
+            id INTEGER PRIMARY KEY,
+            symptomName TEXT,
+            symptomStartDate TEXT,
+            symptomEndDate TEXT,
+            illnessName TEXT,
+            illnessStartDate TEXT,
+            illnessEndDate TEXT,
+            testName TEXT,
+            testDate TEXT,
+            FOREIGN KEY (illnessName) REFERENCES illness(name),
+            FOREIGN KEY (symptomName) REFERENCES symptom(name),
+            FOREIGN KEY (testName) REFERENCES test(name)
+          );`,
+          [],
+          (_, result) => {
+            console.log("Journal table modified successfully");
+            resolve();
+          },
+          (_, error) => {
+            reject(error);
+          }
+        );
+
+        // Create the medicineEntry table with foreign key reference to medicine
+        tx.executeSql(
+          `CREATE TABLE IF NOT EXISTS medicineEntry (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            medicineId INTEGER,
+            dosage TEXT,
+            dosageSchedule TEXT,
+            frequency TEXT,
+            FOREIGN KEY (medicineId) REFERENCES medicine(id)
+          );`,
+          [],
+          (_, result) => {
+            console.log("MedicineEntry table created successfully");
+            resolve();
+          },
+          (_, error) => {
+            reject(error);
+          }
+        );
+
       }, null, resolve);
     });
-  };
+};
 
+  /*
 export const addAppointment = (eventName, eventDate, eventStartTime, eventEndTime) => {
     return new Promise((resolve, reject) => {
       db.transaction((tx) => {
@@ -289,3 +357,4 @@ const exportDb = async () => {
       await Sharing.shareAsync(FileSystem.documentDirectory + 'SQLite/test.db');
     }
   }
+  */
