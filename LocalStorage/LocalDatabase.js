@@ -4,6 +4,10 @@ import * as FileSystem from 'expo-file-system';
 import * as DocumentPicker from 'expo-document-picker';
 
 const db = SQLite.openDatabase('journal.db');
+const medicineList = ["Motrin", "Ibuprofen",  "Benadryl", "Albuterol", "Motrin", "Epinephrine"];
+const illnessList = ["Cold", "Flu", "Pneumonia", "Cancer", "Allergies", "Pink Eye"];
+const symptomList = ["Cough", "Headache", "Sore Throat", "Back Pain", "Congestion", "Light Headedness"];
+const testList = ["Bloodwork", "X-Ray", "Physical Exam", "Biopsy", "Blood Pressure", "Cholesterol"];
 
 export const initializeDatabase = () => {
     return new Promise((resolve, reject) => {
@@ -35,6 +39,18 @@ export const initializeDatabase = () => {
           [],
           (_, result) => {
             console.log("Illness table created successfully");
+            // Prepopulate the illness table with initial data
+            tx.executeSql(
+              `INSERT INTO illness (name) VALUES (?);`,
+              [illnessList],
+              
+              (_, result) => {
+                console.log("Illness prepopulated successfully");
+              },
+              (_, error) => {
+                console.log("Error prepopulating illness table:", error);
+              }
+            );
           },
           (_, error) => {
             reject(error);
@@ -50,6 +66,18 @@ export const initializeDatabase = () => {
           [],
           (_, result) => {
             console.log("Symptom table created successfully");
+            // Prepopulate the symptom table with initial data
+            tx.executeSql(
+              `INSERT INTO symptom (name) VALUES (?);`,
+              [symptomList],
+              
+              (_, result) => {
+                console.log("Symptom prepopulated successfully");
+              },
+              (_, error) => {
+                console.log("Error prepopulating symptom table:", error);
+              }
+            );
           },
           (_, error) => {
             reject(error);
@@ -75,19 +103,30 @@ export const initializeDatabase = () => {
         tx.executeSql(
           `CREATE TABLE IF NOT EXISTS medicine (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT,
-            dosage TEXT,
-            dosageSchedule TEXT,
-            frequency TEXT
+            name TEXT
           );`,
           [],
           (_, result) => {
             console.log("Medicine table created successfully");
+            // Prepopulate the medicine table with initial data
+            tx.executeSql(
+              `INSERT INTO medicine (name) VALUES (?);`,
+              [medicineList],
+              
+              (_, result) => {
+                console.log("Medicine prepopulated successfully");
+              },
+              (_, error) => {
+                console.log("Error prepopulating medicine table:", error);
+              }
+            );
           },
           (_, error) => {
+            console.log("Error?");
             reject(error);
           }
         );
+
 
         // Create the journal table with foreign key constraints
         tx.executeSql(
@@ -139,222 +178,269 @@ export const initializeDatabase = () => {
     });
 };
 
-  /*
+
+// Create a new appointment
 export const addAppointment = (eventName, eventDate, eventStartTime, eventEndTime) => {
-    return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
       db.transaction((tx) => {
-        tx.executeSql(
-          `INSERT INTO appointments (eventName, eventDate, eventStartTime, eventEndTime) VALUES (?, ?, ?, ?);`,
-          [eventName, eventDate, eventStartTime, eventEndTime],
-          (_, result) => {
-            console.log("Insert Successful ID: ", result.insertId, eventName, eventDate);
-            resolve(result.insertId); // Resolve with the ID of the newly inserted appointment
-          },
-          (_, error) => {
-            reject(error); // Reject with the error if insertion fails
-          }
-        );
-      });
-    });
-  };
-
-  export const addMedicine = (name, dosage, dosageSchedule, frequency) => {
-    return new Promise((resolve, reject) => {
-      db.transaction((tx) => {
-        tx.executeSql(
-          `INSERT INTO medicine (name, dosage, dosageSchedule, frequency) VALUES (?, ?, ?, ?);`,
-          [name, dosage, dosageSchedule, frequency],
-          (_, result) => {
-            console.log("Insert Successful ID: ", result.insertId)
-            resolve(result.insertId); // Resolve with the ID of the newly inserted medicine
-          },
-          (_, error) => {
-            reject(error); // Reject with the error if insertion fails
-          }
-        );
-      });
-    });
-  };
-
-  export const addJournal = (symptomName, symptomStartDate, symptomEndDate, illnessName, illnessStartDate, illnessEndDate, testName, testDate) => {
-    return new Promise((resolve, reject) => {
-      db.transaction((tx) => {
-        tx.executeSql(
-          `INSERT INTO journal (symptomName, symptomStartDate, symptomEndDate, illnessName, illnessStartDate, illnessEndDate, testName, testDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?);`,
-          [symptomName, symptomStartDate, symptomEndDate, illnessName, illnessStartDate, illnessEndDate, testName, testDate],
-          (_, result) => {
-            console.log("Insert Successful ID: ", result.insertId, symptomName, illnessName, testName);
-            resolve(result.insertId); // Resolve with the ID of the newly inserted journal
-          },
-          (_, error) => {
-            reject(error); // Reject with the error if insertion fails
-          }
-        );
-      });
-    });
-  };
-
-  export const fetchAppointments = () => {
-    return new Promise((resolve, reject) => {
-      db.transaction((tx) => {
-        tx.executeSql(
-          `SELECT * FROM appointments;`,
-          [],
-          (_, result) => {
-            const appointments = result.rows._array;
-            resolve(appointments); // Resolve with the fetched appointments
-          },
-          (_, error) => {
-            reject(error); // Reject with the error if fetching fails
-          }
-        );
-      });
-    });
-  };
-
-
-  export const fetchMedications = () => {
-    return new Promise((resolve, reject) => {
-      db.transaction((tx) => {
-        tx.executeSql(
-          `SELECT * FROM medications;`,
-          [],
-          (_, result) => {
-            const medications = result.rows._array;
-            resolve(medications); // Resolve with the fetched appointments
-          },
-          (_, error) => {
-            reject(error); // Reject with the error if fetching fails
-          }
-        );
-      });
-    });
-  };
-
-  export const fetchJournals = () => {
-    return new Promise((resolve, reject) => {
-      db.transaction((tx) => {
-        tx.executeSql(
-          `SELECT * FROM journal;`,
-          [],
-          (_, result) => {
-            const journals = result.rows._array;
-            resolve(journals); // Resolve with the fetched appointments
-          },
-          (_, error) => {
-            reject(error); // Reject with the error if fetching fails
-          }
-        );
-      });
-    });
-  };
-
-  export const clearAppointments = () => {
-    return new Promise((resolve, reject) => {
-      db.transaction((tx) => {
-        tx.executeSql(
-          `DELETE FROM appointments;`,
-          [],
-          (_, result) => {
-            // After deleting all records, reset the primary key sequence
-            tx.executeSql(
-              `DELETE FROM sqlite_sequence WHERE name = 'appointments';`,
-              [],
-              () => {
-                // Resolve with the number of rows affected (should be 0 or more)
-                resolve(result.rowsAffected);
+          tx.executeSql(
+              `INSERT INTO appointments (eventName, eventDate, eventStartTime, eventEndTime) VALUES (?, ?, ?, ?);`,
+              [eventName, eventDate, eventStartTime, eventEndTime],
+              (_, result) => {
+                  console.log("Appointment added successfully");
+                  resolve(result.insertId); // Resolve with the ID of the newly inserted appointment
               },
               (_, error) => {
-                reject(error); // Reject with the error if resetting the sequence fails
+                  reject(error); // Reject with the error if insertion fails
               }
-            );
-          },
-          (_, error) => {
-            reject(error); // Reject with the error if deletion fails
-          }
-        );
+          );
       });
-    });
-  };
+  });
+};
 
-  export const clearJournals = () => {
-    return new Promise((resolve, reject) => {
+// Fetch all appointments
+export const fetchAppointments = () => {
+  return new Promise((resolve, reject) => {
       db.transaction((tx) => {
-        tx.executeSql(
-          `DELETE FROM journal;`,
-          [],
-          (_, result) => {
-            // After deleting all records, reset the primary key sequence
-            tx.executeSql(
-              `DELETE FROM sqlite_sequence WHERE name = 'journal';`,
+          tx.executeSql(
+              `SELECT * FROM appointments;`,
               [],
-              () => {
-                // Resolve with the number of rows affected (should be 0 or more)
-                resolve(result.rowsAffected);
+              (_, result) => {
+                  const appointments = result.rows._array;
+                  resolve(appointments); // Resolve with the fetched appointments
               },
               (_, error) => {
-                reject(error); // Reject with the error if resetting the sequence fails
+                  reject(error); // Reject with the error if fetching fails
               }
-            );
-          },
-          (_, error) => {
-            reject(error); // Reject with the error if deletion fails
-          }
-        );
+          );
       });
-    });
-  };
+  });
+};
 
-  export const clearMedications = () => {
-    return new Promise((resolve, reject) => {
+// Create a new journal entry
+export const addJournalEntry = (symptomName, symptomStartDate, symptomEndDate, illnessName, illnessStartDate, illnessEndDate, testName, testDate) => {
+  return new Promise((resolve, reject) => {
       db.transaction((tx) => {
-        tx.executeSql(
-          `DELETE FROM medications;`,
-          [],
-          (_, result) => {
-            // After deleting all records, reset the primary key sequence
-            tx.executeSql(
-              `DELETE FROM sqlite_sequence WHERE name = 'medications';`,
-              [],
-              () => {
-                // Resolve with the number of rows affected (should be 0 or more)
-                resolve(result.rowsAffected);
+          tx.executeSql(
+              `INSERT INTO journal (symptomName, symptomStartDate, symptomEndDate, illnessName, illnessStartDate, illnessEndDate, testName, testDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?);`,
+              [symptomName, symptomStartDate, symptomEndDate, illnessName, illnessStartDate, illnessEndDate, testName, testDate],
+              (_, result) => {
+                  console.log("Journal entry added successfully");
+                  resolve(result.insertId); // Resolve with the ID of the newly inserted journal entry
               },
               (_, error) => {
-                reject(error); // Reject with the error if resetting the sequence fails
+                  reject(error); // Reject with the error if insertion fails
               }
-            );
-          },
-          (_, error) => {
-            reject(error); // Reject with the error if deletion fails
-          }
-        );
+          );
       });
-    });
-  };
+  });
+};
 
+// Fetch all journal entries
+export const fetchJournalEntries = () => {
+  return new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+          tx.executeSql(
+              `SELECT * FROM journal;`,
+              [],
+              (_, result) => {
+                  const journalEntries = result.rows._array;
+                  resolve(journalEntries); // Resolve with the fetched journal entries
+              },
+              (_, error) => {
+                  reject(error); // Reject with the error if fetching fails
+              }
+          );
+      });
+  });
+};
 
-const exportDb = async () => {
-    if (Platform.OS === "android") {
-      const permissions = await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
-      if (permissions.granted) {
-        const base64 = await FileSystem.readAsStringAsync(
-          FileSystem.documentDirectory + 'SQLite/test.db',
-          {
-            encoding: FileSystem.EncodingType.Base64
-          }
-        );
+// Create a new medicine entry
+export const addMedicineEntry = (medicineId, dosage, dosageSchedule, frequency) => {
+  return new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+          tx.executeSql(
+              `INSERT INTO medicineEntry (medicineId, dosage, dosageSchedule, frequency) VALUES (?, ?, ?, ?);`,
+              [medicineId, dosage, dosageSchedule, frequency],
+              (_, result) => {
+                  console.log("Medicine entry added successfully");
+                  resolve(result.insertId); // Resolve with the ID of the newly inserted medicine entry
+              },
+              (_, error) => {
+                  reject(error); // Reject with the error if insertion fails
+              }
+          );
+      });
+  });
+};
 
-        await FileSystem.StorageAccessFramework.createFileAsync(permissions.directoryUri, 'test.db', 'application/octet-stream')
-        .then(async (uri) => {
-          await FileSystem.writeAsStringAsync(uri, base64, { encoding : FileSystem.EncodingType.Base64 });
-        })
-        .catch((e) => console.log(e));
-      } else {
-        console.log("Permission not granted");
-      }
-    } else {
-      await Sharing.shareAsync(FileSystem.documentDirectory + 'SQLite/test.db');
-    }
-  }
-  */
+// Fetch all medicine entries
+export const fetchMedicineEntries = () => {
+  return new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+          tx.executeSql(
+              `SELECT * FROM medicineEntry;`,
+              [],
+              (_, result) => {
+                  const medicineEntries = result.rows._array;
+                  resolve(medicineEntries); // Resolve with the fetched medicine entries
+              },
+              (_, error) => {
+                  reject(error); // Reject with the error if fetching fails
+              }
+          );
+      });
+  });
+};
+
+// Create a new illness
+export const addIllness = (name) => {
+  return new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+          tx.executeSql(
+              `INSERT INTO illness (name) VALUES (?);`,
+              [name],
+              (_, result) => {
+                  console.log("Illness added successfully");
+                  resolve(result.insertId); // Resolve with the ID of the newly inserted illness
+              },
+              (_, error) => {
+                  reject(error); // Reject with the error if insertion fails
+              }
+          );
+      });
+  });
+};
+
+// Fetch all illnesses
+export const fetchIllnesses = () => {
+  return new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+          tx.executeSql(
+              `SELECT * FROM illness;`,
+              [],
+              (_, result) => {
+                  const illnesses = result.rows._array;
+                  resolve(illnesses); // Resolve with the fetched illnesses
+              },
+              (_, error) => {
+                  reject(error); // Reject with the error if fetching fails
+              }
+          );
+      });
+  });
+};
+
+// Create a new symptom
+export const addSymptom = (name) => {
+  return new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+          tx.executeSql(
+              `INSERT INTO symptom (name) VALUES (?);`,
+              [name],
+              (_, result) => {
+                  console.log("Symptom added successfully");
+                  resolve(result.insertId); // Resolve with the ID of the newly inserted symptom
+              },
+              (_, error) => {
+                  reject(error); // Reject with the error if insertion fails
+              }
+          );
+      });
+  });
+};
+
+// Fetch all symptoms
+export const fetchSymptoms = () => {
+  return new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+          tx.executeSql(
+              `SELECT * FROM symptom;`,
+              [],
+              (_, result) => {
+                  const symptoms = result.rows._array;
+                  resolve(symptoms); // Resolve with the fetched symptoms
+              },
+              (_, error) => {
+                  reject(error); // Reject with the error if fetching fails
+              }
+          );
+      });
+  });
+};
+
+// Create a new test
+export const addTest = (name) => {
+  return new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+          tx.executeSql(
+              `INSERT INTO test (name) VALUES (?);`,
+              [name],
+              (_, result) => {
+                  console.log("Test added successfully");
+                  resolve(result.insertId); // Resolve with the ID of the newly inserted test
+              },
+              (_, error) => {
+                  reject(error); // Reject with the error if insertion fails
+              }
+          );
+      });
+  });
+};
+
+// Fetch all tests
+export const fetchTests = () => {
+  return new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+          tx.executeSql(
+              `SELECT * FROM test;`,
+              [],
+              (_, result) => {
+                  const tests = result.rows._array;
+                  resolve(tests); // Resolve with the fetched tests
+              },
+              (_, error) => {
+                  reject(error); // Reject with the error if fetching fails
+              }
+          );
+      });
+  });
+};
+
+// Create a new medicine
+export const addMedicine = (name) => {
+  return new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+          tx.executeSql(
+              `INSERT INTO medicine (name) VALUES (?);`,
+              [name],
+              (_, result) => {
+                  console.log("Medicine added successfully");
+                  resolve(result.insertId); // Resolve with the ID of the newly inserted medicine
+              },
+              (_, error) => {
+                  reject(error); // Reject with the error if insertion fails
+              }
+          );
+      });
+  });
+};
+
+// Fetch all medicines
+export const fetchMedicines = () => {
+  return new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+          tx.executeSql(
+              `SELECT * FROM medicine;`,
+              [],
+              (_, result) => {
+                  const medicines = result.rows._array;
+                  resolve(medicines); // Resolve with the fetched medicines
+              },
+              (_, error) => {
+                  reject(error); // Reject with the error if fetching fails
+              }
+          );
+      });
+  });
+};
