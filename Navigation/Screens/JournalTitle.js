@@ -26,8 +26,8 @@ export default function JournalTitle({ route, navigation }) {
           <View sytle={styles.entryContainer}>
             <Text style={styles.entryTitle}>Symptom Name: {entry.name}</Text>
             <View style={styles.dateContainer}>
-              <Text>Start Date: {entry.startDate}</Text>
-              <Text>End Date: {entry.endDate}</Text>
+            <Text>Start Date: {entry.startDate}  End Date: {entry.endDate}</Text>
+              
             </View>
           </View>
         );
@@ -36,8 +36,8 @@ export default function JournalTitle({ route, navigation }) {
           <View sytle={styles.entryContainer}>
             <Text style={styles.entryTitle}>Illness Name: {entry.name} </Text>
             <View style={styles.dateContainer}>
-              <Text>Start Date: {entry.startDate}</Text>
-              <Text>End Date: {entry.endDate}</Text>
+              <Text>Start Date: {entry.startDate}  End Date: {entry.endDate}</Text>
+              
             </View>
           </View>
         );
@@ -138,9 +138,9 @@ const styles = StyleSheet.create({
   mainIdContainer: {
     // display Journal #number
     fontSize: 30,
-    marginTop: 30,
-    alignContent: "center", // vertically
     fontWeight: "bold",
+    marginTop: 50,
+    alignContent: "center", // vertically
     textAlign: "center", // center horizontally
     ...Platform.select({
       ios: {
@@ -155,11 +155,15 @@ const styles = StyleSheet.create({
   },
 
   sectionTitle: {
+    // display gray box symtom, illness, test and labworks.
+    backgroundColor: "lightgray",
     padding: 10,
-    marginTop: 20,
-    borderBottomWidth: 1,
+    borderRadius: 10,
+    textAlign: "center",
+
     fontSize: 20,
     fontWeight: "bold",
+    marginTop: 20,
     ...Platform.select({
       ios: {
         fontFamily: "Times New Roman", // Set font family to Times New Roman
@@ -169,8 +173,12 @@ const styles = StyleSheet.create({
   entryContainer: {
     marginTop: 10,
     padding: 20,
-    marginBottom: 40,
     justifyContent: "center",
+    //minHeight: 300, // set minimum height
+
+    fontFamily: "Times New Roman",
+    marginBottom: 40,
+
     ...Platform.select({
       ios: {
         fontFamily: "Times New Roman", // Set font family to Times New Roman
@@ -187,9 +195,14 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  dateContainer: {
-    justifyContent: "space-between",
-    flexDirection: "row",
+  entryDate: {
+    fontSize: 18,
+    marginTop: 10,
+    ...Platform.select({
+      ios: {
+        fontFamily: "Times New Roman", // Set font family to Times New Roman
+      },
+    }),
   },
   exitButton: {
     position: "absolute",
