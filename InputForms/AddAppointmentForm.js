@@ -1,4 +1,16 @@
-import Ionicons from "react-native-vector-icons/Ionicons";
+/***************************************************************************************
+ * Authors: Stephen Alvarez
+ * Date: 5/1/2024
+ * Code Version: 1.0
+ * 
+ * Description:
+ *  Renders a form that takes user input to fill out fields required for appointments
+ * 
+ * 
+ * 
+ ***************************************************************************************/
+
+import Ionicons from "react-native-vector-icons/Ionicons"; //Vector Icons are used for button icons
 import React, { useState } from "react";
 import {
   View,
@@ -10,15 +22,15 @@ import {
   TextInput,
 } from "react-native";
 
+import Appointment from "../Classes/Appointment";
 import DatePicker from "../Components/DatePicker";
 import TimePicker from "../Components/TimePicker";
-import Appointment from "../Classes/Appointment";
 
 const AddAppointmentForm = ({ isVisible, onClose }) => {
   const [eventName, setEventName] = new useState("");
   const [eventDate, setEventDate] = new useState(new Date());
-  const [eventStartTime, setEventStartTime] = new useState(null);
-  const [eventEndTime, setEventEndTime] = new useState(null);
+  const [eventStartTime, setEventStartTime] = new useState('');
+  const [eventEndTime, setEventEndTime] = new useState('');
   let appointment = null;
 
   const handleDateChange = (selectedDate) => {
@@ -36,6 +48,9 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
     // console.log("EndTime: " + endTime);
   };
 
+  /**
+   * Resets form's fields to default values then closes form
+   */
   const clearFields = () => {
     setEventName("");
     setEventDate(new Date().toLocaleDateString());
@@ -46,14 +61,27 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
   };
 
   //TODO: Implement save functionality
+  /**
+   * Takes collected user data and pushes the data either to local or cloud
+   * storage, depends if user has cloud storage active
+   * 
+   */
   const onSave = () => {
     const eName = eventName;
     const eDate = eventDate;
     const eStartTime = eventStartTime;
     const eEndTime = eventEndTime;
-    appointment = new Appointment(eName, eventDate.toLocaleDateString(), eStartTime, eEndTime);
-    console.log(appointment.toString());
-    clearFields();
+
+    //Checks if required fields are inputted in the correct format
+    //eName is not just whitespace
+    //eStartTime and eEndTime are not null
+    if(!/^\s*$/.test(eName) && eStartTime != null && eEndTime != null){
+      appointment = new Appointment(eName, eventDate, eStartTime, eEndTime);
+      console.log(appointment.toString());
+      clearFields();
+    }else{
+      alert('Required fields missing.\nRequired fields contains \'*\'.')
+    }
   };
 
   return (
@@ -80,8 +108,9 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
           </View>
 
           <View style={styles.modalFormContent}>
+            {/**Form content goes in this scope */}
             <View style={styles.inputEventName}>
-              <Text style={styles.buttonHeaderText}>Event Name: </Text>
+              <Text style={styles.buttonHeaderText}>*Event Name: </Text>
               <TextInput
                 style={{
                   borderWidth: 1,
@@ -92,17 +121,14 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
                 value={eventName}
                 onChangeText={setEventName}
               />
-              {/* {console.log(eventName)} */}
             </View>
 
+            {/**Date and Time pickers used to gather date and time data */}
             <DatePicker name={"Date"} onDateChange={handleDateChange} />
+            <TimePicker name={"*Start time"} onTimeChange={handleStartTimeChange}/>
+            <TimePicker name={"*End time"} onTimeChange={handleEndTimeChange} />
 
-            <TimePicker
-              name={"Start time"}
-              onTimeChange={handleStartTimeChange}
-            />
-            <TimePicker name={"End time"} onTimeChange={handleEndTimeChange} />
-
+            {/**Save button that calls onSave function */}
             <View style={styles.saveButtonContainer}>
               <TouchableOpacity onPress={onSave} style={styles.saveButton}>
                 <Text>Save</Text>

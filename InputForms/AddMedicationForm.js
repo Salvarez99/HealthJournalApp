@@ -1,4 +1,15 @@
-import Ionicons from "react-native-vector-icons/Ionicons";
+/***************************************************************************************
+ * Authors: Stephen Alvarez
+ * Date: 5/1/2024
+ * Code Version: 1.0
+ * 
+ * Description:
+ *  Renders a form that takes user input to fill out fields required for Medications
+ * 
+ * 
+ * 
+ ***************************************************************************************/
+import Ionicons from "react-native-vector-icons/Ionicons"; //Vector Icons are used for button icons
 import React, { useState } from "react";
 import {
   View,
@@ -8,8 +19,6 @@ import {
   StyleSheet,
   Platform,
   TextInput,
-  KeyboardAvoidingView,
-  ScrollView,
 } from "react-native";
 import Medication from "../Classes/Medication";
 import DropDownList from "../Components/DosageSchedDropDown";
@@ -19,9 +28,21 @@ const AddMedicationForm = ({ isVisible, onClose }) => {
   const [medicationName, setMedicationName] = new useState("");
   const [dosage, setDosage] = new useState("");
   const [dosageSchedule, setDosageSchedule] = new useState("Morning");
-  const [frequency, setFrequency] = useState([]);
+  /**
+   * List of ints
+   * Range from 0 - 6 
+   * 0 = Sunday,
+   * 1 = Monday, 
+   * ... 
+   * 6 = Saturday
+   */
+  const [frequency, setFrequency] = useState([]); 
   let medication = null;
 
+  
+  /**
+   * Resets form's fields to default values then closes form
+   */
   const clearFields = () => {
     setMedicationName("");
     setDosage("");
@@ -31,6 +52,11 @@ const AddMedicationForm = ({ isVisible, onClose }) => {
   };
 
   //TODO: Implement save functionality
+    /**
+   * Takes collected user data and pushes the data either to local or cloud
+   * storage, depends if user has cloud storage active
+   * 
+   */
   const onSave = () => {
     medication = new Medication(
       medicationName,
@@ -38,13 +64,23 @@ const AddMedicationForm = ({ isVisible, onClose }) => {
       dosageSchedule,
       frequency
     );
+
+    
+    //Checks if required fields are inputted in the correct format
+    //medication name is not just whitespace
+    //medication dosage is not empty string
+    //frequency list is not empty
+    if (!/^\s*$/.test(medication.name) && medication.dosage != "" && medication.frequency.length != 0) {
+      console.log(medication.toString());
+      clearFields();
+      onClose();
+    } else {
+      alert('Required fields missing.\nRequired fields contains \'*\'.')
+    }
     // console.log("Medication: " + medicationName);
     // console.log("Dosage: " + dosage);
     // console.log('Dosage Schedule: ' + dosageSchedule);
     // console.log('Frequency: ' + frequency);
-    console.log(medication.toString());
-    clearFields();
-    onClose();
   };
 
   return (
@@ -71,8 +107,9 @@ const AddMedicationForm = ({ isVisible, onClose }) => {
           </View>
 
           <View style={styles.modalFormContent}>
+            {/**Form content goes in this scope */}
             <View>
-              <Text style={styles.buttonHeaderText}>Medication Name: </Text>
+              <Text style={styles.buttonHeaderText}>*Medication Name: </Text>
               <TextInput
                 style={{
                   borderWidth: 1,
@@ -86,7 +123,7 @@ const AddMedicationForm = ({ isVisible, onClose }) => {
             </View>
 
             <View>
-              <Text style={styles.buttonHeaderText}>Dosage: </Text>
+              <Text style={styles.buttonHeaderText}>*Dosage: </Text>
               <TextInput
                 style={{
                   borderWidth: 1,
@@ -106,7 +143,7 @@ const AddMedicationForm = ({ isVisible, onClose }) => {
             <DropDownList setDosageSchedule={setDosageSchedule} />
 
             <View>
-              <Text style={styles.buttonHeaderText}>Frequency: </Text>
+              <Text style={styles.buttonHeaderText}>*Frequency: </Text>
             </View>
 
             <WeekDaysButtons

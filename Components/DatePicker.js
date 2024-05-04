@@ -1,10 +1,28 @@
+/***************************************************************************************
+ * Authors: Stephen Alvarez
+ * Date: 5/1/2024
+ * Code Version: 1.0
+ * 
+ * Description:
+ *  Renders a Date picker. Passes gathered data up to parent component.
+ * 
+ * Source: 
+ *  https://github.com/react-native-datetimepicker/datetimepicker
+ * 
+ ***************************************************************************************/
 import React, { useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
+/**
+ * 
+ * @param {String} name name displayed on top of touchableOpacity
+ * @param {function} onDateChange passthrough parent function, used to update parents variables with date gathered
+ * @returns 
+ */
 const DatePicker = ({ name, onDateChange }) => {
   const [date, setDate] = useState(new Date());
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(false); //state to control if datePicker is shown
 
   const handleDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -19,6 +37,7 @@ const DatePicker = ({ name, onDateChange }) => {
 
   return (
     <View style={styles.container}>
+      {/**show the picker if show is true; Otherwise picker is hidden*/}
       {show && (
         <DateTimePicker
           testID="dateTimePicker"
@@ -29,6 +48,7 @@ const DatePicker = ({ name, onDateChange }) => {
           onChange={handleDateChange}
         />
       )}
+      {/**TouchableOpacity when clicked sets showPicker to true */}
       <Text style={styles.dateText}>{name}: </Text>
       <TouchableOpacity style={styles.dateInput} onPress={showDatePicker}>
         <Text>{date.toLocaleDateString()}</Text>

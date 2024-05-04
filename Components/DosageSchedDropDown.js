@@ -1,7 +1,22 @@
+/***************************************************************************************
+ * Authors: Stephen Alvarez
+ * Date: 5/1/2024
+ * Code Version: 1.0
+ * 
+ * Description:
+ *  Renders a dropdown menu where user selects their dosage schedule from prepopulated list.
+ * 
+ * Source: 
+ *  https://github.com/hoaphantn7604/react-native-element-dropdown
+ * 
+ ***************************************************************************************/
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 
+/**
+ * Prepopulated list of dosage schdules
+ */
 const data = [
   { label: "Morning", value: "1" },
   { label: "Midday", value: "2" },
@@ -9,6 +24,11 @@ const data = [
   { label: "Bedtime", value: "4" },
 ];
 
+/**
+ * 
+ * @param {function} setDosageSchedule passthrough parent function to update parent variable 
+ * @returns 
+ */
 const DosageSchedDropDown = ({ setDosageSchedule }) => {
   const [value, setValue] = useState("Morning");
   const [isFocus, setIsFocus] = useState(false);
