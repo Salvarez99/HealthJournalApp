@@ -26,7 +26,9 @@ export default function JournalScreen({ navigation }) {
   //const [appointmentData, setAppointmentData] = React.useState(null); // for data fetched from backend url take input from addappointmentFrom.js
   const [appointments, setAppointments] = useState([]); // hook. for dummy datas
   const forceUpdate = useForceUpdate();
+
   // create useEffect() and use dummy data for now
+
 
   const fetchJournalData = async () => {
     try{
@@ -187,7 +189,7 @@ const renderJournalItem = ({ item }) => {
 };
 
 
-  // Define modal components with their names
+  // Defined modal components with their names
   const modalComponents = [
     { name: "Add Appointment", openModal: openModal1 },
     { name: "Add Medication", openModal: openModal2 },
@@ -206,10 +208,7 @@ const renderJournalItem = ({ item }) => {
         );
       case "AddJournalEntryForm":
         return (
-          <AddJournalEntryForm
-            isVisible={isModalVisible}
-            onClose={closeModal}
-          />
+          <AddJournalEntryForm isVisible={isModalVisible} onClose={closeModal} />
         );
       default:
         return null;

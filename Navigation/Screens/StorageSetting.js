@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  Platform,
   View,
   StyleSheet,
   TouchableOpacity,
@@ -17,10 +16,10 @@ export default function StorageSetting() {
       ? alert("Cloud Storage Enabled")
       : alert("Cloud Storage Disabled");
 
-    //db logic goes here
+    //TODO: db logic goes here
   };
   const removeJournals = async () => {
-    //db logic goes here
+    //TODO: db logic goes here
     await clearJournal();
     await clearJournalEntry();
     alert("Removed Journals from cloud.");

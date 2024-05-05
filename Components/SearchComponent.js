@@ -1,3 +1,15 @@
+/***************************************************************************************
+ * Authors: Stephen Alvarez
+ * Date: 5/1/2024
+ * Code Version: 1.0
+ * 
+ * Description:
+ *  Renders a search component. Consist of a searchbar and handles functionality of when 
+ * the user inputs data and saves the item. Items will be displayed from the DisplayItems
+ * component
+ * 
+ * 
+ ***************************************************************************************/
 import React, { useState, useEffect } from "react";
 import {
   View,

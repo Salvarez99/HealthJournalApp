@@ -1,6 +1,22 @@
+/***************************************************************************************
+ * Authors: Stephen Alvarez
+ * Date: 5/1/2024
+ * Code Version: 1.0
+ * 
+ * Description:
+ *  Renders a flatlist
+ * 
+ * 
+ * 
+ ***************************************************************************************/
 import React from "react";
-import { View, FlatList, Text, StyleSheet } from "react-native";
+import { View, FlatList, Text } from "react-native";
 
+/**
+ * 
+ * @param {List} data list being displayed in flatlist
+ * @returns renders flatlist with items in data list
+ */
 const DisplayItems = ({ data }) => {
   const renderItem = ({ item }) => (
     <Text style={{ borderBottomWidth: 1, backgroundColor: "#d7dbe0" }}>

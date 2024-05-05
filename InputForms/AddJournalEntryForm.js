@@ -1,8 +1,18 @@
-import Ionicons from "react-native-vector-icons/Ionicons";
+/***************************************************************************************
+ * Authors: Stephen Alvarez
+ * Date: 5/1/2024
+ * Code Version: 1.0
+ * 
+ * Description:
+ *  Renders a form that takes user input to fill out fields required for Journal Entries
+ * 
+ * 
+ * 
+ ***************************************************************************************/
+import Ionicons from "react-native-vector-icons/Ionicons"; //Vector Icons are used for button icons
 import React, { useState, useEffect } from "react";
 import {
   View,
-  ScrollView,
   Text,
   TouchableOpacity,
   Modal,
@@ -10,7 +20,7 @@ import {
   Platform,
 } from "react-native";
 
-import SearchComponent from "../Components/SearchComponent";
+import SearchComponent from "../Components/SearchComponent"; 
 import JournalEntry from "../Classes/JournalEntry";
 import { fetchIllnesses, fetchSymptoms, fetchTests, addJournal, addJournalEntry } from "../LocalStorage/LocalDatabase";
 
@@ -63,14 +73,14 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
     console.log("Symptoms: \n");
     for (const symptom of symptoms) {
       console.log(
-        symptom.name + ":" + symptom.startDate + " -> " + symptom.endDate + "\n"
+        symptom.name + ": " + symptom.startDate + " -> " + symptom.endDate + "\n"
       );
     }
     console.log("\n");
     console.log("Illnesses: \n");
     for (const illness of illnesses) {
       console.log(
-        illness.name + ":" + illness.startDate + " -> " + illness.endDate + "\n"
+        illness.name + ": " + illness.startDate + " -> " + illness.endDate + "\n"
       );
     }
     console.log("\n");
@@ -83,11 +93,17 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
   };
 
   //TODO: Implement save functionality
+  /**
+   * Takes collected user data and pushes the data either to local or cloud
+   * storage, depends if user has cloud storage active
+   * 
+   */
   const onSave = () => {
     printLists();
     journalEntry = new JournalEntry(symptoms, illnesses, tests);
     onClose();
   };
+
   return (
     <Modal
       visible={isVisible}
@@ -105,8 +121,9 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
           </View>
 
           <View style={styles.modalFormContent}>
+            {/**Form content goes in this scope */}
             <View>
-              <Text style={styles.SearchComponentHeader}>Symptoms:</Text>
+              <Text style={styles.SearchComponentHeader}>*Symptoms:</Text>
             </View>
             <View style={{ height: 180 }}>
               <SearchComponent
@@ -116,7 +133,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
               />
             </View>
             <View>
-              <Text style={styles.SearchComponentHeader}>Illnesses:</Text>
+              <Text style={styles.SearchComponentHeader}>*Illnesses:</Text>
             </View>
             <View style={{ height: 180 }}>
               <SearchComponent
@@ -126,7 +143,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
               />
             </View>
             <View>
-              <Text style={styles.SearchComponentHeader}>Tests:</Text>
+              <Text style={styles.SearchComponentHeader}>*Tests:</Text>
             </View>
             <View style={{ height: 180 }}>
               <SearchComponent
@@ -135,6 +152,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
                 updateList={setTests}
               />
             </View>
+            {/**Save button that calls onSave function */}
             <View style={styles.saveButtonContainer}>
               <TouchableOpacity onPress={onSave} style={styles.saveButton}>
                 <Text>Save</Text>

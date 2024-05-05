@@ -1,4 +1,16 @@
-import Ionicons from "react-native-vector-icons/Ionicons";
+/***************************************************************************************
+ * Authors: Stephen Alvarez
+ * Date: 5/1/2024
+ * Code Version: 1.0
+ * 
+ * Description:
+ *  Renders a form that takes user input to fill out fields required for appointments
+ * 
+ * 
+ * 
+ ***************************************************************************************/
+
+import Ionicons from "react-native-vector-icons/Ionicons"; //Vector Icons are used for button icons
 import React, { useState } from "react";
 import {
   View,
@@ -10,16 +22,16 @@ import {
   TextInput,
 } from "react-native";
 
+import Appointment from "../Classes/Appointment";
 import DatePicker from "../Components/DatePicker";
 import TimePicker from "../Components/TimePicker";
-import Appointment from "../Classes/Appointment";
 import {addAppointment, clearAppointments} from "../LocalStorage/LocalDatabase";
 
-const AddAppointmentForm = ({ isVisible, onClose, navigation }) => {
-  const [eventName, setEventName] = useState("");
-  const [eventDate, setEventDate] = useState(new Date());
-  const [eventStartTime, setEventStartTime] = useState(null);
-  const [eventEndTime, setEventEndTime] = useState(null);
+const AddAppointmentForm = ({ isVisible, onClose }) => {
+  const [eventName, setEventName] = new useState("");
+  const [eventDate, setEventDate] = new useState(new Date());
+  const [eventStartTime, setEventStartTime] = new useState('');
+  const [eventEndTime, setEventEndTime] = new useState('');
   let appointment = null;
 
   const convertDateFormat = (dateString) => {
@@ -52,6 +64,9 @@ const AddAppointmentForm = ({ isVisible, onClose, navigation }) => {
     // console.log("EndTime: " + endTime);
   };
 
+  /**
+   * Resets form's fields to default values then closes form
+   */
   const clearFields = () => {
     setEventName("");
     setEventDate(new Date().toLocaleDateString());
@@ -62,16 +77,26 @@ const AddAppointmentForm = ({ isVisible, onClose, navigation }) => {
   };
 
   //TODO: Implement save functionality
-  const onSave = async () => {
-    try{
-    await addAppointment(eventName,eventDate,eventStartTime,eventEndTime);
-    //For testing purposes, if you wish to wipe the entries clean uncomment this
-    //await clearAppointments();
-    onClose();
-    //navigation.navigate('JournalScreen');
-    }
-    catch (error){
-      console.error('Error adding appointment', error);
+  /**
+   * Takes collected user data and pushes the data either to local or cloud
+   * storage, depends if user has cloud storage active
+   * 
+   */
+  const onSave = () => {
+    const eName = eventName;
+    const eDate = eventDate;
+    const eStartTime = eventStartTime;
+    const eEndTime = eventEndTime;
+
+    //Checks if required fields are inputted in the correct format
+    //eName is not just whitespace
+    //eStartTime and eEndTime are not null
+    if(!/^\s*$/.test(eName) && eStartTime != null && eEndTime != null){
+      appointment = new Appointment(eName, eventDate, eStartTime, eEndTime);
+      console.log(appointment.toString());
+      clearFields();
+    }else{
+      alert('Required fields missing.\nRequired fields contains \'*\'.')
     }
   };
 
@@ -99,8 +124,9 @@ const AddAppointmentForm = ({ isVisible, onClose, navigation }) => {
           </View>
 
           <View style={styles.modalFormContent}>
+            {/**Form content goes in this scope */}
             <View style={styles.inputEventName}>
-              <Text style={styles.buttonHeaderText}>Event Name: </Text>
+              <Text style={styles.buttonHeaderText}>*Event Name: </Text>
               <TextInput
                 style={{
                   borderWidth: 1,
@@ -111,17 +137,14 @@ const AddAppointmentForm = ({ isVisible, onClose, navigation }) => {
                 value={eventName}
                 onChangeText={setEventName}
               />
-              {/* {console.log(eventName)} */}
             </View>
 
+            {/**Date and Time pickers used to gather date and time data */}
             <DatePicker name={"Date"} onDateChange={handleDateChange} />
+            <TimePicker name={"*Start time"} onTimeChange={handleStartTimeChange}/>
+            <TimePicker name={"*End time"} onTimeChange={handleEndTimeChange} />
 
-            <TimePicker
-              name={"Start time"}
-              onTimeChange={handleStartTimeChange}
-            />
-            <TimePicker name={"End time"} onTimeChange={handleEndTimeChange} />
-
+            {/**Save button that calls onSave function */}
             <View style={styles.saveButtonContainer}>
               <TouchableOpacity onPress={onSave} style={styles.saveButton}>
                 <Text>Save</Text>
