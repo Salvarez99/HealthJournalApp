@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import {
   View,
   Text,
@@ -12,108 +13,63 @@ import AddJournalEntryForm from "../../InputForms/AddJournalEntryForm";
 import AddAppointmentForm from "../../InputForms/AddAppointmentForm";
 import AddMedicationForm from "../../InputForms/AddMedicationForm";
 import JournalTitle from "./JournalTitle";
-import * as SQLite from 'expo-sqlite';
-//import { openData, closeData } from "./LocalStorage/LocalDatabase";
-import { AppState } from "react-native";
-import * as Sharing from 'expo-sharing';
-import * as FileSystem from 'expo-file-system';
-import * as DocumentPicker from 'expo-document-picker';
-import { fetchAppointments, clearAppointments, fetchJournals } from "../../LocalStorage/LocalDatabase";
-import { useFocusEffect} from "@react-navigation/native";
+import {fetchJournalEntries, addJournalEntry, addJournal, fetchJournals, fetchJournalDataByJournalId} from "../../LocalStorage/LocalDatabase";
+
 // for testing
 import PlaceholderForm from "../../InputForms/PlaceholderForm";
-
+import Symptom from "../../Classes/Symptom";
 
 export default function JournalScreen({ navigation }) {
   const [isModalVisible, setIsModalVisible] = React.useState(false); // vsible or not
   const [selectedModal, setSelectedModal] = React.useState(null); // track which model should displayed.
-
+  const [journalEntries, setJournalEntries] = useState([]);
   //const [appointmentData, setAppointmentData] = React.useState(null); // for data fetched from backend url take input from addappointmentFrom.js
   const [appointments, setAppointments] = useState([]); // hook. for dummy datas
-  const [journals, setJournals] = useState([]);
-  
+  const forceUpdate = useForceUpdate();
+  // create useEffect() and use dummy data for now
 
-  const fetchJournalsFromDB = async () => {
-    try {
-      const journalsFromDB = await fetchJournals();
-      setJournals(journalsFromDB);
-      console.log("journals successfully fetched?");
-    } catch (error) {
-      console.error('Error fetching journals', error);
+  const fetchJournalData = async () => {
+    try{
+      const entries = await fetchJournalEntries();
+      //const testJournals = await fetchJournalDataByJournalId(1);
+      setJournalEntries(entries);
+      console.log(entries);
+      //console.log(testJournals);
+    } catch(error){
+      console.log("Failed to fetch journal entries:", error);
     }
   };
 
-  // create useEffect() and use dummy data for now
-  useEffect(() => {
-    // think of fetching appointments variable from the backend side
-    const fetchAppointmentsFromDB = async()=> {
-      try{ 
-        const appointmentsFromDB = await fetchAppointments();
-        setAppointments(appointmentsFromDB);
-        console.log("Appointments successfully fetched?");
-      } catch(error){
-        console.error('Error fetching appointments', error);
-      }
-    };
-
-    const fetchJournalsFromDB = async()=> {
-      try{ 
-        const journalsFromDB = await fetchJournals();
-        setJournals(journalsFromDB);
-        console.log("journals successfully fetched?");
-      } catch(error){
-        console.error('Error fetching journals', error);
-      }
-    };
-
-    const clearAllData = async () => {
-      try {
-        const rowsAffected = await clearAppointments();
-        console.log('Number of rows affected:', rowsAffected);
-      } catch (error) {
-        console.error('Error clearing appointments:', error);
-      }
-    };
-    fetchJournalsFromDB();
-  }, []);
+  
 
   useFocusEffect(
-    
-    React.useCallback(() => {
-
-      const fetchJournalsFromDB = async()=> {
-        try{ 
-          const journalsFromDB = await fetchJournals();
-          setJournals(journalsFromDB);
-          console.log("journals successfully fetched?");
-        } catch(error){
-          console.error('Error fetching journals', error);
-        }
-      };
-
-      fetchJournalsFromDB(); // Fetch journals data when screen is focused
-    }, [])
-  );
+    useCallback(()=>{
+  
+  //const someDate = "2024-04-29"; // Example date
+  /*
+  addJournal("Cough","test","test", "Cold", "test", "test", "Bloodwork", "test", 1)
+  .then((insertId) => {
+    console.log("Inserted journal entry ID:", insertId);
+  })
+  .catch((error) => {
+    console.error("Error adding journal entry:", error);
+  });
+*/
+    // set appointments state
+    fetchJournalData();
+    fetchAppointmentData();
+  }, [])
+);
 
   // define fetchAppointmetnData() function with async
   const fetchAppointmentData = async () => {
     try {
-      // change url with actrual backend API url.
-      //citation :https://dmitripavlutin.com/javascript-fetch-async-await/
-      const response = await fetch("backend-api-url-placeholder");
-      const data = await response.json(); // store response in data
-      setAppointments(data); // pass retrived data
+      setAppointments(journalEntries); // pass retrived data
     } catch (error) {
-      //console.log("fail to fetch data from appointment database : ", error);
+      console.log("test");
     }
   };
 
-  // after setting up backend API
-  useEffect(() => {
-    // citation : https://www.guvi.in/blog/how-to-fetch-data-using-api-in-react/
-    //fetch appointmetn data from backend API
-    fetchAppointmentData();
-  }, []);
 
   const openModal1 = () => {
     setSelectedModal("AddAppointmentForm");
@@ -136,59 +92,113 @@ export default function JournalScreen({ navigation }) {
 
   // handle input data parameter from AddJournalEntryForm.js
   const saveAppointmentData = (data) => {
-    fetchAppointmentData(); // setAppointmentData(data)
+    setAppointments(data); // setAppointmentData(data)
     setIsModalVisible(false);
   };
 
   // handel when user click journal screen entry >> display JournalTitle.js page
-  const handleAppointmentPress = (arryOfAppointmentInfo, item) => {
-    console.log(item.id);
-    navigation.navigate("JournalTitle", { arryOfAppointmentInfo, item }); //https://youtu.be/oBAOr1OswkQ?si=NQ_XdTnzKk3t8xGd
+  const handleAppointmentPress = (journalID) => {
+    navigation.navigate("JournalTitle", {journalId: journalID}); //https://youtu.be/oBAOr1OswkQ?si=NQ_XdTnzKk3t8xGd
   };
-
+//
   // render journal date on journal screen.
+  // sort date in each symptom list , illnes list, test and labwork list.
   const displayStartDate = (item) => {
     if (item.Symptom && item.Symptom.length > 0) {
+      // citation: sorting https://stackoverflow.com/questions/47071623/sort-by-closest-date-to-dates-which-have-occured-and-will-occur
+      // compare starting date 
+      item.Symptom.sort(function(a, b) {
+            //a.startDate is string type , conver to Date object. 
+            const dateA = new Date(a.startDate);
+            const dateB = new Date(b.startDate);
+            return Math.abs(Date.now() - dateA) - Math.abs(Date.now() - dateB);
+        });
+
+        // Log the sorted Symptom array (for debugging)
+        // console.log(item.Symptom);
       return item.Symptom[0].startDate;
-    } else if (item.Illness && item.Illness.length > 0) {
+
+    } 
+    
+    if (item.Illness && item.Illness.length > 0) {
+
+      item.Illness.sort(function(a, b) {
+        //a.startDate is string type , conver to Date object. 
+        const dateA = new Date(a.startDate);
+        const dateB = new Date(b.startDate);
+        return Math.abs(Date.now() - dateA) - Math.abs(Date.now() - dateB);
+    });
+
+        // Log the sorted Illness array (for debugging)
+        // console.log(item.Illness);
       return item.Illness[0].startDate;
-    } else if (item.TestsAndLabWorks && item.TestsAndLabWorks.length > 0) {
+    } 
+    
+    if (item.TestsAndLabWorks && item.TestsAndLabWorks.length > 0) {
+      // Sort TestsAndLabWorks array based on dateOccurred
+      item.TestsAndLabWorks.sort((a, b) => {
+        const dateA = new Date(a.dateOccurred);
+        const dateB = new Date(b.dateOccurred);
+        return Math.abs(Date.now() - dateA) - Math.abs(Date.now() - dateB);
+      });
+  
+      // Return the dateOccurred of the first item in TestsAndLabWorks array
+      // console.log(item.TestsAndLabWorks);
       return item.TestsAndLabWorks[0].dateOccurred;
     }
+  
+    // case : all three array is empty 
+    return null; 
   };
 
-  const displayAppointmentDetails = (item) => {
-    return `${item.symptomName}`;
-  };
+ // calculate each entry's difference in date ex) current date 04-25 - storedStartDate 04-23 return 2 
+ const calculateDateDifference = (startDate) => {
+  const storedStartDate = new Date(startDate);
+  return Math.abs(Date.now() - storedStartDate);
+};
 
   // render appointment item (prepare for displaying)
-  const renderAppointmentItem = ({ item }) => (
+const renderJournalItem = ({ item }) => {
+ 
+  // Determine the source of data (dummy or fetched appointments)
+  const sourceAppointments = appointments.length > 0 ? appointments : dummyAppointments;
+
+  // Sort the appointments based on date difference
+  // citation : https://stackoverflow.com/questions/47071623/sort-by-closest-date-to-dates-which-have-occured-and-will-occur
+  sourceAppointments.sort((a, b) => {
+   
+    // Calculate date difference for both items
+    const differenceA = calculateDateDifference(displayStartDate(a));
+    const differenceB = calculateDateDifference(displayStartDate(b));
+    return differenceA - differenceB; // sort by ascending order , nearest item fist comes.
+  });
+
+  // render return with touchable opacity >> linked to journaltitle.js 
+  return (
     <TouchableOpacity
-    style={styles.appointmentItem}
-    onPress={() => handleAppointmentPress(item,item)}
-  >
-    <View style={styles.appointmentInfo}>
-      <Text style={styles.JournalTitle}>{`Journal: ${item.id}`}</Text>
-      <Text style={styles.JournalDate}>{displayAppointmentDetails(item)}</Text>
-    </View>
-    <Text style={styles.horizontalLine}></Text>
-  </TouchableOpacity>
-);
+      style={styles.journalButtonStyle}
+      onPress={() => handleAppointmentPress(item.id)}
+    >
+      <Text style={styles.JournalTitle}>{`Journal ${item.id}`}</Text>
+      <Text style={styles.JournalDate}>{item.primaryDate}</Text>
+      <View style={styles.horizontalLine}></View>
+    </TouchableOpacity>
+  );
+};
+
 
   // Define modal components with their names
   const modalComponents = [
     { name: "Add Appointment", openModal: openModal1 },
     { name: "Add Medication", openModal: openModal2 },
     { name: "Add Journal Entry", openModal: openModal3 },
-    // Add more modal components as needed
   ];
 
   const renderSelectedModal = () => {
     switch (selectedModal) {
       case "AddAppointmentForm":
-        //return <PlaceholderForm isVisible={isModalVisible} onClose={closeModal} />;    // for testing
         return (
-          <AddAppointmentForm isVisible={isModalVisible} onClose={closeModal} navigation={navigation} />
+          <AddAppointmentForm isVisible={isModalVisible} onClose={closeModal} />
         );
       case "AddMedicationForm":
         return (
@@ -199,13 +209,8 @@ export default function JournalScreen({ navigation }) {
           <AddJournalEntryForm
             isVisible={isModalVisible}
             onClose={closeModal}
-            navigation={navigation}
-            onSaveSuccess={()=> {
-              fetchJournalsFromDB();
-            }}
           />
         );
-
       default:
         return null;
     }
@@ -216,14 +221,11 @@ export default function JournalScreen({ navigation }) {
       <View style={styles.mainContent}>
         {/* Put your content in this view */}
 
-        {/* display add appointment data */}
-
         {/** show list of saved appointment records */}
         <FlatList
-          data={journals}
-          renderItem={renderAppointmentItem}
+          data={appointments}
+          renderItem={renderJournalItem}
           keyExtractor={(item) => item.id.toString()}
-          contentContainerStyle={styles.horizontalListContent}
           showsVerticalScrollIndicator={false}
         />
       </View>
@@ -238,70 +240,29 @@ export default function JournalScreen({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
-  // add scrollContent style!
+export function useForceUpdate() {
+  const [, setValue] = useState(0); // Use state to trigger re-render
+  return () => setValue(value => value + 1); // Update state to trigger re-render
+}
 
+const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
   mainContent: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingBottom: 50,
-  },
-  title: {
-    paddingTop: 10,
-    fontSize: 26,
-    fontWeight: "bold",
   },
   quickAddButtonContainer: {
     position: "absolute",
     bottom: "2%",
     left: "4%",
   },
-  //
-  appointmentDataContainer: {
-    paddingLeft: 20,
-    marginTop: 20,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: "gray",
-    borderRadius: 5,
-    paddingHorizontal: 20, // Add horizontal padding
-  },
-  appointmentList: {
-    flex: 1,
-    horizontal: "100%",
-    paddingVertical: 20, // put paddding in vertical way
-  },
-  appointmentItem: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+  journalButtonStyle: {
     flexDirection: "row", // Align children horizontally
-    // alignItems: 'flex-start', // Align children vertically
-    paddingRight: 100,
     justifyContent: "space-between", // Align children evenly
+    padding: 30,
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
-  },
-
-  // horizontal line
-  horizontalLine: {
-    flex: 1, // take full screen
-    height: 1,
-    backgroundColor: "#000000",
-    marginTop: 10,
-    marginBottom: 10,
-  },
-  // Journal# size
-  appointmentInfo: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingTop: 25,
-    paddingBottom: 25,
-    paddingRight: 7,
     ...Platform.select({
       ios: {
         fontFamily: "Times New Roman", // Set font family to Times New Roman
@@ -309,10 +270,9 @@ const styles = StyleSheet.create({
     }),
   },
   JournalTitle: {
-    fontSize: 17,
+    fontSize: 16,
     fontWeight: "bold",
     paddingLeft: 20,
-
     ...Platform.select({
       ios: {
         fontFamily: "Times New Roman", // Set font family to Times New Roman
@@ -321,19 +281,13 @@ const styles = StyleSheet.create({
   },
   JournalDate: {
     fontSize: 14,
+    paddingTop : 3,
     paddingLeft: 150,
-    paddingRight: 20,
     color: "#555",
     ...Platform.select({
       ios: {
         fontFamily: "Times New Roman", // Set font family to Times New Roman
       },
     }),
-  },
-  horizontalListContent: {
-    horizontal: "100%",
-    width: "100",
-    marginTop: 10,
-    marginBottom: 10,
   },
 });

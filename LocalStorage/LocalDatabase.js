@@ -1,4 +1,5 @@
 import * as SQLite from 'expo-sqlite';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Sharing from 'expo-sharing';
 import * as FileSystem from 'expo-file-system';
 import * as DocumentPicker from 'expo-document-picker';
@@ -11,8 +12,24 @@ const testList = ["Bloodwork", "X-Ray", "Physical Exam", "Biopsy", "Blood Pressu
 
 export const initializeDatabase = () => {
     return new Promise((resolve, reject) => {
+      
+      //
+      //const checkAndPreloadData = async () => {
       db.transaction((tx) => {
         // Create the appointments table
+        /*
+        tx.executeSql(
+          `DROP TABLE IF EXISTS journal;`,
+          [],
+          (_, result) => {
+              console.log("Journal table deleted successfully");
+              resolve();
+          },
+          (_, error) => {
+              reject(error);
+          }
+      );
+*/
         tx.executeSql(
           `CREATE TABLE IF NOT EXISTS appointments (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -30,108 +47,258 @@ export const initializeDatabase = () => {
             reject(error); // Reject with the error if table creation fails
           }
         );
-  
+        
         tx.executeSql(
           `CREATE TABLE IF NOT EXISTS illness (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              name TEXT
           );`,
           [],
           (_, result) => {
-            console.log("Illness table created successfully");
-            // Prepopulate the illness table with initial data
-            tx.executeSql(
-              `INSERT INTO illness (name) VALUES (?);`,
-              [illnessList],
-              
-              (_, result) => {
-                console.log("Illness prepopulated successfully");
-              },
-              (_, error) => {
-                console.log("Error prepopulating illness table:", error);
-              }
-            );
+              console.log("Illness table created successfully");
+              // Prepopulate the illness table with initial data
           },
           (_, error) => {
-            reject(error);
+              reject(error);
           }
-        );
-
-        // Create the symptom table
+      );
+      
         tx.executeSql(
-          `CREATE TABLE IF NOT EXISTS symptom (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT
-          );`,
+          `SELECT name FROM sqlite_master WHERE type='table' AND name='illness';`,
           [],
           (_, result) => {
-            console.log("Symptom table created successfully");
-            // Prepopulate the symptom table with initial data
-            tx.executeSql(
-              `INSERT INTO symptom (name) VALUES (?);`,
-              [symptomList],
-              
-              (_, result) => {
-                console.log("Symptom prepopulated successfully");
-              },
-              (_, error) => {
-                console.log("Error prepopulating symptom table:", error);
+              if (result.rows.length != 0) {
+                tx.executeSql(
+                  `SELECT * FROM illness;`,
+                  [],
+                  (_, result) => {
+                    if(result.rows.length === 0){
+                          // Illness table is empty, populate it
+                          populateIllnessTable(tx);
+                    }
+                  },
+                  (_, error) => {
+                      reject(error);
+                  }
+              );
+                  // Illness table does not exist, create table and populate it
+                  // Illness table exists, check if it's empty
+                  
               }
-            );
+              else {
+                console.log("Illness table doesn't exist?");
+                resolve();
+            }
+
           },
           (_, error) => {
-            reject(error);
+              reject(error);
           }
-        );
+      );
+
+const populateIllnessTable = (tx) => {
+tx.executeSql(
+  `INSERT INTO illness (name) VALUES (?), (?), (?), (?), (?), (?);`,
+  ["Cold","Flu","Pneumonia","Cancer","Allergies","Pink Eye"],
+  (_, result) => {
+      console.log("Illness prepopulated successfully");
+  },
+  (_, error) => {
+      console.log("Error prepopulating illness table:", error);
+  }
+);
+};
+
+tx.executeSql(
+  `CREATE TABLE IF NOT EXISTS symptom (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT
+  );`,
+  [],
+  (_, result) => {
+      console.log("Symptom table created successfully");
+  },
+  (_, error) => {
+      reject(error);
+  }
+);
+
+tx.executeSql(
+  `SELECT name FROM sqlite_master WHERE type='table' AND name='symptom';`,
+  [],
+  (_, result) => {
+      if (result.rows.length != 0) {
+        tx.executeSql(
+          `SELECT * FROM symptom;`,
+          [],
+          (_, result) => {
+            if(result.rows.length === 0){
+                  // symptom table is empty, populate it
+                  populateSymptomTable(tx);
+            }
+          },
+          (_, error) => {
+              reject(error);
+          }
+      );
+          // symptom table does not exist, create table and populate it
+          // symptom table exists, check if it's empty
+          
+      }
+      else {
+        console.log("symptom table doesn't exist?");
+        resolve();
+    }
+
+  },
+  (_, error) => {
+      reject(error);
+  }
+);
+
+const populateSymptomTable = (tx) => {
+tx.executeSql(
+`INSERT INTO symptom (name) VALUES (?), (?), (?), (?), (?), (?);`,
+["Cough", "Headache", "Sore Throat", "Back Pain", "Congestion", "Light Headedness"],
+(_, result) => {
+console.log("symptom prepopulated successfully");
+},
+(_, error) => {
+console.log("Error prepopulating symptom table:", error);
+}
+);
+};
 
         // Create the test table
         tx.executeSql(
           `CREATE TABLE IF NOT EXISTS test (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              name TEXT
           );`,
           [],
           (_, result) => {
-            console.log("Test table created successfully");
+              console.log("Test table created successfully");
+              // Prepopulate the test table with initial data
           },
           (_, error) => {
-            reject(error);
+              reject(error);
           }
-        );
+      );
+      
+        tx.executeSql(
+          `SELECT name FROM sqlite_master WHERE type='table' AND name='test';`,
+          [],
+          (_, result) => {
+              if (result.rows.length != 0) {
+                tx.executeSql(
+                  `SELECT * FROM test;`,
+                  [],
+                  (_, result) => {
+                    if(result.rows.length === 0){
+                          // test table is empty, populate it
+                          populateTestTable(tx);
+                    }
+                  },
+                  (_, error) => {
+                      reject(error);
+                  }
+              );
+                  // test table does not exist, create table and populate it
+                  // test table exists, check if it's empty
+                  
+              }
+              else {
+                console.log("Test table doesn't exist?");
+                resolve();
+            }
+
+          },
+          (_, error) => {
+              reject(error);
+          }
+      );
+
+const populateTestTable = (tx) => {
+tx.executeSql(
+  `INSERT INTO test (name) VALUES (?), (?), (?), (?), (?), (?);`,
+  ["Bloodwork", "X-Ray", "Physical Exam", "Biopsy", "Blood Pressure", "Cholesterol"],
+  (_, result) => {
+      console.log("Test prepopulated successfully");
+  },
+  (_, error) => {
+      console.log("Error prepopulating test table:", error);
+  }
+);
+};
+
 
         // Create the medicine table
         tx.executeSql(
           `CREATE TABLE IF NOT EXISTS medicine (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              name TEXT
           );`,
           [],
           (_, result) => {
-            console.log("Medicine table created successfully");
-            // Prepopulate the medicine table with initial data
-            tx.executeSql(
-              `INSERT INTO medicine (name) VALUES (?);`,
-              [medicineList],
+              console.log("Medicine table created successfully");
               
-              (_, result) => {
-                console.log("Medicine prepopulated successfully");
-              },
-              (_, error) => {
-                console.log("Error prepopulating medicine table:", error);
-              }
-            );
           },
           (_, error) => {
-            console.log("Error?");
-            reject(error);
+              reject(error);
           }
-        );
+      );
+      
+        tx.executeSql(
+          `SELECT name FROM sqlite_master WHERE type='table' AND name='medicine';`,
+          [],
+          (_, result) => {
+              if (result.rows.length != 0) {
+                tx.executeSql(
+                  `SELECT * FROM medicine;`,
+                  [],
+                  (_, result) => {
+                    if(result.rows.length === 0){
+                          
+                          populateMedicineTable(tx);
+                    }
+                  },
+                  (_, error) => {
+                      reject(error);
+                  }
+              );
+                  
+              }
+              else {
+                console.log("Medicine table doesn't exist?");
+                resolve();
+            }
+
+          },
+          (_, error) => {
+              reject(error);
+          }
+      );
+
+const populateMedicineTable = (tx) => {
+tx.executeSql(
+  `INSERT INTO medicine (name) VALUES (?), (?), (?), (?), (?), (?);`,
+  ["Motrin", "Ibuprofen",  "Benadryl", "Albuterol", "Motrin", "Epinephrine"],
+  (_, result) => {
+      console.log("Medicine prepopulated successfully");
+  },
+  (_, error) => {
+      console.log("Error prepopulating medicine table:", error);
+  }
+);
+};
 
 
-        // Create the journal table with foreign key constraints
+        // Create the journal table with foreign key constraints test
+        
         tx.executeSql(
           `CREATE TABLE IF NOT EXISTS journal (
-            id INTEGER PRIMARY KEY,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            JID INTEGER,
             symptomName TEXT,
             symptomStartDate TEXT,
             symptomEndDate TEXT,
@@ -142,18 +309,20 @@ export const initializeDatabase = () => {
             testDate TEXT,
             FOREIGN KEY (illnessName) REFERENCES illness(name),
             FOREIGN KEY (symptomName) REFERENCES symptom(name),
-            FOREIGN KEY (testName) REFERENCES test(name)
+            FOREIGN KEY (testName) REFERENCES test(name),
+            FOREIGN KEY (JID) REFERENCES journalEntry(id)
           );`,
           [],
           (_, result) => {
-            console.log("Journal table modified successfully");
+            console.log("Journal table initialized successfully");
             resolve();
           },
           (_, error) => {
+            console.log("Error creating journal table", error);
             reject(error);
           }
         );
-
+        
         // Create the medicineEntry table with foreign key reference to medicine
         tx.executeSql(
           `CREATE TABLE IF NOT EXISTS medicineEntry (
@@ -174,9 +343,28 @@ export const initializeDatabase = () => {
           }
         );
 
+        tx.executeSql(
+          `CREATE TABLE IF NOT EXISTS journalEntry (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            primaryDate TEXT);`,
+          [],
+          (_, result) => {
+            console.log("journalEntry Table Initialized Successfully");
+            resolve();
+          },
+          (_, error) => {
+            reject(error);
+          }
+        );
+
+      
       }, null, resolve);
     });
 };
+
+
+
+
 
 
 // Create a new appointment
@@ -217,13 +405,49 @@ export const fetchAppointments = () => {
   });
 };
 
-// Create a new journal entry
-export const addJournalEntry = (symptomName, symptomStartDate, symptomEndDate, illnessName, illnessStartDate, illnessEndDate, testName, testDate) => {
+export const addJournalEntry = (primaryDate) => {
   return new Promise((resolve, reject) => {
       db.transaction((tx) => {
           tx.executeSql(
-              `INSERT INTO journal (symptomName, symptomStartDate, symptomEndDate, illnessName, illnessStartDate, illnessEndDate, testName, testDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?);`,
-              [symptomName, symptomStartDate, symptomEndDate, illnessName, illnessStartDate, illnessEndDate, testName, testDate],
+              `INSERT INTO journalEntry (primaryDate) VALUES (?);`,
+              [primaryDate],
+              (_, result) => {
+                  console.log("Entry Added Successfully");
+                  resolve(result.insertId); // Resolve with the ID of the newly inserted journalEntry
+              },
+              (_, error) => {
+                  reject(error); // Reject with the error if insertion fails
+              }
+          );
+      });
+  });
+};
+
+export const fetchJournalEntries = () => {
+  return new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+          tx.executeSql(
+              `SELECT * FROM journalEntry;`,
+              [],
+              (_, result) => {
+                  const appointments = result.rows._array;
+                  resolve(appointments); // Resolve with the fetched appointments
+              },
+              (_, error) => {
+                  reject(error); // Reject with the error if fetching fails
+              }
+          );
+      });
+  });
+};
+
+// Create a new journal entry
+export const addJournal = (symptomName, symptomStartDate, symptomEndDate, illnessName, illnessStartDate, illnessEndDate, testName, testDate, JID) => {
+  return new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+          tx.executeSql(
+              `INSERT INTO journal (symptomName, symptomStartDate, symptomEndDate, illnessName, illnessStartDate, illnessEndDate, testName, testDate, JID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+              [symptomName, symptomStartDate, symptomEndDate, illnessName, illnessStartDate, illnessEndDate, testName, testDate, JID],
               (_, result) => {
                   console.log("Journal entry added successfully");
                   resolve(result.insertId); // Resolve with the ID of the newly inserted journal entry
@@ -237,7 +461,7 @@ export const addJournalEntry = (symptomName, symptomStartDate, symptomEndDate, i
 };
 
 // Fetch all journal entries
-export const fetchJournalEntries = () => {
+export const fetchJournals = () => {
   return new Promise((resolve, reject) => {
       db.transaction((tx) => {
           tx.executeSql(
@@ -442,5 +666,191 @@ export const fetchMedicines = () => {
               }
           );
       });
+  });
+};
+
+export const fetchJournalDataByJournalId = (journalId) => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `SELECT * FROM journal WHERE JID = ?;`,
+        [journalId],
+        (_, result) => {
+          const journalData = result.rows._array;
+          resolve(journalData); // Resolve with the fetched journal data
+        },
+        (_, error) => {
+          reject(error); // Reject with the error if fetching fails
+        }
+      );
+    });
+  });
+};
+
+export const clearIllness = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `DELETE FROM illness;`,
+        [],
+        (_, result) => {
+          // After deleting all records, reset the primary key sequence
+          tx.executeSql(
+            `DELETE FROM sqlite_sequence WHERE name = 'illness';`,
+            [],
+            () => {
+              // Resolve with the number of rows affected (should be 0 or more)
+              resolve(result.rowsAffected);
+            },
+            (_, error) => {
+              reject(error); // Reject with the error if resetting the sequence fails
+            }
+          );
+        },
+        (_, error) => {
+          reject(error); // Reject with the error if deletion fails
+        }
+      );
+    });
+  });
+};
+
+export const clearSymptom = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `DELETE FROM symptom;`,
+        [],
+        (_, result) => {
+          // After deleting all records, reset the primary key sequence
+          tx.executeSql(
+            `DELETE FROM sqlite_sequence WHERE name = 'symptom';`,
+            [],
+            () => {
+              // Resolve with the number of rows affected (should be 0 or more)
+              resolve(result.rowsAffected);
+            },
+            (_, error) => {
+              reject(error); // Reject with the error if resetting the sequence fails
+            }
+          );
+        },
+        (_, error) => {
+          reject(error); // Reject with the error if deletion fails
+        }
+      );
+    });
+  });
+};
+
+export const clearTest = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `DELETE FROM test;`,
+        [],
+        (_, result) => {
+          // After deleting all records, reset the primary key sequence
+          tx.executeSql(
+            `DELETE FROM sqlite_sequence WHERE name = 'test';`,
+            [],
+            () => {
+              // Resolve with the number of rows affected (should be 0 or more)
+              resolve(result.rowsAffected);
+            },
+            (_, error) => {
+              reject(error); // Reject with the error if resetting the sequence fails
+            }
+          );
+        },
+        (_, error) => {
+          reject(error); // Reject with the error if deletion fails
+        }
+      );
+    });
+  });
+};
+
+export const clearMedicine = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `DELETE FROM medicine;`,
+        [],
+        (_, result) => {
+          // After deleting all records, reset the primary key sequence
+          tx.executeSql(
+            `DELETE FROM sqlite_sequence WHERE name = 'medicine';`,
+            [],
+            () => {
+              // Resolve with the number of rows affected (should be 0 or more)
+              resolve(result.rowsAffected);
+            },
+            (_, error) => {
+              reject(error); // Reject with the error if resetting the sequence fails
+            }
+          );
+        },
+        (_, error) => {
+          reject(error); // Reject with the error if deletion fails
+        }
+      );
+    });
+  });
+};
+
+export const clearJournalEntry = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `DELETE FROM journalEntry;`,
+        [],
+        (_, result) => {
+          // After deleting all records, reset the primary key sequence
+          tx.executeSql(
+            `DELETE FROM sqlite_sequence WHERE name = 'journalEntry';`,
+            [],
+            () => {
+              // Resolve with the number of rows affected (should be 0 or more)
+              resolve(result.rowsAffected);
+            },
+            (_, error) => {
+              reject(error); // Reject with the error if resetting the sequence fails
+            }
+          );
+        },
+        (_, error) => {
+          reject(error); // Reject with the error if deletion fails
+        }
+      );
+    });
+  });
+};
+
+export const clearJournal = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `DELETE FROM journal;`,
+        [],
+        (_, result) => {
+          // After deleting all records, reset the primary key sequence
+          tx.executeSql(
+            `DELETE FROM sqlite_sequence WHERE name = 'journal';`,
+            [],
+            () => {
+              // Resolve with the number of rows affected (should be 0 or more)
+              resolve(result.rowsAffected);
+            },
+            (_, error) => {
+              reject(error); // Reject with the error if resetting the sequence fails
+            }
+          );
+        },
+        (_, error) => {
+          reject(error); // Reject with the error if deletion fails
+        }
+      );
+    });
   });
 };

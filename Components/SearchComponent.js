@@ -19,44 +19,21 @@ const SearchComponent = ({ searchData, typeDataInputted, updateList }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  const [items, setItems] = useState([]); //List of data stored from user input
+  const [items, setItems] = useState([]);
   const [showList, setShowList] = useState(true);
 
   const onStartDateChange = (newDate) => {
     setStartDate(newDate);
-    // console.log("New Start Date: ", newDate);
   };
   
   const onEndDateChange = (newDate) => {
-    // console.log("New End Date: ", newDate);
     setEndDate(newDate);
   };
-  
 
-  const addItem = (name, startDate, endDate) => {
-    let item;
-
-    if (startDate instanceof Date) {
-      startDate = startDate.toLocaleDateString();
-    }
-    if (endDate instanceof Date) {
-      endDate = endDate.toLocaleDateString();
-    }
-    switch (typeDataInputted) {
-      case "symptoms":
-        item = new Symptom(name, startDate, endDate);
-        break;
-      case "illnesses":
-        item = new Illness(name, startDate, endDate);
-        break;
-      case "tests":
-        item = new TestAndLabwork(name, startDate);
-        break;
-      default:
-        console.error("Unknown Type: " + typeDataInputted);
-        return;
-    }
-    setItems((prevItems) => [...prevItems, item]);
+  const addItem = (item) => {
+    // Extract the necessary information from the item object
+    const newItem = { name: item.name, startDate: startDate, endDate: endDate };
+    setItems((prevItems) => [...prevItems, newItem]);
   };
 
   useEffect(() => {
@@ -67,7 +44,7 @@ const SearchComponent = ({ searchData, typeDataInputted, updateList }) => {
     // Update the visibility based on the search query
     if (searchQuery.trim().length > 0 && !showList) {
       const exactMatch = filteredList.some(
-        (item) => item.toLowerCase() === searchQuery.toLowerCase()
+        (item) => item.name.toLowerCase() === searchQuery.toLowerCase()
       );
       if (exactMatch) {
         setShowList(false);
@@ -81,24 +58,33 @@ const SearchComponent = ({ searchData, typeDataInputted, updateList }) => {
 
   const filteredList = searchQuery
     ? searchData.filter((item) =>
-        item.toLowerCase().includes(searchQuery.toLowerCase())
+        item.name.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : [];
 
   const onChange = () => {
-    addItem(searchQuery, startDate, endDate);
+    const selectedItem = filteredList.find(
+      (item) => item.name.toLowerCase() === searchQuery.toLowerCase()
+    );
+    if (selectedItem) {
+      addItem(selectedItem);
+      setSearchQuery("");
+      setShowList(false);
+    }
   };
 
   const onItemPress = (item) => {
-    setSearchQuery(item);
+    addItem(item);
+    setSearchQuery("");
     setShowList(false);
   };
 
   const renderItem = ({ item }) => (
     <TouchableOpacity onPress={() => onItemPress(item)}>
-      <Text>{item}</Text>
+      <Text>{item.name}</Text>
     </TouchableOpacity>
   );
+
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <View style={styles.datePickerContainer}>
@@ -126,7 +112,7 @@ const SearchComponent = ({ searchData, typeDataInputted, updateList }) => {
         </View>
       ) : (
         <View style={styles.datePickerContainer}>
-          <DatePicker name={"Date Occured"} onDateChange={onStartDateChange} />
+          <DatePicker name={"Date Occurred"} onDateChange={onStartDateChange} />
         </View>
       )}
 
@@ -136,7 +122,7 @@ const SearchComponent = ({ searchData, typeDataInputted, updateList }) => {
             data={filteredList}
             renderItem={renderItem}
             contentContainerStyle={styles.listStyle}
-            keyExtractor={(item) => item.toString()}
+            keyExtractor={(item) => item.key.toString()}
           />
         </View>
       )}

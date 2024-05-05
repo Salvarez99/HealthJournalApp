@@ -1,5 +1,5 @@
 import Ionicons from "react-native-vector-icons/Ionicons";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   ScrollView,
@@ -12,12 +12,11 @@ import {
 
 import SearchComponent from "../Components/SearchComponent";
 import JournalEntry from "../Classes/JournalEntry";
-import { addJournal } from "../LocalStorage/LocalDatabase";
-import { TextInput } from "react-native-gesture-handler";
+import { fetchIllnesses, fetchSymptoms, fetchTests, addJournal, addJournalEntry } from "../LocalStorage/LocalDatabase";
 
-const AddJournalEntryForm = ({ isVisible, onClose, navigation, onSaveSuccess }) => {
+const AddJournalEntryForm = ({ isVisible, onClose }) => {
   let dummySymptoms = [
-    "Cough",
+    "Dummy",
     "Headache",
     "Sore throat",
     "Back pain",
@@ -26,7 +25,7 @@ const AddJournalEntryForm = ({ isVisible, onClose, navigation, onSaveSuccess }) 
   ]; //Dummy db list, to be replaced with call to
 
   let dummyIllnesses = [
-    "Cold",
+    "Dummy",
     "Flu",
     "Pneumonia",
     "Cancer",
@@ -35,7 +34,7 @@ const AddJournalEntryForm = ({ isVisible, onClose, navigation, onSaveSuccess }) 
   ]; //Dummy db list, to be replaced with call to db
 
   let dummyTest = [
-    "Bloodwork",
+    "Dummy",
     "X-Ray",
     "Physical Exam",
     "Biopsy",
@@ -46,22 +45,43 @@ const AddJournalEntryForm = ({ isVisible, onClose, navigation, onSaveSuccess }) 
   const [symptoms, setSymptoms] = useState([]);
   const [illnesses, setIllnesses] = useState([]);
   const [tests, setTests] = useState([]);
-  const [symptom, setSymptom] = useState("");
-  const [illness, setIllness] = useState("");
-  const [test, setTest] = useState("");
-  /*
-  const [currentSymptom, setSymptom] = new useState("");
-  const [currentSymptomStartDate, setSymptomStartDate] = new Date();
-  const [currentSymptomEndDate, setSymptomEndDate] = new Date();
-  const [currentIllness, setIllness] = new useState("");
-  const [currentIllnessStartDate, setIllnessStartDate] = new Date();
-  const [currentIllnessEndDate, setIllnessEndDate] = new Date();
-  const [testName, setTestName] = new useState("");
-  const [testDate, setTestDate] = new Date();
-*/
   let journalEntry = null;
 
-  
+
+  useEffect(() => {
+    if (isVisible) {
+    // Fetch preloaded illnesses
+    fetchIllnesses()
+        .then(data => {
+          console.log('Fetched illnesses:', data);
+          setIllnesses(data);
+        })
+        .catch(error => {
+          console.error('Error fetching illnesses:', error);
+        });
+
+    // Fetch preloaded symptoms
+    fetchSymptoms()
+      .then(data => {
+        setSymptoms(data);
+        console.log('Fetched symptoms:', data);
+      })
+      .catch(error => {
+        console.error('Error fetching symptoms:', error);
+      });
+
+    // Fetch preloaded tests
+    fetchTests()
+      .then(data => {
+        console.log('Fetched tests:', data);
+        setTests(data);
+      })
+      .catch(error => {
+        console.error('Error fetching tests:', error);
+      });
+    }
+  }, [isVisible]);
+
   const printLists = () => {
     console.log("Symptoms: \n");
     for (const symptom of symptoms) {
@@ -85,31 +105,11 @@ const AddJournalEntryForm = ({ isVisible, onClose, navigation, onSaveSuccess }) 
     console.log("\n");
   };
 
-  const handleSymptomNameChange = (symptomName) => {
-    setSymptom(symptomName);
-  };
-
-  const illnessNameChange = (illnessName) => {
-    setIllness(illnessName);
-  };
-
-  const handleTestNameChange = (testName) => {
-    setTest(testName);
-  };
   //TODO: Implement save functionality
   const onSave = () => {
     printLists();
     journalEntry = new JournalEntry(symptoms, illnesses, tests);
-    addJournal(symptom, "Placeholder", "Placeholder", illness, "Placeholder", "Placeholder", test, "Placeholder")
-      .then((insertId) => {
-        console.log(`Journal entry added successfully with ID: ${insertId}`);
-        onClose(); // Close the modal after saving
-        //navigation.navigate('MainContainer');
-        onSaveSuccess();
-      })
-      .catch((error) => {
-        console.error('Error adding journal entry:', error);
-      });
+    onClose();
   };
   return (
     <Modal
@@ -132,42 +132,30 @@ const AddJournalEntryForm = ({ isVisible, onClose, navigation, onSaveSuccess }) 
               <Text style={styles.SearchComponentHeader}>Symptoms:</Text>
             </View>
             <View style={{ height: 180 }}>
-              <TextInput
-              style={{
-                borderWidth: 1,
-                borderRadius: 5,
-                borderColor: "black",
-                paddingLeft: 5,
-              }}
-                onChangeText={handleSymptomNameChange}
+              <SearchComponent
+                searchData={symptoms.map(symptoms => ({ name: symptoms.name, key: symptoms.id }))}
+                typeDataInputted={"symptoms"}
+                updateList={setSymptoms}
               />
             </View>
             <View>
               <Text style={styles.SearchComponentHeader}>Illnesses:</Text>
             </View>
             <View style={{ height: 180 }}>
-              <TextInput
-              style={{
-                borderWidth: 1,
-                borderRadius: 5,
-                borderColor: "black",
-                paddingLeft: 5,
-              }}
-                onChangeText={illnessNameChange}
+              <SearchComponent
+                searchData={illnesses.map(illnesses => ({ name: illnesses.name, key: illnesses.id }))}
+                typeDataInputted={"illnesses"}
+                updateList={setIllnesses}
               />
             </View>
             <View>
               <Text style={styles.SearchComponentHeader}>Tests:</Text>
             </View>
             <View style={{ height: 180 }}>
-              <TextInput
-              style={{
-                borderWidth: 1,
-                borderRadius: 5,
-                borderColor: "black",
-                paddingLeft: 5,
-              }}
-                onChangeText={handleTestNameChange}
+              <SearchComponent
+                searchData={tests.map(tests => ({ name: tests.name, key: tests.id }))}
+                typeDataInputted={"tests"}
+                updateList={setTests}
               />
             </View>
             <View style={styles.saveButtonContainer}>
