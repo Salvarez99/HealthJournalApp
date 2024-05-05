@@ -15,33 +15,6 @@ import JournalEntry from "../Classes/JournalEntry";
 import { fetchIllnesses, fetchSymptoms, fetchTests, addJournal, addJournalEntry } from "../LocalStorage/LocalDatabase";
 
 const AddJournalEntryForm = ({ isVisible, onClose }) => {
-  let dummySymptoms = [
-    "Dummy",
-    "Headache",
-    "Sore throat",
-    "Back pain",
-    "Congestion",
-    "Light Headedness",
-  ]; //Dummy db list, to be replaced with call to
-
-  let dummyIllnesses = [
-    "Dummy",
-    "Flu",
-    "Pneumonia",
-    "Cancer",
-    "Allergies",
-    "Pink eye",
-  ]; //Dummy db list, to be replaced with call to db
-
-  let dummyTest = [
-    "Dummy",
-    "X-Ray",
-    "Physical Exam",
-    "Biopsy",
-    "Blood Pressure",
-    "Cholestrol",
-  ]; //Dummy db list, to be replaced with call to db
-
   const [symptoms, setSymptoms] = useState([]);
   const [illnesses, setIllnesses] = useState([]);
   const [tests, setTests] = useState([]);
@@ -54,7 +27,9 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
     fetchIllnesses()
         .then(data => {
           console.log('Fetched illnesses:', data);
-          setIllnesses(data);
+          const illnessNames = data.map(illness => illness.name);
+          console.log(illnessNames);
+          setIllnesses(illnessNames);
         })
         .catch(error => {
           console.error('Error fetching illnesses:', error);
@@ -63,7 +38,8 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
     // Fetch preloaded symptoms
     fetchSymptoms()
       .then(data => {
-        setSymptoms(data);
+        const symptomNames = data.map(symptom => symptom.name);
+        setSymptoms(symptomNames);
         console.log('Fetched symptoms:', data);
       })
       .catch(error => {
@@ -73,8 +49,9 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
     // Fetch preloaded tests
     fetchTests()
       .then(data => {
+        const testNames = data.map(test => test.name);
         console.log('Fetched tests:', data);
-        setTests(data);
+        setTests(testNames);
       })
       .catch(error => {
         console.error('Error fetching tests:', error);
@@ -133,7 +110,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
             </View>
             <View style={{ height: 180 }}>
               <SearchComponent
-                searchData={symptoms.map(symptoms => ({ name: symptoms.name, key: symptoms.id }))}
+                searchData={symptoms}
                 typeDataInputted={"symptoms"}
                 updateList={setSymptoms}
               />
@@ -143,7 +120,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
             </View>
             <View style={{ height: 180 }}>
               <SearchComponent
-                searchData={illnesses.map(illnesses => ({ name: illnesses.name, key: illnesses.id }))}
+                searchData={illnesses}
                 typeDataInputted={"illnesses"}
                 updateList={setIllnesses}
               />
@@ -153,7 +130,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
             </View>
             <View style={{ height: 180 }}>
               <SearchComponent
-                searchData={tests.map(tests => ({ name: tests.name, key: tests.id }))}
+                searchData={tests}
                 typeDataInputted={"tests"}
                 updateList={setTests}
               />

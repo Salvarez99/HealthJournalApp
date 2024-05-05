@@ -8,43 +8,81 @@ import {
   StyleSheet,
   Platform,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons"; //Vector Icons are used for button icons
 import Symptom from "../Classes/Symptom";
 import Illness from "../Classes/Illness";
 import TestAndLabwork from "../Classes/TestAndLabwork";
 import DisplayItems from "./DisplayItems";
 import DatePicker from "./DatePicker";
 
+/**
+ * 
+ * @param {List} param0 list of strings that are to be displayed when user searches for an item
+ * @param {String} param1 string that indicates the type of data that is being inputted and should be passed back to parent component
+ * @param {List} param2 passthrough function from parent component that updates the parent's list
+ * @returns 
+ */
 const SearchComponent = ({ searchData, typeDataInputted, updateList }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState([]); //List of data stored from user input
   const [showList, setShowList] = useState(true);
 
   const onStartDateChange = (newDate) => {
     setStartDate(newDate);
+    // console.log("New Start Date: ", newDate);
   };
   
   const onEndDateChange = (newDate) => {
+    // console.log("New End Date: ", newDate);
     setEndDate(newDate);
   };
+  
+  /**
+   * 
+   * @param {String} name 
+   * @param {Date} startDate 
+   * @param {Date} endDate 
+   * @returns 
+   */
+  const addItem = (name, startDate, endDate) => {
+    let item;
 
-  const addItem = (item) => {
-    // Extract the necessary information from the item object
-    const newItem = { name: item.name, startDate: startDate, endDate: endDate };
-    setItems((prevItems) => [...prevItems, newItem]);
+    if (startDate instanceof Date) {
+      startDate = startDate.toLocaleDateString();
+    }
+    if (endDate instanceof Date) {
+      endDate = endDate.toLocaleDateString();
+    }
+
+    switch (typeDataInputted) {
+      case "symptoms":
+        item = new Symptom(name, startDate, endDate);
+        break;
+      case "illnesses":
+        item = new Illness(name, startDate, endDate);
+        break;
+      case "tests":
+        item = new TestAndLabwork(name, startDate);
+        break;
+      default:
+        console.error("Unknown Type: " + typeDataInputted);
+        return;
+    }
+    setItems((prevItems) => [...prevItems, item]); //update local list of items
   };
 
+  //Updates parents list when items is used
   useEffect(() => {
     updateList(items);
-  }, [items]); // Only call updateList when items changes
+  }, [items]);
 
   useEffect(() => {
     // Update the visibility based on the search query
     if (searchQuery.trim().length > 0 && !showList) {
       const exactMatch = filteredList.some(
-        (item) => item.name.toLowerCase() === searchQuery.toLowerCase()
+        (item) => item.toLowerCase() === searchQuery.toLowerCase()
       );
       if (exactMatch) {
         setShowList(false);
@@ -56,35 +94,37 @@ const SearchComponent = ({ searchData, typeDataInputted, updateList }) => {
     }
   }, [searchQuery]);
 
+  //Filter the list based on current searchQuery
   const filteredList = searchQuery
-    ? searchData.filter((item) =>
-        item.name.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : [];
+  ? searchData.filter((item) => {
+      if (typeof item !== 'string') {
+        console.error('Invalid item type:', item);
+        return false;
+      }
+      return item.toLowerCase().includes(searchQuery.toLowerCase());
+    })
+  : [];
 
   const onChange = () => {
-    const selectedItem = filteredList.find(
-      (item) => item.name.toLowerCase() === searchQuery.toLowerCase()
-    );
-    if (selectedItem) {
-      addItem(selectedItem);
-      setSearchQuery("");
-      setShowList(false);
+    //Checks if searchQuery is not just whitespace
+    if(!/^\s*$/.test(searchQuery)){
+      addItem(searchQuery, startDate, endDate);
+    }else{
+      alert('Required fields missing.\nRequired fields contains \'*\'.')
+      return
     }
   };
 
   const onItemPress = (item) => {
-    addItem(item);
-    setSearchQuery("");
+    setSearchQuery(item);
     setShowList(false);
   };
 
   const renderItem = ({ item }) => (
     <TouchableOpacity onPress={() => onItemPress(item)}>
-      <Text>{item.name}</Text>
+      <Text>{item}</Text>
     </TouchableOpacity>
   );
-
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <View style={styles.datePickerContainer}>
@@ -100,11 +140,13 @@ const SearchComponent = ({ searchData, typeDataInputted, updateList }) => {
             borderRadius: 5,
           }}
         />
+        {/**TouchableOpacity when pressed adds item to list */}
         <TouchableOpacity style={styles.addButton} onPress={onChange}>
           <Ionicons name="add" size={20} />
         </TouchableOpacity>
       </View>
-
+      
+      {/**If type of data is either symptoms or illness; render 2 datePickers. Otherwise render one datePicker */}
       {typeDataInputted === "symptoms" || typeDataInputted === "illnesses" ? (
         <View style={styles.datePickerContainer}>
           <DatePicker name={"Start Date"} onDateChange={onStartDateChange} />
@@ -112,20 +154,22 @@ const SearchComponent = ({ searchData, typeDataInputted, updateList }) => {
         </View>
       ) : (
         <View style={styles.datePickerContainer}>
-          <DatePicker name={"Date Occurred"} onDateChange={onStartDateChange} />
+          <DatePicker name={"Date Occured"} onDateChange={onStartDateChange} />
         </View>
       )}
 
+      {/**Shows list of items when user is typing into textInput */}
       {showList && (
         <View style={styles.listContainer}>
           <FlatList
             data={filteredList}
             renderItem={renderItem}
             contentContainerStyle={styles.listStyle}
-            keyExtractor={(item) => item.key.toString()}
+            keyExtractor={(item) => item.toString()}
           />
         </View>
       )}
+      {/** Shows data collected from user input. i.e. Symptoms data*/}
       <DisplayItems data={items} />
     </View>
   );
