@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import {
   View,
@@ -12,17 +12,15 @@ import QuickAddButton from "../../Components/QuickAddButton";
 import AddJournalEntryForm from "../../InputForms/AddJournalEntryForm";
 import AddAppointmentForm from "../../InputForms/AddAppointmentForm";
 import AddMedicationForm from "../../InputForms/AddMedicationForm";
-import JournalTitle from "./JournalTitle";
 import {fetchJournalEntries, addJournalEntry, addJournal, fetchJournals, fetchJournalDataByJournalId} from "../../LocalStorage/LocalDatabase";
 
 // for testing
-import PlaceholderForm from "../../InputForms/PlaceholderForm";
 import Symptom from "../../Classes/Symptom";
 
 export default function JournalScreen({ navigation }) {
   const [isModalVisible, setIsModalVisible] = React.useState(false); // vsible or not
   const [selectedModal, setSelectedModal] = React.useState(null); // track which model should displayed.
-  const [journalEntries, setJournalEntries] = useState([]);
+  const [journalEntries, setJournalEntries] = useState([]); //empty list
   //const [appointmentData, setAppointmentData] = React.useState(null); // for data fetched from backend url take input from addappointmentFrom.js
   const [appointments, setAppointments] = useState([]); // hook. for dummy datas
   const forceUpdate = useForceUpdate();
@@ -32,10 +30,10 @@ export default function JournalScreen({ navigation }) {
 
   const fetchJournalData = async () => {
     try{
-      const entries = await fetchJournalEntries();
+      const entries = await fetchJournalEntries(); // returns all rows from journalEntries table. row = id, date
       //const testJournals = await fetchJournalDataByJournalId(1);
       setJournalEntries(entries);
-      console.log(entries);
+      console.log('Journal Entries: ' + entries);
       //console.log(testJournals);
     } catch(error){
       console.log("Failed to fetch journal entries:", error);
@@ -59,7 +57,7 @@ export default function JournalScreen({ navigation }) {
 */
     // set appointments state
     fetchJournalData();
-    fetchAppointmentData();
+    // fetchAppointmentData();
   }, [])
 );
 
@@ -98,7 +96,7 @@ export default function JournalScreen({ navigation }) {
     setIsModalVisible(false);
   };
 
-  // handel when user click journal screen entry >> display JournalTitle.js page
+  // handle when user click journal screen entry >> display JournalTitle.js page
   const handleAppointmentPress = (journalID) => {
     navigation.navigate("JournalTitle", {journalId: journalID}); //https://youtu.be/oBAOr1OswkQ?si=NQ_XdTnzKk3t8xGd
   };
@@ -215,9 +213,20 @@ const renderJournalItem = ({ item }) => {
     }
   };
 
+  const addToJournalTable = () => {
+    console.log('Added to Journal Table');
+    addJournalEntry('12/28/1968');
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.mainContent}>
+
+      {/**TODO: Remove this later */}
+      <TouchableOpacity style={{backgroundColor : 'aquamarine', flex : 1}} onPress = {addToJournalTable}>
+        <Text> Add to Journal Table</Text>
+      </TouchableOpacity>
+      
         {/* Put your content in this view */}
 
         {/** show list of saved appointment records */}
