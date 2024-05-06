@@ -4,8 +4,9 @@
  * Code Version: 1.0
  *
  * Description:
- *  Renders a form that takes user input to fill out fields required for Journal Entries
- *
+ *  Renders a form that takes user input to fill out fields required for Journal Entries.
+ * Adds gathered data to local DB tables when onSave() is triggered or clears data when form  
+ * is closed without changing tables.
  *
  *
  ***************************************************************************************/
@@ -23,39 +24,35 @@ import {
 import SearchComponent from "../Components/SearchComponent";
 import JournalEntry from "../Classes/JournalEntry";
 import {
-  fetchJournalEntries,
-  addJournal,
-  addJournalEntry,
-  fetchSymptoms,
-  addSymptom,
-  fetchIllnesses,
-  addIllness,
-  fetchTests,
-  addTest,
-  addUserSymptom,
-  addUserIllness,
-  addUserTest,
-  fetchLatestJournalEntry,
-  fetchLatestJournalEntryJID,
-} from "../LocalStorage/LocalDatabase";
+  fetchLatestJournalEntryJID, //Get the most recent JID added to table as {Integer}
+  fetchJournalEntries, //Get all rows in journalEntry table
+  addJournalEntry, //Add instance to journalEntry table
+  fetchSymptoms, //Get all rows in symptom table
+  addUserSymptom, //Add instance to userSymptom table
+  fetchIllnesses, //Get all rows in illness table
+  addUserIllness, //Add instance to userIllness table
+  fetchTests, //Get all rows in test table
+  addUserTest, //Add instance to userTest table
+} from "../LocalStorage/LocalDatabase"; //imports localDB functions
 
 const AddJournalEntryForm = ({ isVisible, onClose }) => {
-  const [userSymptoms, setUserSymptoms] = useState([]);
-  const [symptoms, setSymptoms] = useState([]);
-  const [userIllnesses, setUserIllnesses] = useState([]);
-  const [illnesses, setIllnesses] = useState([]);
-  const [userTests, setUserTests] = useState([]);
-  const [tests, setTests] = useState([]);
-  let journalEntry = null;
+  const [userSymptoms, setUserSymptoms] = useState([]); //list of userSymptoms, items are of type {Symptom}
+  const [symptoms, setSymptoms] = useState([]); //list of symptoms to populate search data, items are of type {String}
+  const [userIllnesses, setUserIllnesses] = useState([]);  //list of userIllnesses, items are of type {Illness}
+  const [illnesses, setIllnesses] = useState([]); //list of illnesses to populate search data, items are of type {String}
+  const [userTests, setUserTests] = useState([]);  //list of userTests, items are of type {TestAndLabworks}
+  const [tests, setTests] = useState([]); //list of illnesses to populate search data, items are of type {String}
+  let journalEntry = null;  //To be used to store data into an {JournalEntry} instance
 
+  /**
+   * Fetches data from symptom, illness and test tables when JournalEntryForm is visible
+   */
   useEffect(() => {
     if (isVisible) {
       // Fetch preloaded illnesses
       fetchIllnesses()
         .then((data) => {
           const illnessNames = data.map((illness) => illness.name);
-          // console.log('Fetched illnesses:', data);
-          // console.log(illnessNames);
           setIllnesses(illnessNames);
         })
         .catch((error) => {
@@ -66,7 +63,6 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
       fetchSymptoms()
         .then((data) => {
           const symptomNames = data.map((symptom) => symptom.name);
-          // console.log('Fetched symptoms:', data);
           setSymptoms(symptomNames);
         })
         .catch((error) => {
@@ -77,7 +73,6 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
       fetchTests()
         .then((data) => {
           const testNames = data.map((test) => test.name);
-          // console.log('Fetched tests:', data);
           setTests(testNames);
         })
         .catch((error) => {
