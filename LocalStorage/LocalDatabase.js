@@ -463,9 +463,11 @@ export const fetchJournalEntries = () => {
               [],
               (_, result) => {
                   const appointments = result.rows._array; //Id , Date 
+                  console.log("Fetched journal entries:", appointments); // Log fetched appointments
                   resolve(appointments); // Resolve with the fetched appointments
               },
               (_, error) => {
+                console.error("Error fetching journal entries:", error); // Log fetch error
                   reject(error); // Reject with the error if fetching fails
               }
           );
@@ -502,9 +504,12 @@ export const fetchJournals = () => {
               [],
               (_, result) => {
                   const journalEntries = result.rows._array;
+                  console.log("Fetched journal entries:", journalEntries); // Log fetched journal entries
+        
                   resolve(journalEntries); // Resolve with the fetched journal entries
               },
               (_, error) => {
+                console.error("Error fetching journal entries:", error); // Log fetch error
                   reject(error); // Reject with the error if fetching fails
               }
           );
@@ -600,6 +605,7 @@ export const addSymptom = (name) => {
                   resolve(result.insertId); // Resolve with the ID of the newly inserted symptom
               },
               (_, error) => {
+                console.log("error with add symptom Name: ", name, "Type:", typeof name);
                   reject(error); // Reject with the error if insertion fails
               }
           );

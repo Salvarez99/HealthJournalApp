@@ -98,10 +98,51 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
    * storage, depends if user has cloud storage active
    * 
    */
-  const onSave = () => {
+  const onSave = async () => {
     printLists();
     journalEntry = new JournalEntry(symptoms, illnesses, tests);
-    onClose();
+    try {
+      // Process symptoms
+      for (const symptom of journalEntry.symptoms) {
+        const symptomId = await addSymptom(symptom.name);
+        console.log(`Added symptom with ID: ${symptomId}`);
+      }
+
+      // Process illnesses
+      for (const illness of journalEntry.illnesses) {
+        const illnessId = await addIllness(illness.name);
+        console.log(`Added illness with ID: ${illnessId}`);
+      }
+
+      // Process tests
+      for (const test of journalEntry.tests) {
+        const testId = await addTest(test.name);
+        console.log(`Added test with ID: ${testId}`);
+      }
+
+      // Add journal entry
+      const journalEntryId = await addJournalEntry(new Date());
+      console.log(`Added journal entry with ID: ${journalEntryId}`);
+
+      // Fetch all journal entries after adding the new entry
+      const entries = await fetchJournalEntries();
+      console.log("Fetched journal entries:", entries);
+
+      // Add journal to local database
+      const journalId = await addJournal(
+        journalEntry.symptoms.map((symptom) => symptom.name), // ?
+        journalEntry.illnesses.map((illness) => illness.name),
+        journalEntry.tests.map((test) => test.name),
+        journalEntryId
+      );
+      console.log(`Added journal with ID: ${journalId}`);
+
+      // Close the modal or perform any other post-save actions
+      onClose();
+    } catch (error) {
+      console.error("Error saving journal entry:", error);
+      alert("Failed to save journal entry. Please try again.");
+    }
   };
 
   return (
