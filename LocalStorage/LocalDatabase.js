@@ -492,7 +492,7 @@ export const fetchJournalEntries = () => {
               `SELECT * FROM journalEntry;`,
               [],
               (_, result) => {
-                  const appointments = result.rows._array;
+                  const appointments = result.rows._array; //Id , Date 
                   resolve(appointments); // Resolve with the fetched appointments
               },
               (_, error) => {
