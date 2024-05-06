@@ -86,7 +86,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
 
   const printLists = () => {
     console.log("Symptoms: \n");
-    for (const symptom of UserSymptoms) {
+    for (const symptom of userSymptoms) {
       console.log(
         symptom.name +
           ": " +
@@ -132,7 +132,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
         // const symptomId = await addSymptom(symptom.name);
         // console.log(`Added symptom with ID: ${symptomId}`);
         const latest_journal_entry = fetchLatestJournalEntry();
-        j_id = latest_journal_entry.id++;
+        const j_id = latest_journal_entry[0].id;
         const userSymptom = await addUserSymptom(j_id,symptom.name, symptom.startDate, symptom.endDate);
         console.log('Added User Symptom to :' + j_id);
       }
