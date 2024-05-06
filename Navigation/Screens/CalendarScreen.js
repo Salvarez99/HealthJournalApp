@@ -39,6 +39,7 @@ export default function CalendarScreen() {
   
      // await Promise.all(promiseArray); // wait for all promise to be completed
       setAppointmentInfo(formattedAppointments); // update appointment info
+      onclose()
     } catch (error) {
       console.log("Failed to fetch appointment data: ", error);
     }
