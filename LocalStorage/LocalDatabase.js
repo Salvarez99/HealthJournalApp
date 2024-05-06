@@ -476,23 +476,23 @@ export const fetchJournalEntries = () => {
 };
 
 // Create a new journal entry
-export const addJournal = (symptomName, symptomStartDate, symptomEndDate, illnessName, illnessStartDate, illnessEndDate, testName, testDate, JID) => {
-  return new Promise((resolve, reject) => {
-      db.transaction((tx) => {
-          tx.executeSql(
-              `INSERT INTO journal (symptomName, symptomStartDate, symptomEndDate, illnessName, illnessStartDate, illnessEndDate, testName, testDate, JID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);`,
-              [symptomName, symptomStartDate, symptomEndDate, illnessName, illnessStartDate, illnessEndDate, testName, testDate, JID],
-              (_, result) => {
-                  console.log("Journal entry added successfully");
-                  resolve(result.insertId); // Resolve with the ID of the newly inserted journal entry
-              },
-              (_, error) => {
-                  reject(error); // Reject with the error if insertion fails
-              }
-          );
-      });
-  });
-};
+// export const addJournal = (symptomName, symptomStartDate, symptomEndDate, illnessName, illnessStartDate, illnessEndDate, testName, testDate, JID) => {
+//   return new Promise((resolve, reject) => {
+//       db.transaction((tx) => {
+//           tx.executeSql(
+//               `INSERT INTO journal (symptomName, symptomStartDate, symptomEndDate, illnessName, illnessStartDate, illnessEndDate, testName, testDate, JID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);`,
+//               [symptomName, symptomStartDate, symptomEndDate, illnessName, illnessStartDate, illnessEndDate, testName, testDate, JID],
+//               (_, result) => {
+//                   console.log("Journal entry added successfully");
+//                   resolve(result.insertId); // Resolve with the ID of the newly inserted journal entry
+//               },
+//               (_, error) => {
+//                   reject(error); // Reject with the error if insertion fails
+//               }
+//           );
+//       });
+//   });
+// };
 
 
 // Fetch all journal entries
@@ -1161,6 +1161,31 @@ export const fetchLatestJournalEntry = () => {
         },
         (_, error) => {
           console.error("Error fetching latest journal entry:", error);
+          reject(error);
+        }
+      );
+    });
+  });
+};
+
+//Returns the latest journalEntry, might be useful for AddJournalEntryForm logic
+export const fetchLatestJournalEntryJID = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `SELECT id FROM journalEntry ORDER BY id DESC LIMIT 1`,
+        [],
+        (_, { rows }) => {
+          if (rows.length > 0) {
+            const latestJID = rows.item(0).id; // Retrieve the JID from the first (and only) row
+            console.log("Latest Journal Entry JID:", latestJID);
+            resolve(latestJID);
+          } else {
+            resolve(null); // If no rows found, resolve with null
+          }
+        },
+        (_, error) => {
+          console.error("Error fetching latest journal entry JID:", error);
           reject(error);
         }
       );
