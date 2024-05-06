@@ -57,6 +57,7 @@ export default function JournalScreen({ navigation }) {
   };
 
   const closeModal = () => {
+    fetchJournalData();
     setIsModalVisible(false);
     fetchJournalData();
   };
