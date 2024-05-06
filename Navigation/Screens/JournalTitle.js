@@ -33,9 +33,9 @@ export default function JournalTitle({ route, navigation }) {
 
   const fetchJournalData = async () => {
     try {
-      const fetchedSymptoms = await fetchUserSymptomByJournalId(1);
-      const fetchedIllnesses = await fetchUserIllnessByJournalId(1);
-      const fetchedTests = await fetchUserTestByJournalId(1);
+      const fetchedSymptoms = await fetchUserSymptomByJournalId(journalId);
+      const fetchedIllnesses = await fetchUserIllnessByJournalId(journalId);
+      const fetchedTests = await fetchUserTestByJournalId(journalId);
   
       setSymptomData(fetchedSymptoms);
       setIllnessData(fetchedIllnesses);
