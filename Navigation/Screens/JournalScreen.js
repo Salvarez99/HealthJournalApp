@@ -12,65 +12,35 @@ import QuickAddButton from "../../Components/QuickAddButton";
 import AddJournalEntryForm from "../../InputForms/AddJournalEntryForm";
 import AddAppointmentForm from "../../InputForms/AddAppointmentForm";
 import AddMedicationForm from "../../InputForms/AddMedicationForm";
-import {fetchJournalEntries, addJournalEntry, addJournal, fetchJournals, fetchJournalDataByJournalId} from "../../LocalStorage/LocalDatabase";
-
-// for testing
-import Symptom from "../../Classes/Symptom";
+import {
+  fetchJournalEntries,
+  addJournalEntry,
+  addJournal,
+  fetchJournals,
+  fetchJournalDataByJournalId,
+} from "../../LocalStorage/LocalDatabase";
 
 export default function JournalScreen({ navigation }) {
   const [isModalVisible, setIsModalVisible] = React.useState(false); // vsible or not
   const [selectedModal, setSelectedModal] = React.useState(null); // track which model should displayed.
   const [journalEntries, setJournalEntries] = useState([]); //empty list
-  //const [appointmentData, setAppointmentData] = React.useState(null); // for data fetched from backend url take input from addappointmentFrom.js
-  const [appointments, setAppointments] = useState([]); // hook. for dummy datas
   const forceUpdate = useForceUpdate();
 
-  // create useEffect() and use dummy data for now
-
-
   const fetchJournalData = async () => {
-    try{
+    try {
       const entries = await fetchJournalEntries(); // returns all rows from journalEntries table. row = id, date
-      //const testJournals = await fetchJournalDataByJournalId(1);
       setJournalEntries(entries);
-      console.log('Journal Entries: ' + entries);
-      //console.log(testJournals);
-    } catch(error){
+      console.log("Journal Entries: " + entries);
+    } catch (error) {
       console.log("Failed to fetch journal entries:", error);
     }
   };
 
-  
-
   useFocusEffect(
-    useCallback(()=>{
-  
-  //const someDate = "2024-04-29"; // Example date
-  /*
-  addJournal("Cough","test","test", "Cold", "test", "test", "Bloodwork", "test", 1)
-  .then((insertId) => {
-    console.log("Inserted journal entry ID:", insertId);
-  })
-  .catch((error) => {
-    console.error("Error adding journal entry:", error);
-  });
-*/
-    // set appointments state
-    fetchJournalData();
-    // fetchAppointmentData();
-  }, [])
-);
-
-  // define fetchAppointmetnData() function with async
-  const fetchAppointmentData = async () => {
-    try {
-      setAppointments(journalEntries); // pass retrived data
-    } catch (error) {
-      console.log("test");
-    }
-  };
-
-
+    useCallback(() => {
+      fetchJournalData();
+    }, [])
+  );
   const openModal1 = () => {
     setSelectedModal("AddAppointmentForm");
     setIsModalVisible(true);
@@ -90,50 +60,42 @@ export default function JournalScreen({ navigation }) {
     setIsModalVisible(false);
   };
 
-  // handle input data parameter from AddJournalEntryForm.js
-  const saveAppointmentData = (data) => {
-    setAppointments(data); // setAppointmentData(data)
-    setIsModalVisible(false);
+  // handle when user click journal screen entry >> display JournalTitle.js page
+  const handleJournalEntryPress = (journalID) => {
+    navigation.navigate("JournalTitle", { journalId: journalID }); //https://youtu.be/oBAOr1OswkQ?si=NQ_XdTnzKk3t8xGd
   };
 
-  // handle when user click journal screen entry >> display JournalTitle.js page
-  const handleAppointmentPress = (journalID) => {
-    navigation.navigate("JournalTitle", {journalId: journalID}); //https://youtu.be/oBAOr1OswkQ?si=NQ_XdTnzKk3t8xGd
-  };
-//
   // render journal date on journal screen.
   // sort date in each symptom list , illnes list, test and labwork list.
   const displayStartDate = (item) => {
     if (item.Symptom && item.Symptom.length > 0) {
       // citation: sorting https://stackoverflow.com/questions/47071623/sort-by-closest-date-to-dates-which-have-occured-and-will-occur
-      // compare starting date 
-      item.Symptom.sort(function(a, b) {
-            //a.startDate is string type , conver to Date object. 
-            const dateA = new Date(a.startDate);
-            const dateB = new Date(b.startDate);
-            return Math.abs(Date.now() - dateA) - Math.abs(Date.now() - dateB);
-        });
-
-        // Log the sorted Symptom array (for debugging)
-        // console.log(item.Symptom);
-      return item.Symptom[0].startDate;
-
-    } 
-    
-    if (item.Illness && item.Illness.length > 0) {
-
-      item.Illness.sort(function(a, b) {
-        //a.startDate is string type , conver to Date object. 
+      // compare starting date
+      item.Symptom.sort(function (a, b) {
+        //a.startDate is string type , conver to Date object.
         const dateA = new Date(a.startDate);
         const dateB = new Date(b.startDate);
         return Math.abs(Date.now() - dateA) - Math.abs(Date.now() - dateB);
-    });
+      });
 
-        // Log the sorted Illness array (for debugging)
-        // console.log(item.Illness);
+      // Log the sorted Symptom array (for debugging)
+      // console.log(item.Symptom);
+      return item.Symptom[0].startDate;
+    }
+
+    if (item.Illness && item.Illness.length > 0) {
+      item.Illness.sort(function (a, b) {
+        //a.startDate is string type , conver to Date object.
+        const dateA = new Date(a.startDate);
+        const dateB = new Date(b.startDate);
+        return Math.abs(Date.now() - dateA) - Math.abs(Date.now() - dateB);
+      });
+
+      // Log the sorted Illness array (for debugging)
+      // console.log(item.Illness);
       return item.Illness[0].startDate;
-    } 
-    
+    }
+
     if (item.TestsAndLabWorks && item.TestsAndLabWorks.length > 0) {
       // Sort TestsAndLabWorks array based on dateOccurred
       item.TestsAndLabWorks.sort((a, b) => {
@@ -141,52 +103,51 @@ export default function JournalScreen({ navigation }) {
         const dateB = new Date(b.dateOccurred);
         return Math.abs(Date.now() - dateA) - Math.abs(Date.now() - dateB);
       });
-  
+
       // Return the dateOccurred of the first item in TestsAndLabWorks array
       // console.log(item.TestsAndLabWorks);
       return item.TestsAndLabWorks[0].dateOccurred;
     }
-  
-    // case : all three array is empty 
-    return null; 
+
+    // case : all three array is empty
+    return null;
   };
 
- // calculate each entry's difference in date ex) current date 04-25 - storedStartDate 04-23 return 2 
- const calculateDateDifference = (startDate) => {
-  const storedStartDate = new Date(startDate);
-  return Math.abs(Date.now() - storedStartDate);
-};
+  // calculate each entry's difference in date ex) current date 04-25 - storedStartDate 04-23 return 2
+  const calculateDateDifference = (startDate) => {
+    const storedStartDate = new Date(startDate);
+    return Math.abs(Date.now() - storedStartDate);
+  };
 
   // render appointment item (prepare for displaying)
-const renderJournalItem = ({ item }) => {
- 
-  // Determine the source of data (dummy or fetched appointments)
-  const sourceAppointments = appointments.length > 0 ? appointments : dummyAppointments;
+  const renderJournalItem = ({ item }) => {
+    // Determine the source of data (dummy or fetched appointments)
+    // const sourceAppointments = appointments.length > 0 ? appointments : dummyAppointments;
 
-  // Sort the appointments based on date difference
-  // citation : https://stackoverflow.com/questions/47071623/sort-by-closest-date-to-dates-which-have-occured-and-will-occur
-  sourceAppointments.sort((a, b) => {
-   
-    // Calculate date difference for both items
-    const differenceA = calculateDateDifference(displayStartDate(a));
-    const differenceB = calculateDateDifference(displayStartDate(b));
-    return differenceA - differenceB; // sort by ascending order , nearest item fist comes.
-  });
+    // Sort the appointments based on date difference
+    // citation : https://stackoverflow.com/questions/47071623/sort-by-closest-date-to-dates-which-have-occured-and-will-occur
+    //TODO: reimplement sorting algorithm to work with primary dates
+    // sourceAppointments.sort((a, b) => {
 
-  console.log('item: ' + item);
-  // render return with touchable opacity >> linked to journaltitle.js 
-  return (
-    <TouchableOpacity
-      style={styles.journalButtonStyle}
-      onPress={() => handleAppointmentPress(item.id)}
-    >
-      <Text style={styles.JournalTitle}>{`Journal ${item.id}`}</Text>
-      <Text style={styles.JournalDate}>{item.primaryDate}</Text>
-      <View style={styles.horizontalLine}></View>
-    </TouchableOpacity>
-  );
-};
+    //   // Calculate date difference for both items
+    //   const differenceA = calculateDateDifference(displayStartDate(a));
+    //   const differenceB = calculateDateDifference(displayStartDate(b));
+    //   return differenceA - differenceB; // sort by ascending order , nearest item fist comes.
+    // });
 
+    console.log("item: " + item);
+    // render return with touchable opacity >> linked to journaltitle.js
+    return (
+      <TouchableOpacity
+        style={styles.journalButtonStyle}
+        onPress={() => handleJournalEntryPress(item.id)}
+      >
+        <Text style={styles.JournalTitle}>{`Journal ${item.id}`}</Text>
+        <Text style={styles.JournalDate}>{item.primaryDate}</Text>
+        <View style={styles.horizontalLine}></View>
+      </TouchableOpacity>
+    );
+  };
 
   // Defined modal components with their names
   const modalComponents = [
@@ -207,7 +168,10 @@ const renderJournalItem = ({ item }) => {
         );
       case "AddJournalEntryForm":
         return (
-          <AddJournalEntryForm isVisible={isModalVisible} onClose={closeModal} />
+          <AddJournalEntryForm
+            isVisible={isModalVisible}
+            onClose={closeModal}
+          />
         );
       default:
         return null;
@@ -215,24 +179,33 @@ const renderJournalItem = ({ item }) => {
   };
 
   const addToJournalTable = () => {
-    console.log('Added to Journal Table');
-    addJournalEntry('12/28/1968');
-  }
+    console.log("Added to Journal Table");
+    addJournalEntry("12/28/1968");
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.mainContent}>
+        
+        {/**Dev Button: Adds item to journal table
+         * TODO: Remove later
+         */}
+        {/* <TouchableOpacity
+          style={{ backgroundColor: "aquamarine", flex: 1 }}
+          onPress={addToJournalTable}
+        >
+          <Text> Add to Journal Table</Text>
+        </TouchableOpacity> */}
 
-      {/**TODO: Remove this later */}
-      <TouchableOpacity style={{backgroundColor : 'aquamarine', flex : 1}} onPress = {addToJournalTable}>
-        <Text> Add to Journal Table</Text>
-      </TouchableOpacity>
+
+
+
 
         {/* Put your content in this view */}
 
         {/** show list of saved appointment records */}
         <FlatList
-          data={appointments}
+          data={journalEntries}
           renderItem={renderJournalItem}
           keyExtractor={(item) => item.id.toString()}
           showsVerticalScrollIndicator={false}
@@ -251,7 +224,7 @@ const renderJournalItem = ({ item }) => {
 
 export function useForceUpdate() {
   const [, setValue] = useState(0); // Use state to trigger re-render
-  return () => setValue(value => value + 1); // Update state to trigger re-render
+  return () => setValue((value) => value + 1); // Update state to trigger re-render
 }
 
 const styles = StyleSheet.create({
@@ -290,7 +263,7 @@ const styles = StyleSheet.create({
   },
   JournalDate: {
     fontSize: 14,
-    paddingTop : 3,
+    paddingTop: 3,
     paddingLeft: 150,
     color: "#555",
     ...Platform.select({
