@@ -313,7 +313,6 @@ tx.executeSql(
           }
         );
 
-
         tx.executeSql(
           `CREATE TABLE IF NOT EXISTS journalEntry (
             id INTEGER PRIMARY KEY AUTOINCREMENT,

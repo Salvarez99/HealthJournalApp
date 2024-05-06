@@ -74,7 +74,7 @@ export default function MedicationScreen({ navigation }) {
 
   const renderMedicationItem = ({ item }) => (
     <View style={styles.medicationItem}>
-      <Text style={styles.medicationName}>{`Name: ${item.medicineName}`}</Text>
+      <Text style={styles.medicationName}>{`${item.medicineName}`}</Text>
 
       <View style={styles.rightContent}>
         <Text style={styles.medicationDetail}>{`Dosage: ${item.dosage}`}</Text>
