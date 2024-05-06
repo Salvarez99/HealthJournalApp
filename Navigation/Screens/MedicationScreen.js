@@ -12,6 +12,8 @@ export default function MedicationScreen({ navigation }) {
   const [selectedModal, setSelectedModal] = React.useState(null);
   const [medications, setMedications] = useState([]);
 
+  
+
   const fetchMedicationData = async () => {
     try {
       const medData = await fetchMedicineEntries();
@@ -19,6 +21,7 @@ export default function MedicationScreen({ navigation }) {
     } catch (error) {
       console.error("Failed to fetch medication data:", error);
     }
+    onclose()
   };
 
   useEffect(() => {
@@ -62,7 +65,7 @@ export default function MedicationScreen({ navigation }) {
 
   const renderMedicationItem = ({ item }) => (
     <View style={styles.medicationItem}>
-      <Text style={styles.medicationName}>{item.name}</Text>
+      <Text style={styles.medicationDetail}>{`Name: ${item.medicationName} `}</Text>
 
       <View style={styles.rightContent}>
         <Text style={styles.medicationDetail}>{`Dosage: ${item.dosage}`}</Text>

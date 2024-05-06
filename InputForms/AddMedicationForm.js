@@ -72,7 +72,7 @@ const AddMedicationForm = ({ isVisible, onClose }) => {
       if (!/^\s*$/.test(medication.name) && medication.dosage !== "" && medication.frequency.length !== 0) {
         try {
           // Add the medication entry to the database
-          const insertId = await addMedicineEntry(medication.id, medication.dosage, medication.dosageSchedule, JSON.stringify(medication.frequency));
+          const insertId = await addMedicineEntry(medication.medicationName, medication.dosage, medication.dosageSchedule, JSON.stringify(medication.frequency));
     
           // Log success message
           console.log("Medicine entry added successfully with ID:", insertId);
