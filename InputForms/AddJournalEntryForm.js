@@ -30,12 +30,19 @@ import {
   fetchIllnesses,
   addIllness,
   fetchTests,
-  addTest
+  addTest,
+  addUserSymptom,
+  addUserIllness,
+  addUserTest,
+  fetchLatestJournalEntry,
 } from "../LocalStorage/LocalDatabase";
 
 const AddJournalEntryForm = ({ isVisible, onClose }) => {
+  const [userSymptoms, setUserSymptoms] = useState([]);
   const [symptoms, setSymptoms] = useState([]);
+  const [userIllnesses, setUserIllnesses] = useState([]);
   const [illnesses, setIllnesses] = useState([]);
+  const [userTests, setUserTests] = useState([]);
   const [tests, setTests] = useState([]);
   let journalEntry = null;
 
@@ -79,7 +86,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
 
   const printLists = () => {
     console.log("Symptoms: \n");
-    for (const symptom of symptoms) {
+    for (const symptom of UserSymptoms) {
       console.log(
         symptom.name +
           ": " +
@@ -91,7 +98,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
     }
     console.log("\n");
     console.log("Illnesses: \n");
-    for (const illness of illnesses) {
+    for (const illness of userIllnesses) {
       console.log(
         illness.name +
           ": " +
@@ -104,7 +111,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
     console.log("\n");
 
     console.log("Tests: \n");
-    for (const test of tests) {
+    for (const test of userTests) {
       console.log(test.name + ": " + test.dateOccured + "\n");
     }
     console.log("\n");
@@ -118,12 +125,16 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
    */
   const onSave = async () => {
     printLists();
-    journalEntry = new JournalEntry(symptoms, illnesses, tests);
+    journalEntry = new JournalEntry(userSymptoms, userIllnesses, userTests);
     try {
       // Process symptoms
       for (const symptom of journalEntry.symptoms) {
-        const symptomId = await addSymptom(symptom.name);
-        console.log(`Added symptom with ID: ${symptomId}`);
+        // const symptomId = await addSymptom(symptom.name);
+        // console.log(`Added symptom with ID: ${symptomId}`);
+        const latest_journal_entry = fetchLatestJournalEntry();
+        j_id = latest_journal_entry.id++;
+        const userSymptom = await addUserSymptom(j_id,symptom.name, symptom.startDate, symptom.endDate);
+        console.log('Added User Symptom to :' + j_id);
       }
 
       // Process illnesses
@@ -188,7 +199,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
               <SearchComponent
                 searchData={symptoms}
                 typeDataInputted={"symptoms"}
-                updateList={setSymptoms}
+                updateList={setUserSymptoms}
               />
             </View>
             <View>
@@ -198,7 +209,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
               <SearchComponent
                 searchData={illnesses}
                 typeDataInputted={"illnesses"}
-                updateList={setIllnesses}
+                updateList={setUserIllnesses}
               />
             </View>
             <View>
@@ -208,7 +219,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
               <SearchComponent
                 searchData={tests}
                 typeDataInputted={"tests"}
-                updateList={setTests}
+                updateList={setUserTests}
               />
             </View>
             {/**Save button that calls onSave function */}
