@@ -22,6 +22,9 @@ export default function StorageSetting() {
     //TODO: db logic goes here
     await clearJournal();
     await clearJournalEntry();
+    await clearIllness()
+    await clearSymptom()
+    await clearTest()
     alert("Removed Journals from cloud.");
   };
 
