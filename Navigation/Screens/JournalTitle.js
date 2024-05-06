@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { fetchJournalDataByJournalId, addJournal } from "../../LocalStorage/LocalDatabase";
+import { fetchUserIllnessByJournalId, fetchUserSymptomByJournalId, fetchUserTestByJournalId, addJournal } from "../../LocalStorage/LocalDatabase";
 import {
   View,
   Text,
@@ -11,9 +11,12 @@ import {
 } from "react-native";
 
 export default function JournalTitle({ route, navigation }) {
-  const { journalId } = route.params;
-  const [journalData, setJournalData] = useState([]); //empty list 
- 
+  const {journalId} = route.params;
+  const [journalData, setJournalData] = useState([]); //empty list
+  const [symptomData, setSymptomData] = useState([]);
+  const [illnessData, setIllnessData] = useState([]);
+  const [testData, setTestData] = useState([]); 
+  
 
   useEffect(() => {
     
@@ -22,21 +25,9 @@ export default function JournalTitle({ route, navigation }) {
 
   const fetchJournalData = async () => {
     try {
-      const entries = await fetchJournalEntries(); // Fetch all journal entries
-      let foundEntry = null;
-  
-      for (let i = 0; i < entries.length; i++) {
-        if (entries[i].id === journalId) { // match with passed journalID from journalScreen.js 
-          foundEntry = entries[i]; // store journalId's entire row data into foundEntry
-          break; 
-        }
-      }
-  
-      if (foundEntry) { // get symtom name, symtom star date, symtom end date, illness name, illness name, etc 
-        setJournalData(foundEntry); // set data
-      } else {
-        setJournalData([]); // if we can't find matching one 
-      }
+      await setSymptomData(fetchUserSymptomByJournalId(journalId));
+      await setIllnessData(fetchUserIllnessByJournalId(journalId));
+      await setTestData(fetchUserTestByJournalId(journalId));
     } catch (error) {
       console.error('Error fetching journal data:', error);
     }
