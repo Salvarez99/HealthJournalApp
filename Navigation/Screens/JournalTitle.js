@@ -13,7 +13,8 @@ import {
 export default function JournalTitle({ route, navigation }) {
   const { journalId } = route.params;
   const [journalData, setJournalData] = useState([]); //empty list 
-  console.log('Journal data:' + journalData);
+ 
+
   useEffect(() => {
     
     fetchJournalData();
@@ -21,54 +22,56 @@ export default function JournalTitle({ route, navigation }) {
 
   const fetchJournalData = async () => {
     try {
-      const data = await fetchJournalDataByJournalId(journalId);
-      setJournalData(data);
+      const entries = await fetchJournalEntries(); // Fetch all journal entries
+      let foundEntry = null;
+  
+      for (let i = 0; i < entries.length; i++) {
+        if (entries[i].id === journalId) { // match with passed journalID from journalScreen.js 
+          foundEntry = entries[i]; // store journalId's entire row data into foundEntry
+          break; 
+        }
+      }
+  
+      if (foundEntry) { // get symtom name, symtom star date, symtom end date, illness name, illness name, etc 
+        setJournalData(foundEntry); // set data
+      } else {
+        setJournalData([]); // if we can't find matching one 
+      }
     } catch (error) {
-      console.error("Error fetching journal data:", error);
+      console.error('Error fetching journal data:', error);
     }
   };
 
+
   const renderEntry = (entry) => {
     return (
-      <>
-        {entry.map((item, index) => (
-          <React.Fragment key={index}>
-            {item.symptomName && (
-              <>
-                <Text style={styles.sectionTitle}>Symptom</Text>
-                <View style={styles.dateContainer}>
-                  <Text>Name: {item.symptomName}</Text>
-                  <Text>Start Date: {item.symptomStartDate}</Text>
-                  <Text>End Date: {item.symptomEndDate}</Text>
-                </View>
-              </>
-            )}
+      <View key={entry.id}>
+        {entry.symptomName && (
+          <View style={styles.entryContainer}>
+            <Text>Name: {entry.symptomName}</Text>
+            <Text>Start Date: {entry.symptomStartDate}</Text>
+            <Text>End Date: {entry.symptomEndDate}</Text>
+          </View>
+        )}
 
-            {item.illnessName && (
-              <>
-                <Text style={styles.sectionTitle}>Illness</Text>
-                <View style={styles.dateContainer}>
-                  <Text>Name: {item.illnessName}</Text>
-                  <Text>Start Date: {item.illnessStartDate}</Text>
-                  <Text>End Date: {item.illnessEndDate}</Text>
-                </View>
-              </>
-            )}
+        {entry.illnessName && (
+          <View style={styles.entryContainer}>
+            <Text>Name: {entry.illnessName}</Text>
+            <Text>Start Date: {entry.illnessStartDate}</Text>
+            <Text>End Date: {entry.illnessEndDate}</Text>
+          </View>
+        )}
 
-            {item.testName && (
-              <>
-                <Text style={styles.sectionTitle}>Test & Labwork</Text>
-                <View style={styles.dateContainer}>
-                <Text>Name: {item.testName}</Text>
-                <Text>Date Occurred: {item.testDate}</Text>
-                </View>
-              </>
-            )}
-          </React.Fragment>
-        ))}
-      </>
+        {entry.testName && (
+          <View style={styles.entryContainer}>
+            <Text>Name: {entry.testName}</Text>
+            <Text>Date Occurred: {entry.testDate}</Text>
+          </View>
+        )}
+      </View>
     );
   };
+
 
   const renderIfExists = (data) => {
     if (!data || data.length === 0) {
@@ -113,7 +116,8 @@ export default function JournalTitle({ route, navigation }) {
 
        
         <View style={styles.innerContainer}>
-          {renderIfExists(journalData)}
+        {journalData && renderEntry(journalData)}
+        {/* render if exist */}
         </View>
 
         <TouchableOpacity
