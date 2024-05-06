@@ -6,7 +6,7 @@ import {
   Text,
   Switch,
 } from "react-native";
-import { clearIllness, clearSymptom, clearTest, clearMedicine, clearJournalEntry,clearJournal} from "../../LocalStorage/LocalDatabase";
+import { clearIllness, clearSymptom, clearTest, clearMedicine, clearJournalEntry,clearJournal, clearUserIllness, clearUserTest, clearUserSymptom} from "../../LocalStorage/LocalDatabase";
 
 export default function StorageSetting() {
   const [isEnabled, setIsEnabled] = useState(true);
@@ -22,9 +22,9 @@ export default function StorageSetting() {
     //TODO: db logic goes here
     await clearJournal();
     await clearJournalEntry();
-    await clearIllness()
-    await clearSymptom()
-    await clearTest()
+    await clearUserIllness();
+    await clearUserTest()
+    await clearUserSymptom()
     alert("Removed Journals from cloud.");
   };
 
