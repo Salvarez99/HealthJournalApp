@@ -1,16 +1,19 @@
 import React, { useState, useContext } from "react";
 import { StatusBar } from "expo-status-bar";
 // citation learned from : https://www.youtube.com/watch?v=BQ-kHwLlhrg
+import styled from "styled-components/native";
 // import formik
 import { Formik } from "formik";
 import {
   Platform,
+  Button,
   View,
   StyleSheet,
   TouchableOpacity,
   Image,
   Text,
   TextInput,
+  Alert,
 } from "react-native";
 //import { GoogleSignIn, GoogleSigninButton, statusCodes} from '@react-native-google-signin/google-signin';
 // icon
@@ -40,6 +43,23 @@ export default function Login() {
   // use Usestate hook for pasword
   const [hidePassword, setHidePassword] = useState(true); //default is true
 
+  const handleLogin = async ({ email, password }) => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+      navigation.navigate("MainContainer");
+      console.log("Logging in successful!", user);
+    } catch (error) {
+      console.log(email);
+      console.log(password);
+      Alert.alert("Error logging in", error.message);
+    }
+  };
+  /*
   const handleLogin = async ({ email, password }) => {
     try {
       const userCredential = await signInWithEmailAndPassword(
@@ -230,6 +250,7 @@ const StatusBarHeight = Platform.OS === "android" ? StatusBar.currentHeight : 0;
 const styles = StyleSheet.create({
   LoginStyleButton: {
     // for login button style
+    // for login button style
     marginTop: 10,
     padding: 15,
     backgroundColor: "#6495ED", // dark  navy
@@ -276,7 +297,6 @@ const styles = StyleSheet.create({
     paddingTop: 230, // 20% of the screen height
     width: "70%", // Width of 250 pixels
     height: 200, //'200px', // Height of 200 pixels
-    zIndex : 1
   },
 
   Title: {

@@ -10,7 +10,7 @@
  * 
  ***************************************************************************************/
 import Ionicons from "react-native-vector-icons/Ionicons"; //Vector Icons are used for button icons
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -22,39 +22,52 @@ import {
 
 import SearchComponent from "../Components/SearchComponent"; 
 import JournalEntry from "../Classes/JournalEntry";
+import { fetchIllnesses, fetchSymptoms, fetchTests, addJournal, addJournalEntry } from "../LocalStorage/LocalDatabase";
 
 const AddJournalEntryForm = ({ isVisible, onClose }) => {
-  let dummySymptoms = [
-    "Cough",
-    "Headache",
-    "Sore throat",
-    "Back pain",
-    "Congestion",
-    "Light Headedness",
-  ]; //Dummy db list, to be replaced with call to
-
-  let dummyIllnesses = [
-    "Cold",
-    "Flu",
-    "Pneumonia",
-    "Cancer",
-    "Allergies",
-    "Pink eye",
-  ]; //Dummy db list, to be replaced with call to db
-
-  let dummyTest = [
-    "Bloodwork",
-    "X-Ray",
-    "Physical Exam",
-    "Biopsy",
-    "Blood Pressure",
-    "Cholestrol",
-  ]; //Dummy db list, to be replaced with call to db
-
   const [symptoms, setSymptoms] = useState([]);
   const [illnesses, setIllnesses] = useState([]);
   const [tests, setTests] = useState([]);
   let journalEntry = null;
+
+
+  useEffect(() => {
+    if (isVisible) {
+    // Fetch preloaded illnesses
+    fetchIllnesses()
+        .then(data => {
+          console.log('Fetched illnesses:', data);
+          const illnessNames = data.map(illness => illness.name);
+          console.log(illnessNames);
+          setIllnesses(illnessNames);
+        })
+        .catch(error => {
+          console.error('Error fetching illnesses:', error);
+        });
+
+    // Fetch preloaded symptoms
+    fetchSymptoms()
+      .then(data => {
+        const symptomNames = data.map(symptom => symptom.name);
+        setSymptoms(symptomNames);
+        console.log('Fetched symptoms:', data);
+      })
+      .catch(error => {
+        console.error('Error fetching symptoms:', error);
+      });
+
+    // Fetch preloaded tests
+    fetchTests()
+      .then(data => {
+        const testNames = data.map(test => test.name);
+        console.log('Fetched tests:', data);
+        setTests(testNames);
+      })
+      .catch(error => {
+        console.error('Error fetching tests:', error);
+      });
+    }
+  }, [isVisible]);
 
   const printLists = () => {
     console.log("Symptoms: \n");
@@ -114,7 +127,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
             </View>
             <View style={{ height: 180 }}>
               <SearchComponent
-                searchData={dummySymptoms}
+                searchData={symptoms}
                 typeDataInputted={"symptoms"}
                 updateList={setSymptoms}
               />
@@ -124,7 +137,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
             </View>
             <View style={{ height: 180 }}>
               <SearchComponent
-                searchData={dummyIllnesses}
+                searchData={illnesses}
                 typeDataInputted={"illnesses"}
                 updateList={setIllnesses}
               />
@@ -134,7 +147,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
             </View>
             <View style={{ height: 180 }}>
               <SearchComponent
-                searchData={dummyTest}
+                searchData={tests}
                 typeDataInputted={"tests"}
                 updateList={setTests}
               />

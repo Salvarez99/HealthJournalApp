@@ -25,17 +25,33 @@ import {
 import Appointment from "../Classes/Appointment";
 import DatePicker from "../Components/DatePicker";
 import TimePicker from "../Components/TimePicker";
+import {addAppointment, clearAppointments} from "../LocalStorage/LocalDatabase";
 
 const AddAppointmentForm = ({ isVisible, onClose }) => {
   const [eventName, setEventName] = new useState("");
   const [eventDate, setEventDate] = new useState(new Date());
   const [eventStartTime, setEventStartTime] = new useState('');
   const [eventEndTime, setEventEndTime] = new useState('');
-  let appointment = null;
+  let appointment = null; // ? 
+// ? 
+  const convertDateFormat = (dateString) => {
+    const parts = dateString.split('-');
+    const year = parts[0];
+    const month = parts[1];
+    const day = parts[2];
+    return `${month}-${day}-${year}`;
+  };
 
   const handleDateChange = (selectedDate) => {
-    setEventDate(selectedDate);
-    // console.log(selectedDate);
+    const dateObj = new Date(selectedDate);
+
+    const year = dateObj.getFullYear();
+    const month = (dateObj.getMonth()+1).toString().padStart(2,'0');
+    const day = dateObj.getDate().toString().padStart(2, '0');
+
+    const formattedDate = `${year}-${month}-${day}`;
+    setEventDate(formattedDate);
+    console.log(formattedDate);
   };
 
   const handleStartTimeChange = (startTime) => {
@@ -66,7 +82,7 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
    * storage, depends if user has cloud storage active
    * 
    */
-  const onSave = () => {
+  const onSave = async () => {
     const eName = eventName;
     const eDate = eventDate;
     const eStartTime = eventStartTime;
@@ -82,7 +98,26 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
     }else{
       alert('Required fields missing.\nRequired fields contains \'*\'.')
     }
+
+    try {
+      // call localDatabase's addappointment function to store entered data into local database. 
+      const data = await addAppointment(eventName, eventDate, eventStartTime, eventEndTime);
+
+      console.log(`{adding Page} Appointment added with ID: ${data}`);
+
+      //reset the entering field. after saving into local database table. 
+      setEventName("");
+      setEventDate(new Date());
+      setEventStartTime('');
+      setEventEndTime('');
+
+      onClose(); // Close the modal
+    } catch (error) {
+      console.error("Error adding appointment:", error);
+      alert('Failed to add appointment. Please try again.');
+    }
   };
+
 
   return (
     <Modal
