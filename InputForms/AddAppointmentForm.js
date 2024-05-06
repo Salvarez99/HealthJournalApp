@@ -32,8 +32,8 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
   const [eventDate, setEventDate] = new useState(new Date());
   const [eventStartTime, setEventStartTime] = new useState('');
   const [eventEndTime, setEventEndTime] = new useState('');
-  let appointment = null;
-
+  let appointment = null; // ? 
+// ? 
   const convertDateFormat = (dateString) => {
     const parts = dateString.split('-');
     const year = parts[0];
@@ -82,7 +82,7 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
    * storage, depends if user has cloud storage active
    * 
    */
-  const onSave = () => {
+  const onSave = async () => {
     const eName = eventName;
     const eDate = eventDate;
     const eStartTime = eventStartTime;
@@ -98,7 +98,26 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
     }else{
       alert('Required fields missing.\nRequired fields contains \'*\'.')
     }
+
+    try {
+      // call localDatabase's addappointment function to store entered data into local database. 
+      const data = await addAppointment(eventName, eventDate, eventStartTime, eventEndTime);
+
+      console.log(`{adding Page} Appointment added with ID: ${data}`);
+
+      //reset the entering field. after saving into local database table. 
+      setEventName("");
+      setEventDate(new Date());
+      setEventStartTime('');
+      setEventEndTime('');
+
+      onClose(); // Close the modal
+    } catch (error) {
+      console.error("Error adding appointment:", error);
+      alert('Failed to add appointment. Please try again.');
+    }
   };
+
 
   return (
     <Modal
