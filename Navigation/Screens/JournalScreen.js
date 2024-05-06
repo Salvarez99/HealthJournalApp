@@ -173,6 +173,7 @@ const renderJournalItem = ({ item }) => {
     return differenceA - differenceB; // sort by ascending order , nearest item fist comes.
   });
 
+  console.log('item: ' + item);
   // render return with touchable opacity >> linked to journaltitle.js 
   return (
     <TouchableOpacity
@@ -226,7 +227,7 @@ const renderJournalItem = ({ item }) => {
       <TouchableOpacity style={{backgroundColor : 'aquamarine', flex : 1}} onPress = {addToJournalTable}>
         <Text> Add to Journal Table</Text>
       </TouchableOpacity>
-      
+
         {/* Put your content in this view */}
 
         {/** show list of saved appointment records */}
