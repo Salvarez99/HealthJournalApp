@@ -20,15 +20,15 @@ export default function CalendarScreen() {
       const appointments = await fetchAppointments();  // call localdata fetch function and store data into appointments
       const formattedAppointments = {};
   
-     // const promiseArray = []; // Array to hold promises
   // citation for for loop and pushing : https://sliceofdev.com/posts/promises-with-loops-and-array-methods-in-javascript
       for (const ap of appointments) {
         const { eventDate, eventName, eventStartTime, eventEndTime } = ap;
-        // organize fetched data before rendering and return it. 
+       
+        // if formattedAppointments[] doesn't exist then create empty array. 
         if (formattedAppointments[eventDate] === undefined || formattedAppointments[eventDate] === null) {
-          formattedAppointments[eventDate] = []; // if formattedAppointments[] doesn't exist then create empty array. 
+          formattedAppointments[eventDate] = []; 
         }
-        // Push a promise into the array that resolves with the formatted appointment data
+        // Push a promise into the array while following format. 
           formattedAppointments[eventDate].push({
             name: eventName,
             date: eventDate,
@@ -37,7 +37,6 @@ export default function CalendarScreen() {
           });
         }
   
-     // await Promise.all(promiseArray); // wait for all promise to be completed
       setAppointmentInfo(formattedAppointments); // update appointment info
       onclose()
     } catch (error) {
