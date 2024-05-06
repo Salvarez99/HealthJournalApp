@@ -554,6 +554,34 @@ export const fetchMedicineEntries = () => {
   });
 };
 
+export const clearMedicineEntry = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `DELETE FROM medicineEntry;`,
+        [],
+        (_, result) => {
+          // After deleting all records, reset the primary key sequence
+          tx.executeSql(
+            `DELETE FROM sqlite_sequence WHERE name = 'medicineEntry';`,
+            [],
+            () => {
+              // Resolve with the number of rows affected (should be 0 or more)
+              resolve(result.rowsAffected);
+            },
+            (_, error) => {
+              reject(error); // Reject with the error if resetting the sequence fails
+            }
+          );
+        },
+        (_, error) => {
+          reject(error); // Reject with the error if deletion fails
+        }
+      );
+    });
+  });
+};
+
 // Create a new illness
 export const addIllness = (name) => {
   return new Promise((resolve, reject) => {
