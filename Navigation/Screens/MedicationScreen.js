@@ -21,8 +21,11 @@ export default function MedicationScreen({ navigation }) {
     } catch (error) {
       console.error("Failed to fetch medication data:", error);
     }
-    onclose()
   };
+
+  useEffect(() => {
+    console.log(medications);
+  }, [medications]);
 
   useEffect(() => {
     fetchMedicationData();
@@ -65,7 +68,7 @@ export default function MedicationScreen({ navigation }) {
 
   const renderMedicationItem = ({ item }) => (
     <View style={styles.medicationItem}>
-      <Text style={styles.medicationDetail}>{`Name: ${item.medicationName} `}</Text>
+      <Text style={styles.medicationName}>{`Name: ${item.medicineName}`}</Text>
 
       <View style={styles.rightContent}>
         <Text style={styles.medicationDetail}>{`Dosage: ${item.dosage}`}</Text>
@@ -76,6 +79,8 @@ export default function MedicationScreen({ navigation }) {
       </View>
     </View>
   );
+
+
 
   const renderOutput = () => {
     return (
