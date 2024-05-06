@@ -108,14 +108,10 @@ const SearchComponent = ({ searchData, typeDataInputted, updateList }) => {
 
   //Filter the list based on current searchQuery
   const filteredList = searchQuery
-  ? searchData.filter((item) => {
-      if (typeof item !== 'string') {
-        console.error('Invalid item type:', item);
-        return false;
-      }
-      return item.toLowerCase().includes(searchQuery.toLowerCase());
-    })
-  : [];
+    ? searchData.filter((item) =>
+        item.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : [];
 
   const onChange = () => {
     //Checks if searchQuery is not just whitespace

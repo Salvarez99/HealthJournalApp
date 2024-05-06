@@ -110,7 +110,7 @@ export default function MedicationScreen({ navigation }) {
       const data = -(await Response.json());
       setMedications(data); // get data from backend api and set it with setMedications() state hook
     } catch (error) {
-      //console.log("fail to fatch medication data : ", error);
+      console.log("fail to fatch medication data : ", error);
     }
   };
 
