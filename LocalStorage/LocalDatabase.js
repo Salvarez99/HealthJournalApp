@@ -5,11 +5,12 @@ import * as FileSystem from 'expo-file-system';
 import * as DocumentPicker from 'expo-document-picker';
 
 const db = SQLite.openDatabase('journal.db');
+/*
 const medicineList = ["Motrin", "Ibuprofen",  "Benadryl", "Albuterol", "Motrin", "Epinephrine"];
 const illnessList = ["Cold", "Flu", "Pneumonia", "Cancer", "Allergies", "Pink Eye"];
 const symptomList = ["Cough", "Headache", "Sore Throat", "Back Pain", "Congestion", "Light Headedness"];
 const testList = ["Bloodwork", "X-Ray", "Physical Exam", "Biopsy", "Blood Pressure", "Cholesterol"];
-
+*/
 export const initializeDatabase = () => {
     return new Promise((resolve, reject) => {
       
@@ -294,7 +295,7 @@ tx.executeSql(
 
 
         // Create the journal table with foreign key constraints test
-        
+        /*
         tx.executeSql(
           `CREATE TABLE IF NOT EXISTS journal (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -322,7 +323,7 @@ tx.executeSql(
             reject(error);
           }
         );
-        
+        */
         // Create the medicineEntry table with foreign key reference to medicine
         tx.executeSql(
           `CREATE TABLE IF NOT EXISTS medicineEntry (
@@ -357,6 +358,64 @@ tx.executeSql(
           }
         );
 
+        tx.executeSql(
+          `CREATE TABLE IF NOT EXISTS userSymptom (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            JID INTEGER,
+            symptomName TEXT,
+            symptomStartDate TEXT,
+            symptomEndDate TEXT,
+            FOREIGN KEY (JID) REFERENCES journalEntry(id),
+            FOREIGN KEY (symptomName) REFERENCES symptom(name)
+            );`,
+          [],
+          (_, result) => {
+            console.log("userSymptom Table Initialized Successfully");
+            resolve();
+          },
+          (_, error) => {
+            reject(error);
+          }
+        );
+
+        tx.executeSql(
+          `CREATE TABLE IF NOT EXISTS userIllness (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            JID INTEGER,
+            illnessName TEXT,
+            illnessStartDate TEXT,
+            illnessEndDate TEXT,
+            FOREIGN KEY (JID) REFERENCES journalEntry(id),
+            FOREIGN KEY (illnessName) REFERENCES illness(name)
+            );`,
+          [],
+          (_, result) => {
+            console.log("userIllness Table Initialized Successfully");
+            resolve();
+          },
+          (_, error) => {
+            reject(error);
+          }
+        );
+
+        tx.executeSql(
+          `CREATE TABLE IF NOT EXISTS userTest (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            JID INTEGER,
+            testName TEXT,
+            testDate TEXT,
+            FOREIGN KEY (JID) REFERENCES journalEntry(id),
+            FOREIGN KEY (testName) REFERENCES test(name)
+            );`,
+          [],
+          (_, result) => {
+            console.log("userTest Table Initialized Successfully");
+            resolve();
+          },
+          (_, error) => {
+            reject(error);
+          }
+        );
       
       }, null, resolve);
     });
@@ -462,6 +521,7 @@ export const addJournal = (symptomName, symptomStartDate, symptomEndDate, illnes
       });
   });
 };
+
 
 // Fetch all journal entries
 export const fetchJournals = () => {
@@ -852,6 +912,280 @@ export const clearJournal = () => {
         },
         (_, error) => {
           reject(error); // Reject with the error if deletion fails
+        }
+      );
+    });
+  });
+};
+
+//Add/Insert functions for User tables
+export const addUserSymptom = (JID, symptomName, symptomStartDate, symptomEndDate) => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `INSERT INTO userSymptom (JID, symptomName, symptomStartDate, symptomEndDate) VALUES (?, ?, ?, ?)`,
+        [JID, symptomName, symptomStartDate, symptomEndDate],
+        (_, result) => {
+          console.log("Symptom added successfully");
+          resolve(result.insertId); // Return the ID of the newly inserted row
+        },
+        (_, error) => {
+          console.error("Error adding symptom:", error);
+          reject(error);
+        }
+      );
+    });
+  });
+};
+
+export const addUserIllness = (JID, illnessName, illnessStartDate, illnessEndDate) => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `INSERT INTO userIllness (JID, illnessName, illnessStartDate, illnessEndDate) VALUES (?, ?, ?, ?)`,
+        [JID, illnessName, illnessStartDate, illnessEndDate],
+        (_, result) => {
+          console.log("Illness added successfully");
+          resolve(result.insertId); // Return the ID of the newly inserted row
+        },
+        (_, error) => {
+          console.error("Error adding userIllness:", error);
+          reject(error);
+        }
+      );
+    });
+  });
+};
+
+export const addUserTest = (JID, testName, testDate) => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `INSERT INTO userTest (JID, testName, testDate) VALUES (?, ?, ?)`,
+        [JID, testName, testDate],
+        (_, result) => {
+          console.log("Test added successfully");
+          resolve(result.insertId); // Return the ID of the newly inserted row
+        },
+        (_, error) => {
+          console.error("Error adding userTest:", error);
+          reject(error);
+        }
+      );
+    });
+  });
+};
+
+//Clear Functions for User tables
+export const clearUserSymptom = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `DELETE FROM userSymptom;`,
+        [],
+        (_, result) => {
+          // After deleting all records, reset the primary key sequence
+          tx.executeSql(
+            `DELETE FROM sqlite_sequence WHERE name = 'userSymptom';`,
+            [],
+            () => {
+              // Resolve with the number of rows affected (should be 0 or more)
+              resolve(result.rowsAffected);
+            },
+            (_, error) => {
+              reject(error); // Reject with the error if resetting the sequence fails
+            }
+          );
+        },
+        (_, error) => {
+          reject(error); // Reject with the error if deletion fails
+        }
+      );
+    });
+  });
+};
+
+export const clearUserIllness = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `DELETE FROM userIllness;`,
+        [],
+        (_, result) => {
+          // After deleting all records, reset the primary key sequence
+          tx.executeSql(
+            `DELETE FROM sqlite_sequence WHERE name = 'userIllness';`,
+            [],
+            () => {
+              // Resolve with the number of rows affected (should be 0 or more)
+              resolve(result.rowsAffected);
+            },
+            (_, error) => {
+              reject(error); // Reject with the error if resetting the sequence fails
+            }
+          );
+        },
+        (_, error) => {
+          reject(error); // Reject with the error if deletion fails
+        }
+      );
+    });
+  });
+};
+
+export const clearUserTest = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `DELETE FROM userTest;`,
+        [],
+        (_, result) => {
+          // After deleting all records, reset the primary key sequence
+          tx.executeSql(
+            `DELETE FROM sqlite_sequence WHERE name = 'userTest';`,
+            [],
+            () => {
+              // Resolve with the number of rows affected (should be 0 or more)
+              resolve(result.rowsAffected);
+            },
+            (_, error) => {
+              reject(error); // Reject with the error if resetting the sequence fails
+            }
+          );
+        },
+        (_, error) => {
+          reject(error); // Reject with the error if deletion fails
+        }
+      );
+    });
+  });
+};
+
+//Fetch by JID functions, returns array of row objects that share the given JID
+export const fetchUserSymptomByJournalId = (journalId) => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `SELECT * FROM userSymptom WHERE JID = ?;`,
+        [journalId],
+        (_, result) => {
+          const symptomData = result.rows._array;
+          resolve(symptomData); // Resolve with the fetched journal data
+        },
+        (_, error) => {
+          reject(error); // Reject with the error if fetching fails
+        }
+      );
+    });
+  });
+};
+
+export const fetchUserIllnessByJournalId = (journalId) => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `SELECT * FROM userIllness WHERE JID = ?;`,
+        [journalId],
+        (_, result) => {
+          const illnessData = result.rows._array;
+          resolve(illnessData); // Resolve with the fetched journal data
+        },
+        (_, error) => {
+          reject(error); // Reject with the error if fetching fails
+        }
+      );
+    });
+  });
+};
+
+export const fetchUserTestByJournalId = (journalId) => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `SELECT * FROM userTest WHERE JID = ?;`,
+        [journalId],
+        (_, result) => {
+          const testData = result.rows._array;
+          resolve(testData); // Resolve with the fetched journal data
+        },
+        (_, error) => {
+          reject(error); // Reject with the error if fetching fails
+        }
+      );
+    });
+  });
+};
+
+//Fetch all Functions for the 3 User Tables, returns array of row objects
+export const fetchUserSymptom = () => {
+  return new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+          tx.executeSql(
+              `SELECT * FROM userSymptom;`,
+              [],
+              (_, result) => {
+                  const userSymptoms = result.rows._array;
+                  resolve(userSymptoms); // Resolve with the fetched medicines
+              },
+              (_, error) => {
+                  reject(error); // Reject with the error if fetching fails
+              }
+          );
+      });
+  });
+};
+
+export const fetchUserIllness = () => {
+  return new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+          tx.executeSql(
+              `SELECT * FROM userIllness;`,
+              [],
+              (_, result) => {
+                  const userIllnesses = result.rows._array;
+                  resolve(userIllnesses); // Resolve with the fetched medicines
+              },
+              (_, error) => {
+                  reject(error); // Reject with the error if fetching fails
+              }
+          );
+      });
+  });
+};
+
+export const fetchUserTest = () => {
+  return new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+          tx.executeSql(
+              `SELECT * FROM userTest;`,
+              [],
+              (_, result) => {
+                  const userTests = result.rows._array;
+                  resolve(userTests); // Resolve with the fetched medicines
+              },
+              (_, error) => {
+                  reject(error); // Reject with the error if fetching fails
+              }
+          );
+      });
+  });
+};
+
+//Returns the latest journalEntry, might be useful for AddJournalEntryForm logic
+export const fetchLatestJournalEntry = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `SELECT * FROM journalEntry ORDER BY id DESC LIMIT 1`,
+        [],
+        (_, { rows }) => {
+          const latestEntry = rows.item(0); // Retrieve the first (and only) item from the result set
+          console.log("Latest Journal Entry:", latestEntry);
+          resolve(latestEntry);
+        },
+        (_, error) => {
+          console.error("Error fetching latest journal entry:", error);
+          reject(error);
         }
       );
     });
