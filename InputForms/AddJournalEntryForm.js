@@ -23,6 +23,7 @@ import {
 import SearchComponent from "../Components/SearchComponent";
 import JournalEntry from "../Classes/JournalEntry";
 import {
+  fetchJournalEntries,
   addJournal,
   addJournalEntry,
   fetchSymptoms,
@@ -35,6 +36,7 @@ import {
   addUserIllness,
   addUserTest,
   fetchLatestJournalEntry,
+  fetchLatestJournalEntryJID
 } from "../LocalStorage/LocalDatabase";
 
 const AddJournalEntryForm = ({ isVisible, onClose }) => {
@@ -128,43 +130,42 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
     journalEntry = new JournalEntry(userSymptoms, userIllnesses, userTests);
     try {
       // Process symptoms
+      const latest_journal_entry = fetchLatestJournalEntryJID();
+      let j_id;
+
+      if(latest_journal_entry === null){
+        j_id = 1;
+      }else{
+        j_id = latest_journal_entry;
+        j_id++;
+      }
+
       for (const symptom of journalEntry.symptoms) {
-        // const symptomId = await addSymptom(symptom.name);
-        // console.log(`Added symptom with ID: ${symptomId}`);
-        const latest_journal_entry = fetchLatestJournalEntry();
-        const j_id = latest_journal_entry[0].id;
         const userSymptom = await addUserSymptom(j_id,symptom.name, symptom.startDate, symptom.endDate);
-        console.log('Added User Symptom to :' + j_id);
+        console.log(`Added User Symptom with ID: ${j_id}`);
+
       }
 
       // Process illnesses
       for (const illness of journalEntry.illnesses) {
-        const illnessId = await addIllness(illness.name);
-        console.log(`Added illness with ID: ${illnessId}`);
+        const illnessId = await addUserIllness(j_id, illness.name, illness.startDate, illness.endDate);
+        console.log(`Added User Illness with ID: ${j_id}`);
       }
 
       // Process tests
-      for (const test of journalEntry.tests) {
-        const testId = await addTest(test.name);
-        console.log(`Added test with ID: ${testId}`);
+      for (const test of journalEntry.testAndLabworks) {
+        const testId = await addUserTest(j_id, test.name, test.dateOccured);
+        console.log(`Added test with ID: ${j_id}`);
       }
 
       // Add journal entry
-      const journalEntryId = await addJournalEntry(new Date());
+      const date = new Date();
+      const journalEntryId = await addJournalEntry(date.toLocaleDateString());
       console.log(`Added journal entry with ID: ${journalEntryId}`);
 
       // Fetch all journal entries after adding the new entry
       const entries = await fetchJournalEntries();
       console.log("Fetched journal entries:", entries);
-
-      // Add journal to local database
-      const journalId = await addJournal(
-        journalEntry.symptoms.map((symptom) => symptom.name), // ?
-        journalEntry.illnesses.map((illness) => illness.name),
-        journalEntry.tests.map((test) => test.name),
-        journalEntryId
-      );
-      console.log(`Added journal with ID: ${journalId}`);
 
       // Close the modal or perform any other post-save actions
       onClose();
