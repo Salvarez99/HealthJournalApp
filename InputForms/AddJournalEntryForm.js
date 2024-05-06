@@ -131,51 +131,50 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
     try {
       // Process symptoms
       const latest_journal_entry = fetchLatestJournalEntryJID();
-      let j_id;
-
-      if (latest_journal_entry === null) {
-        j_id = 1;
-      } else {
-        j_id = latest_journal_entry;
-        j_id++;
-      }
-
-      for (const symptom of journalEntry.symptoms) {
-        console.log("j_id before adding to table: " + j_id);
-        const userSymptom = await addUserSymptom(
-          j_id,
-          symptom.name,
-          symptom.startDate,
-          symptom.endDate
-        );
-        console.log(`Added User Symptom with ID: ${j_id}`);
-      }
-
-      // Process illnesses
-      for (const illness of journalEntry.illnesses) {
-        console.log("j_id before adding to table: " + j_id);
-
-        const illnessId = await addUserIllness(
-          j_id,
-          illness.name,
-          illness.startDate,
-          illness.endDate
-        );
-        console.log(`Added User Illness with ID: ${j_id}`);
-      }
-
-      // Process tests
-      for (const test of journalEntry.testAndLabworks) {
-        console.log("j_id before adding to table: " + j_id);
-
-        const testId = await addUserTest(j_id, test.name, test.dateOccured);
-        console.log(`Added test with ID: ${j_id}`);
-      }
-
+      // let j_id;
       // Add journal entry
       const date = new Date();
       const journalEntryId = await addJournalEntry(date.toLocaleDateString());
       console.log(`Added journal entry with ID: ${journalEntryId}`);
+
+      // if (latest_journal_entry === null) {
+      //   j_id = 1;
+      // } else {
+      //   j_id = latest_journal_entry;
+      //   j_id++;
+      // }
+
+      for (const symptom of journalEntry.symptoms) {
+        const userSymptom = await addUserSymptom(
+          journalEntryId,
+          symptom.name,
+          symptom.startDate,
+          symptom.endDate
+        );
+        console.log('Symptom added with ID: ' + journalEntryId);
+      }
+
+      // Process illnesses
+      for (const illness of journalEntry.illnesses) {
+
+        const illnessId = await addUserIllness(
+          journalEntryId,
+          illness.name,
+          illness.startDate,
+          illness.endDate
+        );
+        console.log('Illness added with ID: ' + journalEntryId);
+
+      }
+
+      // Process tests
+      for (const test of journalEntry.testAndLabworks) {
+
+        const testId = await addUserTest(journalEntryId, test.name, test.dateOccured);
+        console.log('Test added with ID: ' + journalEntryId);
+
+      }
+
 
       // Fetch all journal entries after adding the new entry
       const entries = await fetchJournalEntries();
