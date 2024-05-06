@@ -435,9 +435,12 @@ export const addAppointment = (eventName, eventDate, eventStartTime, eventEndTim
               [eventName, eventDate, eventStartTime, eventEndTime],
               (_, result) => {
                   console.log("Appointment added successfully");
+                  console.log(`Appointment Details - Name: ${eventName}, Date: ${eventDate}, Start Time: ${eventStartTime}, End Time: ${eventEndTime}`);
+                  
                   resolve(result.insertId); // Resolve with the ID of the newly inserted appointment
               },
               (_, error) => {
+                console.error("Error adding appointment:", error);
                   reject(error); // Reject with the error if insertion fails
               }
           );
