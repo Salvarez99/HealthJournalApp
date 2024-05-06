@@ -1,7 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-import { fetchUserIllnessByJournalId, fetchUserSymptomByJournalId, fetchUserTestByJournalId, fetchUserSymptom } from "../../LocalStorage/LocalDatabase";
+import {
+  fetchUserIllnessByJournalId,
+  fetchUserSymptomByJournalId,
+  fetchUserTestByJournalId,
+  fetchUserSymptom,
+} from "../../LocalStorage/LocalDatabase";
 import {
   View,
   Text,
@@ -12,12 +17,11 @@ import {
 } from "react-native";
 
 export default function JournalTitle({ route, navigation }) {
-  const {journalId} = route.params;
+  const { journalId } = route.params;
   const [journalData, setJournalData] = useState([]); //empty list
   const [symptomData, setSymptomData] = useState([]);
   const [illnessData, setIllnessData] = useState([]);
-  const [testData, setTestData] = useState([]); 
-  
+  const [testData, setTestData] = useState([]);
 
   useFocusEffect(
     useCallback(() => {
@@ -36,7 +40,7 @@ export default function JournalTitle({ route, navigation }) {
       const fetchedSymptoms = await fetchUserSymptomByJournalId(journalId);
       const fetchedIllnesses = await fetchUserIllnessByJournalId(journalId);
       const fetchedTests = await fetchUserTestByJournalId(journalId);
-  
+
       setSymptomData(fetchedSymptoms);
       setIllnessData(fetchedIllnesses);
       setTestData(fetchedTests);
@@ -45,10 +49,9 @@ export default function JournalTitle({ route, navigation }) {
       console.log(illnessData);
       console.log(testData);
     } catch (error) {
-      console.error('Error fetching journal data:', error);
+      console.error("Error fetching journal data:", error);
     }
   };
-
 
   const renderEntry = (symptomEntries, illnessEntries, testEntries) => {
     return (
@@ -58,31 +61,33 @@ export default function JournalTitle({ route, navigation }) {
         <View style={styles.innerContainer}>
           {symptomEntries.map((symptomEntry) => (
             <View style={styles.entryContainer} key={symptomEntry.id}>
-              <Text>Name: {symptomEntry.symptomName}</Text>
+              <Text>{symptomEntry.symptomName}</Text>
               <Text>Start Date: {symptomEntry.symptomStartDate}</Text>
               <Text>End Date: {symptomEntry.symptomEndDate}</Text>
             </View>
           ))}
         </View>
-  
+
         {/* Illness Section */}
         <Text style={styles.sectionTitle}>Illnesses</Text>
         <View style={styles.innerContainer}>
           {illnessEntries.map((illnessEntry) => (
             <View style={styles.entryContainer} key={illnessEntry.id}>
-              <Text>Name: {illnessEntry.illnessName}</Text>
-              <Text>Start Date: {illnessEntry.illnessStartDate}</Text>
-              <Text>End Date: {illnessEntry.illnessEndDate}</Text>
+              <Text>{illnessEntry.illnessName}</Text>
+              <View style={styles.dateContainer}>
+                <Text>Start Date: {illnessEntry.illnessStartDate}</Text>
+                <Text>End Date: {illnessEntry.illnessEndDate}</Text>
+              </View>
             </View>
           ))}
         </View>
-  
+
         {/* Test Section */}
         <Text style={styles.sectionTitle}>Tests</Text>
         <View style={styles.innerContainer}>
           {testEntries.map((testEntry) => (
             <View style={styles.entryContainer} key={testEntry.id}>
-              <Text>Name: {testEntry.testName}</Text>
+              <Text>{testEntry.testName}</Text>
               <Text>Date Occurred: {testEntry.testDate}</Text>
             </View>
           ))}
@@ -90,7 +95,6 @@ export default function JournalTitle({ route, navigation }) {
       </View>
     );
   };
-
 
   const renderIfExists = (data) => {
     if (!data || data.length === 0) {
@@ -129,23 +133,12 @@ export default function JournalTitle({ route, navigation }) {
   return (
     <ScrollView>
       <View style={styles.container}>
-        <Text style={styles.mainIdContainer}>
-          Journal #{journalId}
-        </Text>
+        {/* <Text style={styles.mainIdContainer}>Journal #{journalId}</Text> */}
 
-       
         <View style={styles.innerContainer}>
-        {renderEntry(symptomData, illnessData, testData)}
-        {/* render if exist */}
+          {renderEntry(symptomData, illnessData, testData)}
+          {/* render if exist */}
         </View>
-
-        <TouchableOpacity
-          style={styles.exitButton}
-          onPress={() => navigation.goBack()}
-        >
-          <Ionicons name="exit-outline" size={24} color="lightblue" />
-          <Text style={styles.exitButtonText}>Exit</Text>
-        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -158,7 +151,6 @@ const styles = StyleSheet.create({
   },
   mainIdContainer: {
     fontSize: 30,
-    marginTop: 30,
     fontWeight: "bold",
     textAlign: "center",
     ...Platform.select({
@@ -168,9 +160,7 @@ const styles = StyleSheet.create({
     }),
   },
   innerContainer: {
-    marginTop: 10,
-    marginBottom: 10,
-    minHeight: 120,
+    minHeight : 80
   },
   sectionTitle: {
     padding: 10,
@@ -185,9 +175,7 @@ const styles = StyleSheet.create({
     }),
   },
   entryContainer: {
-    marginTop: 10,
-    padding: 20,
-    marginBottom: 40,
+    padding : 5,
     justifyContent: "center",
     ...Platform.select({
       ios: {

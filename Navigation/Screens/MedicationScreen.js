@@ -66,7 +66,7 @@ export default function MedicationScreen({ navigation }) {
    const convertFrequencyList = (frequency) => {
     const days = ["S", "M", "T", "W", "TH", "F", "S"];
     let outputList = [];
-
+    console.log(frequency)
     for(const index in frequency){
       outputList.push(days[index]);
     }
