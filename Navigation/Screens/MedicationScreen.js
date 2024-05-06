@@ -62,26 +62,29 @@ export default function MedicationScreen({ navigation }) {
     { name: "Add Journal Entry", openModal: openModal3 },
   ];
 
-   // convert received list of int into appropriate frequency (string type) ex) 0,1 conver to Sunday Monday
+   // convert received list of int into appropriate frequency (string type) ex) 0,1 convert to Sunday Monday
    const convertFrequencyList = (frequency) => {
     const days = ["S", "M", "T", "W", "TH", "F", "S"];
     let outputList = [];
-    for (let i = 0; i < frequency.length; i++) {
-      outputList.push(days[frequency[i]]);
+
+    for(const index in frequency){
+      outputList.push(days[index]);
     }
-    return outputList.join(", ");
+
+    console.log(outputList)
+    return outputList.join();
   };
 
   const renderMedicationItem = ({ item }) => (
     <View style={styles.medicationItem}>
-      <Text style={styles.medicationName}>{`${item.medicineName}`}</Text>
+      <View style={{alignContent : 'center', justifyContent : 'center'}}>
+        <Text style={styles.medicationName}>{`${item.medicineName}`}</Text>
+      </View>
 
       <View style={styles.rightContent}>
         <Text style={styles.medicationDetail}>{`Dosage: ${item.dosage}`}</Text>
         <Text style={styles.medicationDetail}>{`Dosage Schedule: ${item.dosageSchedule}`}</Text>
-        <Text style={styles.medicationDetail}>{`Frequency: ${convertFrequencyList(
-          item.frequency
-        )}`}</Text>
+        <Text style={styles.medicationDetail}>{`Frequency: ${convertFrequencyList(item.frequency)}`}</Text>
       </View>
     </View>
   );
@@ -179,12 +182,12 @@ const styles = StyleSheet.create({
 
   medicationName: {
     fontWeight: "bold",
+    fontSize: 20,
     ...Platform.select({
       ios: {
         fontFamily: "Times New Roman", // Set font family to Times New Roman
       },
     }),
-    fontSize: 15,
   },
   medicationDetail: {
     ...Platform.select({
