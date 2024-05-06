@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-import { fetchJournalDataByJournalId, addJournal } from "../../LocalStorage/LocalDatabase";
+import { fetchUserIllnessByJournalId, fetchUserSymptomByJournalId, fetchUserTestByJournalId, fetchUserSymptom } from "../../LocalStorage/LocalDatabase";
 import {
   View,
   Text,
@@ -11,64 +12,85 @@ import {
 } from "react-native";
 
 export default function JournalTitle({ route, navigation }) {
-  const { journalId } = route.params;
-  const [journalData, setJournalData] = useState([]); //empty list 
-  console.log('Journal data:' + journalData);
+  const {journalId} = route.params;
+  const [journalData, setJournalData] = useState([]); //empty list
+  const [symptomData, setSymptomData] = useState([]);
+  const [illnessData, setIllnessData] = useState([]);
+  const [testData, setTestData] = useState([]); 
+  
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchJournalData();
+    }, [])
+  );
+
   useEffect(() => {
-    
-    fetchJournalData();
-  }, []);
+    console.log("Symptom Data:", symptomData);
+    console.log("Illness Data:", illnessData);
+    console.log("Test Data:", testData);
+  }, [symptomData, illnessData, testData]);
 
   const fetchJournalData = async () => {
     try {
-      const data = await fetchJournalDataByJournalId(journalId);
-      setJournalData(data);
+      const fetchedSymptoms = await fetchUserSymptomByJournalId(1);
+      const fetchedIllnesses = await fetchUserIllnessByJournalId(1);
+      const fetchedTests = await fetchUserTestByJournalId(1);
+  
+      setSymptomData(fetchedSymptoms);
+      setIllnessData(fetchedIllnesses);
+      setTestData(fetchedTests);
+
+      console.log(symptomData);
+      console.log(illnessData);
+      console.log(testData);
     } catch (error) {
-      console.error("Error fetching journal data:", error);
+      console.error('Error fetching journal data:', error);
     }
   };
 
-  const renderEntry = (entry) => {
+
+  const renderEntry = (symptomEntries, illnessEntries, testEntries) => {
     return (
-      <>
-        {entry.map((item, index) => (
-          <React.Fragment key={index}>
-            {item.symptomName && (
-              <>
-                <Text style={styles.sectionTitle}>Symptom</Text>
-                <View style={styles.dateContainer}>
-                  <Text>Name: {item.symptomName}</Text>
-                  <Text>Start Date: {item.symptomStartDate}</Text>
-                  <Text>End Date: {item.symptomEndDate}</Text>
-                </View>
-              </>
-            )}
-
-            {item.illnessName && (
-              <>
-                <Text style={styles.sectionTitle}>Illness</Text>
-                <View style={styles.dateContainer}>
-                  <Text>Name: {item.illnessName}</Text>
-                  <Text>Start Date: {item.illnessStartDate}</Text>
-                  <Text>End Date: {item.illnessEndDate}</Text>
-                </View>
-              </>
-            )}
-
-            {item.testName && (
-              <>
-                <Text style={styles.sectionTitle}>Test & Labwork</Text>
-                <View style={styles.dateContainer}>
-                <Text>Name: {item.testName}</Text>
-                <Text>Date Occurred: {item.testDate}</Text>
-                </View>
-              </>
-            )}
-          </React.Fragment>
-        ))}
-      </>
+      <View key={journalId}>
+        {/* Symptom Section */}
+        <Text style={styles.sectionTitle}>Symptoms</Text>
+        <View style={styles.innerContainer}>
+          {symptomEntries.map((symptomEntry) => (
+            <View style={styles.entryContainer} key={symptomEntry.id}>
+              <Text>Name: {symptomEntry.symptomName}</Text>
+              <Text>Start Date: {symptomEntry.symptomStartDate}</Text>
+              <Text>End Date: {symptomEntry.symptomEndDate}</Text>
+            </View>
+          ))}
+        </View>
+  
+        {/* Illness Section */}
+        <Text style={styles.sectionTitle}>Illnesses</Text>
+        <View style={styles.innerContainer}>
+          {illnessEntries.map((illnessEntry) => (
+            <View style={styles.entryContainer} key={illnessEntry.id}>
+              <Text>Name: {illnessEntry.illnessName}</Text>
+              <Text>Start Date: {illnessEntry.illnessStartDate}</Text>
+              <Text>End Date: {illnessEntry.illnessEndDate}</Text>
+            </View>
+          ))}
+        </View>
+  
+        {/* Test Section */}
+        <Text style={styles.sectionTitle}>Tests</Text>
+        <View style={styles.innerContainer}>
+          {testEntries.map((testEntry) => (
+            <View style={styles.entryContainer} key={testEntry.id}>
+              <Text>Name: {testEntry.testName}</Text>
+              <Text>Date Occurred: {testEntry.testDate}</Text>
+            </View>
+          ))}
+        </View>
+      </View>
     );
   };
+
 
   const renderIfExists = (data) => {
     if (!data || data.length === 0) {
@@ -113,7 +135,8 @@ export default function JournalTitle({ route, navigation }) {
 
        
         <View style={styles.innerContainer}>
-          {renderIfExists(journalData)}
+        {renderEntry(symptomData, illnessData, testData)}
+        {/* render if exist */}
         </View>
 
         <TouchableOpacity

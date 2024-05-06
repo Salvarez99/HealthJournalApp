@@ -24,15 +24,15 @@ export default function JournalScreen({ navigation }) {
   const [isModalVisible, setIsModalVisible] = React.useState(false); // vsible or not
   const [selectedModal, setSelectedModal] = React.useState(null); // track which model should displayed.
   const [journalEntries, setJournalEntries] = useState([]); //empty list
-  const forceUpdate = useForceUpdate();
+
 
   const fetchJournalData = async () => {
     try {
-      const entries = await fetchJournalEntries(); // returns all rows from journalEntries table. row = id, date
+      const entries = await fetchJournalEntries(); // Fetch journal entries with id and date
       setJournalEntries(entries);
-      console.log("Journal Entries: " + entries);
+      console.log('Fetched journal entries:', entries); 
     } catch (error) {
-      console.log("Failed to fetch journal entries:", error);
+      console.error('Failed to fetch journal entries:', error);
     }
   };
 
@@ -135,7 +135,7 @@ export default function JournalScreen({ navigation }) {
     //   return differenceA - differenceB; // sort by ascending order , nearest item fist comes.
     // });
 
-    console.log("item: " + item);
+    
     // render return with touchable opacity >> linked to journaltitle.js
     return (
       <TouchableOpacity
@@ -178,10 +178,7 @@ export default function JournalScreen({ navigation }) {
     }
   };
 
-  const addToJournalTable = () => {
-    console.log("Added to Journal Table");
-    addJournalEntry("12/28/1968");
-  };
+
 
   return (
     <View style={styles.container}>
