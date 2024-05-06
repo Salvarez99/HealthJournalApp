@@ -1,158 +1,75 @@
+// CalendarScreen.js
 import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView, Platform, StyleSheet } from "react-native";
 import { Calendar } from "react-native-calendars";
 import QuickAddButton from "../../Components/QuickAddButton";
-import { fetchAppointments } from "../../LocalStorage/LocalDatabase";
+import { fetchAppointments } from "../../LocalStorage/LocalDatabase"; // Update path accordingly
+
 // dummy data to test
-const dummyData = {
-  "2024-04-20": {
-    events: [
-      {
-        name: "Doctor Appointment",
-        date: "2024-04-20",
-        start: "10:00 AM",
-        end: "11:00 AM",
-        location: "Ualbany Medical Center",
-      },
-      {
-        name: "Dr. John Carter - Dermatologist",
-        date: "2024-04-20",
-        start: "12:00 PM",
-        end: "1:00 PM",
-        location: "Skin Health Clinic, 456 Skin Ave., NYC",
-      },
-      {
-        name: "Dr. Laura Casey - Pediatrician",
-        date: "2024-04-20",
-        start: "2:00 PM",
-        end: "4:00 PM",
-        location: "Family Health Clinic, 789 Child Ln., middletown",
-      },
-      {
-        name: "Dr. Alan Grant - Ophthalmologist",
-        date: "2024-04-20",
-        start: "4:00 PM",
-        end: "4:40 PM",
-        location: "Clear Vision Eye Center, 234 Sight St., Lookville",
-      },
-      {
-        name: "Dr. Emily Stone - Cardiologist",
-        date: "2024-04-20",
-        start: "2:00 PM",
-        end: "4:00 PM",
-        location: "Heart Care Institute, 101 Heartbeat Blvd., Cardiocity",
-      },
-    ],
-  },
-  "2024-04-21": {
-    events: [
-      {
-        name: "Dr. Alan Grant - Ophthalmologist",
-        date: "2024-04-21",
-        start: "9:00 AM",
-        end: "12:00 PM",
-        location: "Clear Vision Eye Center, 234 Sight St., Lookville",
-      },
-      {
-        name: "Dr. Susan Hill - General Practitioner",
-        date: "2024-04-21",
-        start: "2:00 PM",
-        end: "3:00 PM",
-        location: "Hill Medical Center, 123 Health St., Cityville",
-      },
-    ],
-  },
-  "2024-04-22": {
-    events: [
-      {
-        name: "Dr. Laura Casey - Pediatrician",
-        date: "2024-04-22",
-        start: "11:00 AM",
-        end: "1:00 PM",
-        location: "Family Health Clinic, 789 Child Ln., Smalltown",
-      },
-    ],
-  },
-  "2024-04-29": {
-    events: [
-      {
-        name: "Dr. Alan Grant - Ophthalmologist",
-        date: "2024-04-29",
-        start: "9:00 AM",
-        end: "12:00 PM",
-        location: "Clear Vision Eye Center, 234 Sight St., Lookville",
-      },
-      {
-        name: "Dr. Susan Hill - General Practitioner",
-        date: "2024-04-29",
-        start: "2:00 PM",
-        end: "3:00 PM",
-        location: "Hill Medical Center, 123 Health St., Cityville",
-      },
-    ],
-  },
-};
 
 // citation for calendar ondaypress : https://community.draftbit.com/c/code-snippets/low-code-calendar-component
 // overall idea (ex theme, markedDates) :  https://www.npmjs.com/package/react-native-calendars
 export default function CalendarScreen() {
   const [pickedDate, setPickedDate] = useState(""); // store date from the calendar
-  const [appointmentInfo, setAppointmentInfo] = useState(""); // store fetched appointment data and set its status.
+  const [appointmentInfo, setAppointmentInfo] = useState({});  // c 
   const [hasDataInPickedDate, setHasDataInPickedDate] = useState(false);
 
-  // same fetech function : fetch from backend API, store in data, else return error
+ 
   const fetchAppointmentInfo = async () => {
     try {
-      const data = await fetchAppointments();
-      setAppointmentInfo(data);
-      console.log(appointmentInfo[0]);
+      const appointments = await fetchAppointments();  // call localdata fetch function and store data into appointments
+      const formattedAppointments = {};
+  
+     // const promiseArray = []; // Array to hold promises
+  // citation for for loop and pushing : https://sliceofdev.com/posts/promises-with-loops-and-array-methods-in-javascript
+      for (const ap of appointments) {
+        const { eventDate, eventName, eventStartTime, eventEndTime } = ap;
+        // organize fetched data before rendering and return it. 
+        if (formattedAppointments[eventDate] === undefined || formattedAppointments[eventDate] === null) {
+          formattedAppointments[eventDate] = []; // if formattedAppointments[] doesn't exist then create empty array. 
+        }
+        // Push a promise into the array that resolves with the formatted appointment data
+          formattedAppointments[eventDate].push({
+            name: eventName,
+            date: eventDate,
+            start: eventStartTime,
+            end: eventEndTime,
+          });
+        }
+  
+     // await Promise.all(promiseArray); // wait for all promise to be completed
+      setAppointmentInfo(formattedAppointments); // update appointment info
     } catch (error) {
       console.log("Failed to fetch appointment data: ", error);
     }
   };
 
+
   useEffect(() => {
     fetchAppointmentInfo();
   }, []);
 
-  // check whether clicked date has data - check with actual data from backend
-  // citation: use useEffect() with if else : https://forum.freecodecamp.org/t/react-useeffect-cleanup-function-within-if-statement/556965
-  useEffect(() => {
-    if (pickedDate && appointmentInfo[0]) {
-      setHasDataInPickedDate(true);
-    } else {
-      setHasDataInPickedDate(false);
-    }
-  }, [pickedDate, appointmentInfo]);
-
+  
   // create render function to display events informaton.
   const renderEvents = () => {
    
     // if fetching from backend was successful use appointmentInfo arrya, else usse dummydata. 
     let eventsData = [];
 
-    if (appointmentInfo[0]) {
-        if (appointmentInfo[0].length > 0) {  // // citation : https://www.squash.io/accessing-array-length-in-thisstate-in-reactjs/
-            eventsData = appointmentInfo[0];
-        }
-    } 
-    /*
-    else if (dummyData[pickedDate] && dummyData[pickedDate].events) {
-        eventsData = dummyData[pickedDate].events;
+    // Check if appointments exist for the selected date
+    if (appointmentInfo[pickedDate]) {
+      eventsData = appointmentInfo[pickedDate];
     }
-*/
-
-
 
     return (
       <ScrollView style={styles.eventList}>
         {eventsData.map((event, index) => (
           <View key={index} style={styles.eventItem}>
-            <Text style={styles.eventName}>{appointmentInfo[0].eventName}</Text>
-            <Text style={styles.eventDetail}>Date: {appointmentInfo[0].eventDate}</Text>
-            <Text style={styles.eventDetail}>Start Time: {appointmentInfo[0].eventStartTime}</Text>
-            <Text style={styles.eventDetail}>End Time: {appointmentInfo[0].eventEndTime}</Text>
-            <Text style={styles.eventDetail}>Location: {"PlaceHolder"}</Text>
+            <Text style={styles.eventName}>{event.name}</Text>
+            <Text style={styles.eventDetail}>Date: {event.date}</Text>
+            <Text style={styles.eventDetail}>Start Time: {event.start}</Text>
+            <Text style={styles.eventDetail}>End Time: {event.end}</Text>
+            {/* Add more details as needed */}
           </View>
         ))}
       </ScrollView>
@@ -165,13 +82,15 @@ export default function CalendarScreen() {
       <Calendar
         style={styles.calendarContainer}
         onDayPress={(day) => {
-          setPickedDate(day.dateString), console.log("Picked Date", day.dateString);
+          setPickedDate(day.dateString), console.log("Picked Date", day);
         }}
         markedDates={{
           [pickedDate]: {
-            selected: true,
+            selected: true, 
+            marked: true,   
           },
         }}
+        
         theme={{
           backgroundColor: "lightgray",
           calendarBackground: "#f9f9f9",
