@@ -292,47 +292,16 @@ tx.executeSql(
   }
 );
 };
-
-
-        // Create the journal table with foreign key constraints test
-        /*
-        tx.executeSql(
-          `CREATE TABLE IF NOT EXISTS journal (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            JID INTEGER,
-            symptomName TEXT,
-            symptomStartDate TEXT,
-            symptomEndDate TEXT,
-            illnessName TEXT,
-            illnessStartDate TEXT,
-            illnessEndDate TEXT,
-            testName TEXT,
-            testDate TEXT,
-            FOREIGN KEY (illnessName) REFERENCES illness(name),
-            FOREIGN KEY (symptomName) REFERENCES symptom(name),
-            FOREIGN KEY (testName) REFERENCES test(name),
-            FOREIGN KEY (JID) REFERENCES journalEntry(id)
-          );`,
-          [],
-          (_, result) => {
-            console.log("Journal table initialized successfully");
-            resolve();
-          },
-          (_, error) => {
-            console.log("Error creating journal table", error);
-            reject(error);
-          }
-        );
-        */
         // Create the medicineEntry table with foreign key reference to medicine
+        
         tx.executeSql(
           `CREATE TABLE IF NOT EXISTS medicineEntry (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            medicineId INTEGER,
+            medicineName TEXT,
             dosage TEXT,
             dosageSchedule TEXT,
             frequency TEXT,
-            FOREIGN KEY (medicineId) REFERENCES medicine(id)
+            FOREIGN KEY (medicineName) REFERENCES medicine(name)
           );`,
           [],
           (_, result) => {
@@ -343,6 +312,7 @@ tx.executeSql(
             reject(error);
           }
         );
+
 
         tx.executeSql(
           `CREATE TABLE IF NOT EXISTS journalEntry (
@@ -543,12 +513,12 @@ export const fetchJournals = () => {
 };
 
 // Create a new medicine entry
-export const addMedicineEntry = (medicineId, dosage, dosageSchedule, frequency) => {
+export const addMedicineEntry = (medicineName, dosage, dosageSchedule, frequency) => {
   return new Promise((resolve, reject) => {
       db.transaction((tx) => {
           tx.executeSql(
-              `INSERT INTO medicineEntry (medicineId, dosage, dosageSchedule, frequency) VALUES (?, ?, ?, ?);`,
-              [medicineId, dosage, dosageSchedule, frequency],
+              `INSERT INTO medicineEntry (medicineName, dosage, dosageSchedule, frequency) VALUES (?, ?, ?, ?);`,
+              [medicineName, dosage, dosageSchedule, frequency],
               (_, result) => {
                   console.log("Medicine entry added successfully");
                   resolve(result.insertId); // Resolve with the ID of the newly inserted medicine entry
