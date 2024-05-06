@@ -2,12 +2,12 @@
  * Authors: Stephen Alvarez
  * Date: 5/1/2024
  * Code Version: 1.0
- * 
+ *
  * Description:
  *  Renders a form that takes user input to fill out fields required for Journal Entries
- * 
- * 
- * 
+ *
+ *
+ *
  ***************************************************************************************/
 import Ionicons from "react-native-vector-icons/Ionicons"; //Vector Icons are used for button icons
 import React, { useState, useEffect } from "react";
@@ -20,9 +20,18 @@ import {
   Platform,
 } from "react-native";
 
-import SearchComponent from "../Components/SearchComponent"; 
+import SearchComponent from "../Components/SearchComponent";
 import JournalEntry from "../Classes/JournalEntry";
-import { fetchIllnesses, fetchSymptoms, fetchTests, addJournal, addJournalEntry } from "../LocalStorage/LocalDatabase";
+import {
+  addJournal,
+  addJournalEntry,
+  fetchSymptoms,
+  addSymptom,
+  fetchIllnesses,
+  addIllness,
+  fetchTests,
+  addTest
+} from "../LocalStorage/LocalDatabase";
 
 const AddJournalEntryForm = ({ isVisible, onClose }) => {
   const [symptoms, setSymptoms] = useState([]);
@@ -30,42 +39,41 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
   const [tests, setTests] = useState([]);
   let journalEntry = null;
 
-
   useEffect(() => {
     if (isVisible) {
-    // Fetch preloaded illnesses
-    fetchIllnesses()
-        .then(data => {
-          console.log('Fetched illnesses:', data);
-          const illnessNames = data.map(illness => illness.name);
-          console.log(illnessNames);
+      // Fetch preloaded illnesses
+      fetchIllnesses()
+        .then((data) => {
+          const illnessNames = data.map((illness) => illness.name);
+          // console.log('Fetched illnesses:', data);
+          // console.log(illnessNames);
           setIllnesses(illnessNames);
         })
-        .catch(error => {
-          console.error('Error fetching illnesses:', error);
+        .catch((error) => {
+          console.error("Error fetching illnesses:", error);
         });
 
-    // Fetch preloaded symptoms
-    fetchSymptoms()
-      .then(data => {
-        const symptomNames = data.map(symptom => symptom.name);
-        setSymptoms(symptomNames);
-        console.log('Fetched symptoms:', data);
-      })
-      .catch(error => {
-        console.error('Error fetching symptoms:', error);
-      });
+      // Fetch preloaded symptoms
+      fetchSymptoms()
+        .then((data) => {
+          const symptomNames = data.map((symptom) => symptom.name);
+          // console.log('Fetched symptoms:', data);
+          setSymptoms(symptomNames);
+        })
+        .catch((error) => {
+          console.error("Error fetching symptoms:", error);
+        });
 
-    // Fetch preloaded tests
-    fetchTests()
-      .then(data => {
-        const testNames = data.map(test => test.name);
-        console.log('Fetched tests:', data);
-        setTests(testNames);
-      })
-      .catch(error => {
-        console.error('Error fetching tests:', error);
-      });
+      // Fetch preloaded tests
+      fetchTests()
+        .then((data) => {
+          const testNames = data.map((test) => test.name);
+          // console.log('Fetched tests:', data);
+          setTests(testNames);
+        })
+        .catch((error) => {
+          console.error("Error fetching tests:", error);
+        });
     }
   }, [isVisible]);
 
@@ -73,14 +81,24 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
     console.log("Symptoms: \n");
     for (const symptom of symptoms) {
       console.log(
-        symptom.name + ": " + symptom.startDate + " -> " + symptom.endDate + "\n"
+        symptom.name +
+          ": " +
+          symptom.startDate +
+          " -> " +
+          symptom.endDate +
+          "\n"
       );
     }
     console.log("\n");
     console.log("Illnesses: \n");
     for (const illness of illnesses) {
       console.log(
-        illness.name + ": " + illness.startDate + " -> " + illness.endDate + "\n"
+        illness.name +
+          ": " +
+          illness.startDate +
+          " -> " +
+          illness.endDate +
+          "\n"
       );
     }
     console.log("\n");
@@ -96,7 +114,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
   /**
    * Takes collected user data and pushes the data either to local or cloud
    * storage, depends if user has cloud storage active
-   * 
+   *
    */
   const onSave = async () => {
     printLists();
@@ -104,52 +122,45 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
     try {
       // Process symptoms
       for (const symptom of journalEntry.symptoms) {
-        
-          const symptomId = await addSymptom(symptom.name);
-          console.log(`Added symptom with ID: ${symptomId}`);
-        
+        const symptomId = await addSymptom(symptom.name);
+        console.log(`Added symptom with ID: ${symptomId}`);
       }
-  
+
       // Process illnesses
       for (const illness of journalEntry.illnesses) {
-        
-          const illnessId = await addIllness(illness.name);
-          console.log(`Added illness with ID: ${illnessId}`);
-        
+        const illnessId = await addIllness(illness.name);
+        console.log(`Added illness with ID: ${illnessId}`);
       }
-  
+
       // Process tests
       for (const test of journalEntry.tests) {
-       
-          const testId = await addTest(test.name);
-          console.log(`Added test with ID: ${testId}`);
-        
+        const testId = await addTest(test.name);
+        console.log(`Added test with ID: ${testId}`);
       }
-  
+
       // Add journal entry
       const journalEntryId = await addJournalEntry(new Date());
       console.log(`Added journal entry with ID: ${journalEntryId}`);
-  
+
       // Fetch all journal entries after adding the new entry
       const entries = await fetchJournalEntries();
       console.log("Fetched journal entries:", entries);
-  
+
       // Add journal to local database
       const journalId = await addJournal(
-        journalEntry.symptoms.map((symptom) => symptom.name), // ? 
+        journalEntry.symptoms.map((symptom) => symptom.name), // ?
         journalEntry.illnesses.map((illness) => illness.name),
         journalEntry.tests.map((test) => test.name),
         journalEntryId
       );
       console.log(`Added journal with ID: ${journalId}`);
-  
+
       // Close the modal or perform any other post-save actions
       onClose();
     } catch (error) {
       console.error("Error saving journal entry:", error);
       alert("Failed to save journal entry. Please try again.");
     }
-
   };
 
   return (
@@ -226,7 +237,7 @@ const styles = StyleSheet.create({
     height: 700,
     borderRadius: 10,
     alignItems: "center",
-    top : 15,
+    top: 15,
     ...Platform.select({
       ios: {
         shadowColor: "black",
