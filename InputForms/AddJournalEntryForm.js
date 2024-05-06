@@ -49,7 +49,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
    */
   useEffect(() => {
     if (isVisible) {
-      // Fetch preloaded illnesses
+      // Fetch preloaded illnesses store as list of {String}
       fetchIllnesses()
         .then((data) => {
           const illnessNames = data.map((illness) => illness.name);
@@ -59,7 +59,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
           console.error("Error fetching illnesses:", error);
         });
 
-      // Fetch preloaded symptoms
+      // Fetch preloaded symptoms store as list of {String}
       fetchSymptoms()
         .then((data) => {
           const symptomNames = data.map((symptom) => symptom.name);
@@ -69,7 +69,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
           console.error("Error fetching symptoms:", error);
         });
 
-      // Fetch preloaded tests
+      // Fetch preloaded tests store as list of {String}
       fetchTests()
         .then((data) => {
           const testNames = data.map((test) => test.name);
@@ -81,6 +81,9 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
     }
   }, [isVisible]);
 
+  /**
+   * Print User symptoms, illnesses, test to console
+   */
   const printLists = () => {
     console.log("Symptoms: \n");
     for (const symptom of userSymptoms) {
@@ -114,31 +117,20 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
     console.log("\n");
   };
 
-  //TODO: Implement save functionality
   /**
-   * Takes collected user data and pushes the data either to local or cloud
-   * storage, depends if user has cloud storage active
-   *
+   * Takes collected user data and pushes the data either to local storage
    */
   const onSave = async () => {
     printLists();
     journalEntry = new JournalEntry(userSymptoms, userIllnesses, userTests);
     try {
-      // Process symptoms
+      //Fetch lastest JID added to journalEntry table
       const latest_journal_entry = fetchLatestJournalEntryJID();
-      // let j_id;
-      // Add journal entry
       const date = new Date();
       const journalEntryId = await addJournalEntry(date.toLocaleDateString());
       console.log(`Added journal entry with ID: ${journalEntryId}`);
 
-      // if (latest_journal_entry === null) {
-      //   j_id = 1;
-      // } else {
-      //   j_id = latest_journal_entry;
-      //   j_id++;
-      // }
-
+      //Iterate through each symptom and add them to userSymptom table
       for (const symptom of journalEntry.symptoms) {
         const userSymptom = await addUserSymptom(
           journalEntryId,
@@ -149,7 +141,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
         console.log('Symptom added with ID: ' + journalEntryId);
       }
 
-      // Process illnesses
+      //Iterate through each illness and add them to userSymptom table
       for (const illness of journalEntry.illnesses) {
 
         const illnessId = await addUserIllness(
@@ -159,25 +151,22 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
           illness.endDate
         );
         console.log('Illness added with ID: ' + journalEntryId);
-
       }
 
-      // Process tests
+      //Iterate through each test and add them to userSymptom table
       for (const test of journalEntry.testAndLabworks) {
 
         const testId = await addUserTest(journalEntryId, test.name, test.dateOccured);
         console.log('Test added with ID: ' + journalEntryId);
-
       }
-
 
       // Fetch all journal entries after adding the new entry
       const entries = await fetchJournalEntries();
-      console.log("Fetched journal entries:", entries);
 
       // Close the modal or perform any other post-save actions
       onClose();
     } catch (error) {
+      //If an error is encountered when saving, alert the user that saving has failed
       console.error("Error saving journal entry:", error);
       alert("Failed to save journal entry. Please try again.");
     }
@@ -205,6 +194,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
               <Text style={styles.SearchComponentHeader}>*Symptoms:</Text>
             </View>
             <View style={{ height: 180 }}>
+              {/**Ensure searchData is a list of {String} */}
               <SearchComponent
                 searchData={symptoms}
                 typeDataInputted={"symptoms"}
@@ -215,6 +205,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
               <Text style={styles.SearchComponentHeader}>*Illnesses:</Text>
             </View>
             <View style={{ height: 180 }}>
+              {/**Ensure searchData is a list of {String} */}
               <SearchComponent
                 searchData={illnesses}
                 typeDataInputted={"illnesses"}
@@ -225,6 +216,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
               <Text style={styles.SearchComponentHeader}>*Tests:</Text>
             </View>
             <View style={{ height: 180 }}>
+              {/**Ensure searchData is a list of {String} */}
               <SearchComponent
                 searchData={tests}
                 typeDataInputted={"tests"}
