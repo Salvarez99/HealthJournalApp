@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import { View, Text, StyleSheet, FlatList, Platform } from "react-native";
 import QuickAddButton from "../../Components/QuickAddButton";
 import AddJournalEntryForm from "../../InputForms/AddJournalEntryForm";
@@ -11,6 +12,7 @@ export default function MedicationScreen({ navigation }) {
   const [isModalVisible, setIsModalVisible] = React.useState(false);
   const [selectedModal, setSelectedModal] = React.useState(null);
   const [medications, setMedications] = useState([]);
+  
 
   
 
@@ -21,11 +23,15 @@ export default function MedicationScreen({ navigation }) {
     } catch (error) {
       console.error("Failed to fetch medication data:", error);
     }
+    
   };
+  useFocusEffect(
+    useCallback(() => {
+      fetchMedicationData();
+    }, [])
+  );
 
-  useEffect(() => {
-    console.log(medications);
-  }, [medications]);
+
 
   useEffect(() => {
     fetchMedicationData();
