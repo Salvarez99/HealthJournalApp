@@ -59,6 +59,7 @@ export default function JournalScreen({ navigation }) {
   const closeModal = () => {
     fetchJournalData();
     setIsModalVisible(false);
+    fetchJournalData();
   };
 
   // handle when user click journal screen entry >> display JournalTitle.js page

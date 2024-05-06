@@ -54,6 +54,7 @@ export default function MedicationScreen({ navigation }) {
 
   const closeModal = () => {
     setIsModalVisible(false);
+    fetchMedicationData();
   };
 
   const modalComponents = [
