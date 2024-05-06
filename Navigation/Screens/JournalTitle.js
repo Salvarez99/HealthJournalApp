@@ -50,31 +50,43 @@ export default function JournalTitle({ route, navigation }) {
   };
 
 
-  const renderEntry = (symptomEntry, illnessEntry, testEntry) => {
+  const renderEntry = (symptomEntries, illnessEntries, testEntries) => {
     return (
       <View key={journalId}>
-        {symptomEntry.symptomName && (
-          <View style={styles.entryContainer}>
-            <Text>Name: {symptomEntry.symptomName}</Text>
-            <Text>Start Date: {symptomEntry.symptomStartDate}</Text>
-            <Text>End Date: {symptomEntry.symptomEndDate}</Text>
-          </View>
-        )}
-
-        {illnessEntry.illnessName && (
-          <View style={styles.entryContainer}>
-            <Text>Name: {illnessEntry.illnessName}</Text>
-            <Text>Start Date: {illnessEntry.illnessStartDate}</Text>
-            <Text>End Date: {illnessEntry.illnessEndDate}</Text>
-          </View>
-        )}
-
-        {testEntry.testName && (
-          <View style={styles.entryContainer}>
-            <Text>Name: {testEntry.testName}</Text>
-            <Text>Date Occurred: {testEntry.testDate}</Text>
-          </View>
-        )}
+        {/* Symptom Section */}
+        <Text style={styles.sectionTitle}>Symptoms</Text>
+        <View style={styles.innerContainer}>
+          {symptomEntries.map((symptomEntry) => (
+            <View style={styles.entryContainer} key={symptomEntry.id}>
+              <Text>Name: {symptomEntry.symptomName}</Text>
+              <Text>Start Date: {symptomEntry.symptomStartDate}</Text>
+              <Text>End Date: {symptomEntry.symptomEndDate}</Text>
+            </View>
+          ))}
+        </View>
+  
+        {/* Illness Section */}
+        <Text style={styles.sectionTitle}>Illnesses</Text>
+        <View style={styles.innerContainer}>
+          {illnessEntries.map((illnessEntry) => (
+            <View style={styles.entryContainer} key={illnessEntry.id}>
+              <Text>Name: {illnessEntry.illnessName}</Text>
+              <Text>Start Date: {illnessEntry.illnessStartDate}</Text>
+              <Text>End Date: {illnessEntry.illnessEndDate}</Text>
+            </View>
+          ))}
+        </View>
+  
+        {/* Test Section */}
+        <Text style={styles.sectionTitle}>Tests</Text>
+        <View style={styles.innerContainer}>
+          {testEntries.map((testEntry) => (
+            <View style={styles.entryContainer} key={testEntry.id}>
+              <Text>Name: {testEntry.testName}</Text>
+              <Text>Date Occurred: {testEntry.testDate}</Text>
+            </View>
+          ))}
+        </View>
       </View>
     );
   };
