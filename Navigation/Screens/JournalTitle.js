@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { fetchJournalDataByJournalId, addJournal } from "../../LocalStorage/LocalDatabase";
+
 import {
   View,
   Text,
@@ -10,112 +10,113 @@ import {
   Platform,
 } from "react-native";
 
+//Goal : Distinguish between different type of entries ( symptom, illness, test and labworks) from fetched data.
+// display details + exit button ( go back to journalscreen.js )
+
 export default function JournalTitle({ route, navigation }) {
-  const { journalId } = route.params;
-  const [journalData, setJournalData] = useState([]); //empty list 
-  console.log('Journal data:' + journalData);
-  useEffect(() => {
-    
-    fetchJournalData();
-  }, []);
+  const { arryOfAppointmentInfo } = route.params; // used navigation parameter to get data from journalscreen.js // citation needed
+  // citation for route.params : https://reactnavigation.org/docs/params/
 
-  const fetchJournalData = async () => {
-    try {
-      const data = await fetchJournalDataByJournalId(journalId);
-      setJournalData(data);
-    } catch (error) {
-      console.error("Error fetching journal data:", error);
+  // used switch statement to display symtop, illness and test and labwork.
+  // citation for switch statement : https://simplefrontend.com/switch-statement-in-react/
+  const renderEntry = (entry, arraytype) => {
+    switch (arraytype) {
+      case "Symptom":
+        return (
+          <View sytle={styles.entryContainer}>
+            <Text style={styles.entryTitle}>Symptom Name: {entry.name}</Text>
+            <View style={styles.dateContainer}>
+              <Text>Start Date: {entry.startDate}</Text>
+              <Text>End Date: {entry.endDate}</Text>
+            </View>
+          </View>
+        );
+      case "Illness":
+        return (
+          <View sytle={styles.entryContainer}>
+            <Text style={styles.entryTitle}>Illness Name: {entry.name} </Text>
+            <View style={styles.dateContainer}>
+              <Text>Start Date: {entry.startDate}</Text>
+              <Text>End Date: {entry.endDate}</Text>
+            </View>
+          </View>
+        );
+      case "TestsAndLabWorks":
+        return (
+          <View sytle={styles.entryContainer}>
+            <Text style={styles.entryTitle}>
+              Test & Labwork Name: {entry.name}
+            </Text>
+            <Text>Date Occurred: {entry.dateOccurred}</Text>
+          </View>
+        );
+      default:
+        return null;
     }
+    // end of switch
   };
 
-  const renderEntry = (entry) => {
-    return (
-      <>
-        {entry.map((item, index) => (
-          <React.Fragment key={index}>
-            {item.symptomName && (
-              <>
-                <Text style={styles.sectionTitle}>Symptom</Text>
-                <View style={styles.dateContainer}>
-                  <Text>Name: {item.symptomName}</Text>
-                  <Text>Start Date: {item.symptomStartDate}</Text>
-                  <Text>End Date: {item.symptomEndDate}</Text>
-                </View>
-              </>
-            )}
+  // Method to render entry if it exists
+  //ciation for for loop idea : https://stackoverflow.com/questions/42519800/how-to-loop-and-render-elements-in-react-native , https://www.delftstack.com/howto/react/react-native-for-loop/
 
-            {item.illnessName && (
-              <>
-                <Text style={styles.sectionTitle}>Illness</Text>
-                <View style={styles.dateContainer}>
-                  <Text>Name: {item.illnessName}</Text>
-                  <Text>Start Date: {item.illnessStartDate}</Text>
-                  <Text>End Date: {item.illnessEndDate}</Text>
-                </View>
-              </>
-            )}
-
-            {item.testName && (
-              <>
-                <Text style={styles.sectionTitle}>Test & Labwork</Text>
-                <View style={styles.dateContainer}>
-                <Text>Name: {item.testName}</Text>
-                <Text>Date Occurred: {item.testDate}</Text>
-                </View>
-              </>
-            )}
+  const renderIfExists = (data, arraytype) => {
+    // if data array is not null, iterate over with for loop and render each index value
+    if (data && data.length > 0) {
+      const renderedItems = [];
+      for (let i = 0; i < data.length; i++) {
+        renderedItems.push(
+          <React.Fragment key={i}>
+            {renderEntry(data[i], arraytype)}
           </React.Fragment>
-        ))}
-      </>
-    );
+        ); // end of push
+      }
+
+      return renderedItems;
+    }
+    //else
+    return null;
   };
 
-  const renderIfExists = (data) => {
-    if (!data || data.length === 0) {
+  //  Check if arrayOfAppointmentInfo exists
+  const checkPassedInfo = (arryOfAppointmentInfo) => {
+    if (!arryOfAppointmentInfo) {
       return <Text>No information available</Text>;
     }
-
-    const groupedData = groupDataByJID(data);
-
-    return (
-      <>
-        {Object.keys(groupedData).map((jid, index) => (
-          <React.Fragment key={index}>
-            <Text style={styles.sectionTitle}>Journal #{jid}</Text>
-            <View style={styles.innerContainer}>
-              {renderEntry(groupedData[jid])}
-            </View>
-          </React.Fragment>
-        ))}
-      </>
-    );
   };
 
-  const groupDataByJID = (data) => {
-    const groupedData = {};
-    data.forEach((entry) => {
-      const jid = entry.JID;
-      if (groupedData[jid]) {
-        groupedData[jid].push(entry);
-      } else {
-        groupedData[jid] = [entry];
-      }
-    });
-    return groupedData;
-  };
-
+  // citation https://legacy.reactjs.org/docs/fragments.html, <React.Fragment> same as <> </>
+  // https://www.knowledgehut.com/blog/web-development/understanding-react-fragments#should-i-use-react-fragments?%C2%A0
   return (
     <ScrollView>
       <View style={styles.container}>
-        <Text style={styles.mainIdContainer}>
-          Journal #{journalId}
-        </Text>
+        {/*call const checkpassedinfo to check wehther array is undefined or not. */}
+        {checkPassedInfo(arryOfAppointmentInfo)}
 
-       
+        <Text style={styles.mainIdContainer}>
+          Journal {arryOfAppointmentInfo.id.toString()}
+        </Text>
+        {/* Render Symptoms */}
+        <Text style={styles.sectionTitle}>Symptom</Text>
         <View style={styles.innerContainer}>
-          {renderIfExists(journalData)}
+          {renderIfExists(arryOfAppointmentInfo.Symptom, "Symptom")}
         </View>
 
+        {/* Render Illnesses */}
+        <Text style={styles.sectionTitle}>Illnesses</Text>
+        <View style={styles.innerContainer}>
+          {renderIfExists(arryOfAppointmentInfo.Illness, "Illness")}
+        </View>
+
+        {/* Render Tests & Labworks */}
+        <Text style={styles.sectionTitle}>Tests & Labworks</Text>
+        <View style={styles.innerContainer}>
+          {renderIfExists(
+            arryOfAppointmentInfo.TestsAndLabWorks,
+            "TestsAndLabWorks"
+          )}
+        </View>
+
+        {/* Exit Button */}
         <TouchableOpacity
           style={styles.exitButton}
           onPress={() => navigation.goBack()}
@@ -133,22 +134,26 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
   },
+
   mainIdContainer: {
+    // display Journal #number
     fontSize: 30,
     marginTop: 30,
+    alignContent: "center", // vertically
     fontWeight: "bold",
-    textAlign: "center",
+    textAlign: "center", // center horizontally
     ...Platform.select({
       ios: {
-        fontFamily: "Times New Roman",
+        fontFamily: "Times New Roman", // Set font family to Times New Roman
       },
     }),
   },
   innerContainer: {
     marginTop: 10,
     marginBottom: 10,
-    minHeight: 120,
+    minHeight: 120, // min hight
   },
+
   sectionTitle: {
     padding: 10,
     marginTop: 20,
@@ -157,7 +162,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     ...Platform.select({
       ios: {
-        fontFamily: "Times New Roman",
+        fontFamily: "Times New Roman", // Set font family to Times New Roman
       },
     }),
   },
@@ -168,16 +173,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     ...Platform.select({
       ios: {
-        fontFamily: "Times New Roman",
+        fontFamily: "Times New Roman", // Set font family to Times New Roman
       },
     }),
+    
   },
   entryTitle: {
     fontSize: 16,
     paddingTop: 10,
     ...Platform.select({
       ios: {
-        fontFamily: "Times New Roman",
+        fontFamily: "Times New Roman", // Set font family to Times New Roman
       },
     }),
   },
@@ -196,13 +202,15 @@ const styles = StyleSheet.create({
     minWidth: 60,
     zIndex: 1,
     marginBottom: 50,
+    
   },
+
   exitButtonText: {
     color: "white",
     fontSize: 16,
     ...Platform.select({
       ios: {
-        fontFamily: "Times New Roman",
+        fontFamily: "Times New Roman", // Set font family to Times New Roman
       },
     }),
   },
