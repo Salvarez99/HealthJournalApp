@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-import { fetchUserIllnessByJournalId, fetchUserSymptomByJournalId, fetchUserTestByJournalId, addJournal } from "../../LocalStorage/LocalDatabase";
+import { fetchUserIllnessByJournalId, fetchUserSymptomByJournalId, fetchUserTestByJournalId, fetchUserSymptom } from "../../LocalStorage/LocalDatabase";
 import {
   View,
   Text,
@@ -18,45 +19,60 @@ export default function JournalTitle({ route, navigation }) {
   const [testData, setTestData] = useState([]); 
   
 
+  useFocusEffect(
+    useCallback(() => {
+      fetchJournalData();
+    }, [])
+  );
+
   useEffect(() => {
-    
-    fetchJournalData();
-  }, []);
+    console.log("Symptom Data:", symptomData);
+    console.log("Illness Data:", illnessData);
+    console.log("Test Data:", testData);
+  }, [symptomData, illnessData, testData]);
 
   const fetchJournalData = async () => {
     try {
-      await setSymptomData(fetchUserSymptomByJournalId(journalId));
-      await setIllnessData(fetchUserIllnessByJournalId(journalId));
-      await setTestData(fetchUserTestByJournalId(journalId));
+      const fetchedSymptoms = await fetchUserSymptomByJournalId(1);
+      const fetchedIllnesses = await fetchUserIllnessByJournalId(1);
+      const fetchedTests = await fetchUserTestByJournalId(1);
+  
+      setSymptomData(fetchedSymptoms);
+      setIllnessData(fetchedIllnesses);
+      setTestData(fetchedTests);
+
+      console.log(symptomData);
+      console.log(illnessData);
+      console.log(testData);
     } catch (error) {
       console.error('Error fetching journal data:', error);
     }
   };
 
 
-  const renderEntry = (entry) => {
+  const renderEntry = (symptomEntry, illnessEntry, testEntry) => {
     return (
-      <View key={entry.id}>
-        {entry.symptomName && (
+      <View key={journalId}>
+        {symptomEntry.symptomName && (
           <View style={styles.entryContainer}>
-            <Text>Name: {entry.symptomName}</Text>
-            <Text>Start Date: {entry.symptomStartDate}</Text>
-            <Text>End Date: {entry.symptomEndDate}</Text>
+            <Text>Name: {symptomEntry.symptomName}</Text>
+            <Text>Start Date: {symptomEntry.symptomStartDate}</Text>
+            <Text>End Date: {symptomEntry.symptomEndDate}</Text>
           </View>
         )}
 
-        {entry.illnessName && (
+        {illnessEntry.illnessName && (
           <View style={styles.entryContainer}>
-            <Text>Name: {entry.illnessName}</Text>
-            <Text>Start Date: {entry.illnessStartDate}</Text>
-            <Text>End Date: {entry.illnessEndDate}</Text>
+            <Text>Name: {illnessEntry.illnessName}</Text>
+            <Text>Start Date: {illnessEntry.illnessStartDate}</Text>
+            <Text>End Date: {illnessEntry.illnessEndDate}</Text>
           </View>
         )}
 
-        {entry.testName && (
+        {testEntry.testName && (
           <View style={styles.entryContainer}>
-            <Text>Name: {entry.testName}</Text>
-            <Text>Date Occurred: {entry.testDate}</Text>
+            <Text>Name: {testEntry.testName}</Text>
+            <Text>Date Occurred: {testEntry.testDate}</Text>
           </View>
         )}
       </View>
@@ -107,7 +123,7 @@ export default function JournalTitle({ route, navigation }) {
 
        
         <View style={styles.innerContainer}>
-        {journalData && renderEntry(journalData)}
+        {renderEntry(symptomData, illnessData, testData)}
         {/* render if exist */}
         </View>
 
