@@ -915,6 +915,7 @@ export const clearJournal = () => {
   });
 };
 
+//Add/Insert functions for User tables
 export const addUserSymptom = (JID, symptomName, symptomStartDate, symptomEndDate) => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
@@ -972,6 +973,7 @@ export const addUserTest = (JID, testName, testDate) => {
   });
 };
 
+//Clear Functions for User tables
 export const clearUserSymptom = () => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
@@ -1056,6 +1058,7 @@ export const clearUserTest = () => {
   });
 };
 
+//Fetch by JID functions, returns array of row objects that share the given JID
 export const fetchUserSymptomByJournalId = (journalId) => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
@@ -1110,6 +1113,7 @@ export const fetchUserTestByJournalId = (journalId) => {
   });
 };
 
+//Fetch all Functions for the 3 User Tables, returns array of row objects
 export const fetchUserSymptom = () => {
   return new Promise((resolve, reject) => {
       db.transaction((tx) => {
@@ -1164,6 +1168,7 @@ export const fetchUserTest = () => {
   });
 };
 
+//Returns the latest journalEntry, might be useful for AddJournalEntryForm logic
 export const fetchLatestJournalEntry = () => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
