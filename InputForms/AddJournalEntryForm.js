@@ -36,7 +36,7 @@ import {
   addUserIllness,
   addUserTest,
   fetchLatestJournalEntry,
-  fetchLatestJournalEntryJID
+  fetchLatestJournalEntryJID,
 } from "../LocalStorage/LocalDatabase";
 
 const AddJournalEntryForm = ({ isVisible, onClose }) => {
@@ -133,27 +133,41 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
       const latest_journal_entry = fetchLatestJournalEntryJID();
       let j_id;
 
-      if(latest_journal_entry === null){
+      if (latest_journal_entry === null) {
         j_id = 1;
-      }else{
+      } else {
         j_id = latest_journal_entry;
         j_id++;
       }
 
       for (const symptom of journalEntry.symptoms) {
-        const userSymptom = await addUserSymptom(j_id,symptom.name, symptom.startDate, symptom.endDate);
+        console.log("j_id before adding to table: " + j_id);
+        const userSymptom = await addUserSymptom(
+          j_id,
+          symptom.name,
+          symptom.startDate,
+          symptom.endDate
+        );
         console.log(`Added User Symptom with ID: ${j_id}`);
-
       }
 
       // Process illnesses
       for (const illness of journalEntry.illnesses) {
-        const illnessId = await addUserIllness(j_id, illness.name, illness.startDate, illness.endDate);
+        console.log("j_id before adding to table: " + j_id);
+
+        const illnessId = await addUserIllness(
+          j_id,
+          illness.name,
+          illness.startDate,
+          illness.endDate
+        );
         console.log(`Added User Illness with ID: ${j_id}`);
       }
 
       // Process tests
       for (const test of journalEntry.testAndLabworks) {
+        console.log("j_id before adding to table: " + j_id);
+
         const testId = await addUserTest(j_id, test.name, test.dateOccured);
         console.log(`Added test with ID: ${j_id}`);
       }
