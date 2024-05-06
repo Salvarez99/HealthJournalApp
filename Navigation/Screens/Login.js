@@ -146,7 +146,7 @@ export default function Login() {
           resizeMode="cover"
           source={require("../../assets/login_page.png")}
         />
-        <Text style={styles.Title}>Health Journaling App</Text>
+        <Text style={styles.Title}>Pulse Journal</Text>
         <Text style={styles.SubText}>Account Login</Text>
         <Formik
           initialValues={{ email: "", password: "" }}

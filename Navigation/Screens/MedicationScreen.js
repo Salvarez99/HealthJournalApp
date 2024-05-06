@@ -67,13 +67,12 @@ export default function MedicationScreen({ navigation }) {
    const convertFrequencyList = (frequency) => {
     const days = ["S", "M", "T", "W", "TH", "F", "S"];
     let outputList = [];
-    console.log(frequency)
-    for(const index in frequency){
-      outputList.push(days[index]);
+    for (let i = 0; i < frequency.length; i++) {
+      if (frequency[i] !== "") {
+        outputList.push(days[frequency[i]]);
+      }
     }
-
-    console.log(outputList)
-    return outputList.join();
+    return outputList.join(" ");
   };
 
   const renderMedicationItem = ({ item }) => (
