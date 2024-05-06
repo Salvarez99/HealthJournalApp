@@ -12,8 +12,8 @@ import {
 
 export default function JournalTitle({ route, navigation }) {
   const { journalId } = route.params;
-  const [journalData, setJournalData] = useState([]);
-  console.log(journalData);
+  const [journalData, setJournalData] = useState([]); //empty list 
+  console.log('Journal data:' + journalData);
   useEffect(() => {
     
     fetchJournalData();
