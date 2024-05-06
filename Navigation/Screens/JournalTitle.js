@@ -62,8 +62,10 @@ export default function JournalTitle({ route, navigation }) {
           {symptomEntries.map((symptomEntry) => (
             <View style={styles.entryContainer} key={symptomEntry.id}>
               <Text>{symptomEntry.symptomName}</Text>
-              <Text>Start Date: {symptomEntry.symptomStartDate}</Text>
-              <Text>End Date: {symptomEntry.symptomEndDate}</Text>
+              <View style={styles.dateContainer}>
+                <Text>Start Date: {symptomEntry.symptomStartDate}</Text>
+                <Text>End Date: {symptomEntry.symptomEndDate}</Text>
+              </View>
             </View>
           ))}
         </View>
@@ -160,7 +162,7 @@ const styles = StyleSheet.create({
     }),
   },
   innerContainer: {
-    minHeight : 80
+    minHeight: 80,
   },
   sectionTitle: {
     padding: 10,
@@ -175,7 +177,7 @@ const styles = StyleSheet.create({
     }),
   },
   entryContainer: {
-    padding : 5,
+    padding: 5,
     justifyContent: "center",
     ...Platform.select({
       ios: {
