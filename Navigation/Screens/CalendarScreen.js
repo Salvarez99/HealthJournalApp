@@ -1,10 +1,10 @@
 // CalendarScreen.js
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { View, Text, ScrollView, Platform, StyleSheet } from "react-native";
 import { Calendar } from "react-native-calendars";
 import QuickAddButton from "../../Components/QuickAddButton";
 import { fetchAppointments } from "../../LocalStorage/LocalDatabase"; // Update path accordingly
-
+import { useFocusEffect } from "@react-navigation/native";
 // dummy data to test
 
 // citation for calendar ondaypress : https://community.draftbit.com/c/code-snippets/low-code-calendar-component
@@ -50,6 +50,11 @@ export default function CalendarScreen() {
     fetchAppointmentInfo();
   }, []);
 
+  useFocusEffect(
+    useCallback(() => {
+      fetchAppointmentInfo();
+    }, [])
+  );
   
   // create render function to display events informaton.
   const renderEvents = () => {
