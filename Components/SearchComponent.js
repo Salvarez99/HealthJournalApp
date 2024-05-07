@@ -29,10 +29,9 @@ import DatePicker from "./DatePicker";
 
 /**
  * 
- * @param {List} param0 list of strings that are to be displayed when user searches for an item
- * @param {String} param1 string that indicates the type of data that is being inputted and should be passed back to parent component
- * @param {List} param2 passthrough function from parent component that updates the parent's list
- * @returns 
+ * @param {List[String]} searchData list of strings that are to be displayed when user searches for an item
+ * @param {String} typeDataInputted indicates the type of data that is being inputted and should be passed back to parent component
+ * @param {function} updateList passthrough function from parent component that updates the parent's list
  */
 const SearchComponent = ({ searchData, typeDataInputted, updateList }) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -56,7 +55,8 @@ const SearchComponent = ({ searchData, typeDataInputted, updateList }) => {
    * @param {String} name 
    * @param {Date} startDate 
    * @param {Date} endDate 
-   * @returns 
+   * Creates an instances of either Symptom, Illness or TestAndLabwork then
+   * stores the item into {items}
    */
   const addItem = (name, startDate, endDate) => {
     let item;
@@ -108,10 +108,15 @@ const SearchComponent = ({ searchData, typeDataInputted, updateList }) => {
 
   //Filter the list based on current searchQuery
   const filteredList = searchQuery
-    ? searchData.filter((item) =>
-        item.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : [];
+  ? searchData.filter((item) => {
+      if (typeof item !== 'string') {
+        console.error('Error in filteredList, Invalid item type:', item);
+        console.log('Expects item type of {list[String]}')
+        return false;
+      }
+      return item.toLowerCase().includes(searchQuery.toLowerCase());
+    })
+  : [];
 
   const onChange = () => {
     //Checks if searchQuery is not just whitespace

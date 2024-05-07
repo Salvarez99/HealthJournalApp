@@ -1,6 +1,12 @@
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-
+import {
+  fetchUserIllnessByJournalId,
+  fetchUserSymptomByJournalId,
+  fetchUserTestByJournalId,
+  fetchUserSymptom,
+} from "../../LocalStorage/LocalDatabase";
 import {
   View,
   Text,
@@ -14,67 +20,87 @@ import {
 // display details + exit button ( go back to journalscreen.js )
 
 export default function JournalTitle({ route, navigation }) {
-  const { arryOfAppointmentInfo } = route.params; // used navigation parameter to get data from journalscreen.js // citation needed
-  // citation for route.params : https://reactnavigation.org/docs/params/
+  const { journalId } = route.params;
+  const [journalData, setJournalData] = useState([]); //empty list
+  const [symptomData, setSymptomData] = useState([]);
+  const [illnessData, setIllnessData] = useState([]);
+  const [testData, setTestData] = useState([]);
+ // call fecthJournalData() to start fetching
+  useFocusEffect(
+    useCallback(() => {
+      fetchJournalData();
+    }, [])
+  );
+  // fetch list of symptm data, illness data, test data and print in consol
+  useEffect(() => {
+    console.log("Symptom Data:", symptomData);
+    console.log("Illness Data:", illnessData);
+    console.log("Test Data:", testData);
+  }, [symptomData, illnessData, testData]);
 
-  // used switch statement to display symtop, illness and test and labwork.
-  // citation for switch statement : https://simplefrontend.com/switch-statement-in-react/
-  const renderEntry = (entry, arraytype) => {
-    switch (arraytype) {
-      case "Symptom":
-        return (
-          <View sytle={styles.entryContainer}>
-            <Text style={styles.entryTitle}>Symptom Name: {entry.name}</Text>
-            <View style={styles.dateContainer}>
-              <Text>Start Date: {entry.startDate}</Text>
-              <Text>End Date: {entry.endDate}</Text>
-            </View>
-          </View>
-        );
-      case "Illness":
-        return (
-          <View sytle={styles.entryContainer}>
-            <Text style={styles.entryTitle}>Illness Name: {entry.name} </Text>
-            <View style={styles.dateContainer}>
-              <Text>Start Date: {entry.startDate}</Text>
-              <Text>End Date: {entry.endDate}</Text>
-            </View>
-          </View>
-        );
-      case "TestsAndLabWorks":
-        return (
-          <View sytle={styles.entryContainer}>
-            <Text style={styles.entryTitle}>
-              Test & Labwork Name: {entry.name}
-            </Text>
-            <Text>Date Occurred: {entry.dateOccurred}</Text>
-          </View>
-        );
-      default:
-        return null;
+  const fetchJournalData = async () => {
+    try {
+      const fetchedSymptoms = await fetchUserSymptomByJournalId(journalId);  // call defined fetching function
+      const fetchedIllnesses = await fetchUserIllnessByJournalId(journalId);
+      const fetchedTests = await fetchUserTestByJournalId(journalId);
+
+      setSymptomData(fetchedSymptoms);
+      setIllnessData(fetchedIllnesses);
+      setTestData(fetchedTests);
+
+      console.log(symptomData);
+      console.log(illnessData);
+      console.log(testData);
+    } catch (error) {
+      console.error("Error fetching journal data:", error);
     }
-    // end of switch
   };
+// use each of entries from list of symtomp, illness, test and use map to display each entry.
+  const renderEntry = (symptomEntries, illnessEntries, testEntries) => {
+    return (
+      <View key={journalId}>
+        {/* Symptom Section */}
+        <Text style={styles.sectionTitle}>Symptoms</Text>
+        <View style={styles.innerContainer}>
+          {symptomEntries.map((symptomEntry) => (
+            <View style={styles.entryContainer} key={symptomEntry.id}>
+              <Text>{symptomEntry.symptomName}</Text>
+              <View style={styles.dateContainer}>
+                <Text>Start Date: {symptomEntry.symptomStartDate}</Text>
+                <Text>End Date: {symptomEntry.symptomEndDate}</Text>
+              </View>
+            </View>
+          ))}
+        </View>
+        <View style={{ height: 1, backgroundColor: 'black', width: '100%' }}></View> 
 
-  // Method to render entry if it exists
-  //ciation for for loop idea : https://stackoverflow.com/questions/42519800/how-to-loop-and-render-elements-in-react-native , https://www.delftstack.com/howto/react/react-native-for-loop/
+        {/* Illness Section */}
+        <Text style={styles.sectionTitle}>Illnesses</Text>
+        <View style={styles.innerContainer}>
+          {illnessEntries.map((illnessEntry) => (
+            <View style={styles.entryContainer} key={illnessEntry.id}>
+              <Text>{illnessEntry.illnessName}</Text>
+              <View style={styles.dateContainer}>
+                <Text>Start Date: {illnessEntry.illnessStartDate}</Text>
+                <Text>End Date: {illnessEntry.illnessEndDate}</Text>
+              </View>
+            </View>
+          ))}
+        </View>
+        <View style={{ height: 1, backgroundColor: 'black', width: '100%' }}></View> 
 
-  const renderIfExists = (data, arraytype) => {
-    // if data array is not null, iterate over with for loop and render each index value
-    if (data && data.length > 0) {
-      const renderedItems = [];
-      for (let i = 0; i < data.length; i++) {
-        renderedItems.push(
-          <React.Fragment key={i}>
-            {renderEntry(data[i], arraytype)}
-          </React.Fragment>
-        ); // end of push
-      }
-
-      return renderedItems;
-    }
-    //else
-    return null;
+        {/* Test Section */}
+        <Text style={styles.sectionTitle}>Tests</Text>
+        <View style={styles.innerContainer}>
+          {testEntries.map((testEntry) => (
+            <View style={styles.entryContainer} key={testEntry.id}>
+              <Text>{testEntry.testName}</Text>
+              <Text>Date Occurred: {testEntry.testDate}</Text>
+            </View>
+          ))}
+        </View>
+      </View>
+    );
   };
 
   //  Check if arrayOfAppointmentInfo exists
@@ -89,41 +115,12 @@ export default function JournalTitle({ route, navigation }) {
   return (
     <ScrollView>
       <View style={styles.container}>
-        {/*call const checkpassedinfo to check wehther array is undefined or not. */}
-        {checkPassedInfo(arryOfAppointmentInfo)}
+        {/* <Text style={styles.mainIdContainer}>Journal #{journalId}</Text> */}
 
-        <Text style={styles.mainIdContainer}>
-          Journal {arryOfAppointmentInfo.id.toString()}
-        </Text>
-        {/* Render Symptoms */}
-        <Text style={styles.sectionTitle}>Symptom</Text>
         <View style={styles.innerContainer}>
-          {renderIfExists(arryOfAppointmentInfo.Symptom, "Symptom")}
+          {renderEntry(symptomData, illnessData, testData)}
+          {/* render if exist */}
         </View>
-
-        {/* Render Illnesses */}
-        <Text style={styles.sectionTitle}>Illnesses</Text>
-        <View style={styles.innerContainer}>
-          {renderIfExists(arryOfAppointmentInfo.Illness, "Illness")}
-        </View>
-
-        {/* Render Tests & Labworks */}
-        <Text style={styles.sectionTitle}>Tests & Labworks</Text>
-        <View style={styles.innerContainer}>
-          {renderIfExists(
-            arryOfAppointmentInfo.TestsAndLabWorks,
-            "TestsAndLabWorks"
-          )}
-        </View>
-
-        {/* Exit Button */}
-        <TouchableOpacity
-          style={styles.exitButton}
-          onPress={() => navigation.goBack()}
-        >
-          <Ionicons name="exit-outline" size={24} color="lightblue" />
-          <Text style={styles.exitButtonText}>Exit</Text>
-        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -138,8 +135,6 @@ const styles = StyleSheet.create({
   mainIdContainer: {
     // display Journal #number
     fontSize: 30,
-    marginTop: 30,
-    alignContent: "center", // vertically
     fontWeight: "bold",
     textAlign: "center", // center horizontally
     ...Platform.select({
@@ -149,9 +144,7 @@ const styles = StyleSheet.create({
     }),
   },
   innerContainer: {
-    marginTop: 10,
-    marginBottom: 10,
-    minHeight: 120, // min hight
+    minHeight: 80,
   },
 
   sectionTitle: {
@@ -167,9 +160,7 @@ const styles = StyleSheet.create({
     }),
   },
   entryContainer: {
-    marginTop: 10,
-    padding: 20,
-    marginBottom: 40,
+    padding: 5,
     justifyContent: "center",
     ...Platform.select({
       ios: {

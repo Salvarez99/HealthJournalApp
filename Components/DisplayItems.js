@@ -14,7 +14,7 @@ import { View, FlatList, Text } from "react-native";
 
 /**
  * 
- * @param {List} data list being displayed in flatlist
+ * @param {List} data list being displayed in flatlist, can be any list of data as long as it has a toString()
  * @returns renders flatlist with items in data list
  */
 const DisplayItems = ({ data }) => {

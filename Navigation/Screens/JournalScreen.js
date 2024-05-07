@@ -7,166 +7,26 @@ import {
   FlatList,
   Platform,
 } from "react-native";
+
 import QuickAddButton from "../../Components/QuickAddButton";
 import AddJournalEntryForm from "../../InputForms/AddJournalEntryForm";
 import AddAppointmentForm from "../../InputForms/AddAppointmentForm";
 import AddMedicationForm from "../../InputForms/AddMedicationForm";
-import JournalTitle from "./JournalTitle";
-
-// for testing
-import PlaceholderForm from "../../InputForms/PlaceholderForm";
-import Symptom from "../../Classes/Symptom";
+import {fetchJournalEntries} from "../../LocalStorage/LocalDatabase";
 
 export default function JournalScreen({ navigation }) {
   const [isModalVisible, setIsModalVisible] = React.useState(false); // vsible or not
   const [selectedModal, setSelectedModal] = React.useState(null); // track which model should displayed.
-
-  //const [appointmentData, setAppointmentData] = React.useState(null); // for data fetched from backend url take input from addappointmentFrom.js
-  const [appointments, setAppointments] = useState([]); // hook. for dummy datas
-
-  // create useEffect() and use dummy data for now
-  useEffect(() => {
-    // think of fetching appointments variable from the backend side
-
-    const dummyAppointments = [
-      //dummy data 1
-      {
-        id: 1,
-        Symptom: [
-          { name: "Fever", startDate: "04-01-2024", endDate: "04-09-2024" },
-          { name: "Headache", startDate: "04-03-2024", endDate: "04-19-2024" },
-          { name: "Tired", startDate: "04-15-2024", endDate: "04-29-2024" },
-        ],
-        Illness: [
-          { name: "Cold", startDate: "04-05-2024", endDate: "04-09-2024" },
-          { name: "Dizziness", startDate: "04-01-2024", endDate: "04-09-2024" },
-          { name: "Fever", startDate: "04-03-2024", endDate: "04-09-2024" },
-          { name: "Fever", startDate: "04-12-2024", endDate: "04-09-2024" },
-         
-        ],
-        TestsAndLabWorks: [
-          { name: "Blood Test", dateOccurred: "04-10-2024" },
-          { name: "X-Ray", dateOccurred: "04-17-2024" },
-        ],
-      },
-
-      {
-        id: 2,
-        Symptom: [
-          
-        ],
-        Illness: [
-          {
-            name: "Common Cold",
-            startDate: "03-01-2024",
-            endDate: "04-09-2024",
-          },
-        ],
-        TestsAndLabWorks: [
-          { name: "Blood Test", dateOccurred: "04-10-2024" },
-          { name: "X-Ray", dateOccurred: "04-10-2024" },
-        ],
-      },
-
-      {
-        id: 3,
-        Symptom: [],
-        Illness: [],
-        TestsAndLabWorks: [
-          { name: "Blood Test", dateOccurred: "04-23-2024" },
-          { name: "X-Ray", dateOccurred: "04-24-2024" },
-        ],
-      },
-
-      {
-        id: 4,
-        Symptom: [],
-        Illness: [
-          {
-            name: "Common Cold",
-            startDate: "04-11-2024",
-            endDate: "04-17-2024",
-          },
-        ],
-        TestsAndLabWorks: [],
-      },
-      {
-        id: 5,
-        Symptom: [],
-        Illness: [
-          {
-            name: "Common Cold",
-            startDate: "04-26-2024",
-            endDate: "04-17-2024",
-          },
-        ],
-        TestsAndLabWorks: [],
-      },
-      {
-        id: 6,
-        Symptom: [
-          { name: "Fever", startDate: "04-30-2024", endDate: "04-09-2024" },
-          { name: "Headache", startDate: "04-03-2024", endDate: "04-19-2024" },
-          { name: "Tired", startDate: "04-02-2024", endDate: "04-29-2024" },
-        ],
-        Illness: [
-          { name: "Cold", startDate: "04-05-2024", endDate: "04-09-2024" },
-          { name: "Dizziness", startDate: "04-01-2024", endDate: "04-09-2024" },
-          { name: "Fever", startDate: "04-03-2024", endDate: "04-09-2024" },
-          { name: "Fever", startDate: "04-12-2024", endDate: "04-09-2024" },
-         
-        ],
-        TestsAndLabWorks: [
-          { name: "Blood Test", dateOccurred: "04-10-2024" },
-          { name: "X-Ray", dateOccurred: "04-17-2024" },
-        ],
-      },
-
-      {
-        id: 7,
-        Symptom: [
-          { name: "Fever", startDate: "01-01-2024", endDate: "04-09-2024" },
-          { name: "Headache", startDate: "03-03-2024", endDate: "04-19-2024" },
-          { name: "Tired", startDate: "03-15-2024", endDate: "04-29-2024" },
-        ],
-        Illness: [
-          { name: "Cold", startDate: "04-05-2024", endDate: "04-09-2024" },
-          { name: "Dizziness", startDate: "04-01-2024", endDate: "04-09-2024" },
-          { name: "Fever", startDate: "04-03-2024", endDate: "04-09-2024" },
-          { name: "Fever", startDate: "04-12-2024", endDate: "04-09-2024" },
-         
-        ],
-        TestsAndLabWorks: [
-          { name: "Blood Test", dateOccurred: "04-10-2024" },
-          { name: "X-Ray", dateOccurred: "04-17-2024" },
-        ],
-      },
-
-      
-
-     
+  const [journalEntries, setJournalEntries] = useState([]); //empty list
 
 
-
-  
-
-      // add more data as needed list of string symptom, illness , test and labworks.
-    ];
-
-    // set appointments state
-    setAppointments(dummyAppointments);
-  }, []);
-
-  // define fetchAppointmetnData() function with async
-  const fetchAppointmentData = async () => {
+  const fetchJournalData = async () => {
     try {
-      // change url with actrual backend API url.
-      //citation :https://dmitripavlutin.com/javascript-fetch-async-await/
-      const response = await fetch("backend-api-url-placeholder");
-      const data = await response.json(); // store response in data
-      setAppointments(data); // pass retrived data
+      const entries = await fetchJournalEntries(); // Fetch journal entries with id and date
+      setJournalEntries(entries);
+      // console.log('Fetched journal entries:', entries); 
     } catch (error) {
-      console.log("fail to fetch data from appointment database : ", error);
+      console.error('Failed to fetch journal entries:', error);
     }
   };
 
@@ -193,18 +53,15 @@ export default function JournalScreen({ navigation }) {
   };
 
   const closeModal = () => {
+    //refreshes the page to update when a new jounral is added
+    fetchJournalData();
     setIsModalVisible(false);
+    fetchJournalData();
   };
 
-  // handle input data parameter from AddJournalEntryForm.js
-  const saveAppointmentData = (data) => {
-    setAppointments(data); // setAppointmentData(data)
-    setIsModalVisible(false);
-  };
-
-  // handel when user click journal screen entry >> display JournalTitle.js page
-  const handleAppointmentPress = (arryOfAppointmentInfo) => {
-    navigation.navigate("JournalTitle", { arryOfAppointmentInfo }); //https://youtu.be/oBAOr1OswkQ?si=NQ_XdTnzKk3t8xGd
+  // handle when user click journal screen entry >> display JournalTitle.js page
+  const handleJournalEntryPress = (journalID) => {
+    navigation.navigate("JournalTitle", { journalId: journalID }); //https://youtu.be/oBAOr1OswkQ?si=NQ_XdTnzKk3t8xGd
   };
 
   // render journal date on journal screen.
@@ -264,34 +121,20 @@ export default function JournalScreen({ navigation }) {
 };
 
   // render appointment item (prepare for displaying)
-const renderJournalItem = ({ item }) => {
- 
-  // Determine the source of data (dummy or fetched appointments)
-  const sourceAppointments = appointments.length > 0 ? appointments : dummyAppointments;
-
-  // Sort the appointments based on date difference
-  // citation : https://stackoverflow.com/questions/47071623/sort-by-closest-date-to-dates-which-have-occured-and-will-occur
-  sourceAppointments.sort((a, b) => {
-   
-    // Calculate date difference for both items
-    const differenceA = calculateDateDifference(displayStartDate(a));
-    const differenceB = calculateDateDifference(displayStartDate(b));
-    return differenceA - differenceB; // sort by ascending order , nearest item fist comes.
-  });
-
-  // render return with touchable opacity >> linked to journaltitle.js 
-  return (
-    <TouchableOpacity
-      style={styles.journalButtonStyle}
-      onPress={() => handleAppointmentPress(item)}
-    >
-      <Text style={styles.JournalTitle}>{`Journal ${item.id}`}</Text>
-      <Text style={styles.JournalDate}>{displayStartDate(item)}</Text>
-      <View style={styles.horizontalLine}></View>
-    </TouchableOpacity>
-  );
-};
-
+  const renderJournalItem = ({ item }) => {
+  
+    // render return with touchable opacity >> linked to journaltitle.js
+    return (
+      <TouchableOpacity
+        style={styles.journalButtonStyle}
+        onPress={() => handleJournalEntryPress(item.id)}
+      >
+        <Text style={styles.JournalTitle}>{`Journal ${item.id}`}</Text>
+        <Text style={styles.JournalDate}>{item.primaryDate}</Text>
+        <View style={styles.horizontalLine}></View>
+      </TouchableOpacity>
+    );
+  };
 
   // Defined modal components with their names
   const modalComponents = [
@@ -322,10 +165,11 @@ const renderJournalItem = ({ item }) => {
     }
   };
 
+
+
   return (
     <View style={styles.container}>
       <View style={styles.mainContent}>
-        {/* Put your content in this view */}
 
         {/** show list of saved appointment records */}
         <FlatList

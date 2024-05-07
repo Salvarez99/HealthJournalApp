@@ -38,7 +38,7 @@ export default function App() {
         <Stack.Screen
           name="JournalTitle"
           component={JournalTitle}
-          options={{ headerShown: false }}
+          options={{ headerShown: true, headerTitle : 'Journal' }}
         />
 
         <Stack.Screen

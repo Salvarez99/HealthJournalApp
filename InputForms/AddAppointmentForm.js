@@ -4,8 +4,9 @@
  * Code Version: 1.0
  * 
  * Description:
- *  Renders a form that takes user input to fill out fields required for appointments
- * 
+ *  Renders a form that takes user input to fill out fields required for appointments.
+ * Adds gathered data to local appointment table when onSave() is triggered or clears data when form  
+ * is closed without changing tables.
  * 
  * 
  ***************************************************************************************/
@@ -25,14 +26,27 @@ import {
 import Appointment from "../Classes/Appointment";
 import DatePicker from "../Components/DatePicker";
 import TimePicker from "../Components/TimePicker";
+import {
+  addAppointment, //Add appointment to appointment table
+  clearAppointments, //Clear the apppointment table
+  } from "../LocalStorage/LocalDatabase"; 
 
 const AddAppointmentForm = ({ isVisible, onClose }) => {
   const [eventName, setEventName] = new useState("");
   const [eventDate, setEventDate] = new useState(new Date());
   const [eventStartTime, setEventStartTime] = new useState('');
   const [eventEndTime, setEventEndTime] = new useState('');
-  let appointment = null;
+  let appointment = null; //To be used to store data into an {Appointment} instance
 
+  const convertDateFormat = (dateString) => {
+    const parts = dateString.split('-');
+    const year = parts[0];
+    const month = parts[1];
+    const day = parts[2];
+    return `${month}-${day}-${year}`;
+  };
+
+  //When the date is changed store and format the selected date
   const handleDateChange = (selectedDate) => {
     setEventDate(selectedDate);
     // console.log(selectedDate);
@@ -60,11 +74,8 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
     onClose();
   };
 
-  //TODO: Implement save functionality
   /**
-   * Takes collected user data and pushes the data either to local or cloud
-   * storage, depends if user has cloud storage active
-   * 
+   * Takes collected user data and pushes the data either to local storage
    */
   const onSave = () => {
     const eName = eventName;
@@ -82,7 +93,27 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
     }else{
       alert('Required fields missing.\nRequired fields contains \'*\'.')
     }
+
+    try {
+      // call localDatabase's addappointment function to store entered data into local database. 
+      const data = await addAppointment(eventName, eventDate, eventStartTime, eventEndTime);
+
+      console.log(`{adding Page} Appointment added with ID: ${data}`);
+
+      //reset the entering field. after saving into local database table. 
+      setEventName("");
+      setEventDate(new Date());
+      setEventStartTime('');
+      setEventEndTime('');
+
+      onClose(); // Close the modal
+    } catch (error) {
+      //If an error is encountered when saving, alert the user that saving has failed
+      console.error("Error adding appointment:", error);
+      alert('Failed to add appointment. Please try again.');
+    }
   };
+
 
   return (
     <Modal

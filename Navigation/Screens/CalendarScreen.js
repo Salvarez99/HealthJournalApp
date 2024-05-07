@@ -1,9 +1,10 @@
 // CalendarScreen.js
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { View, Text, ScrollView, Platform, StyleSheet } from "react-native";
 import { Calendar } from "react-native-calendars";
 import QuickAddButton from "../../Components/QuickAddButton";
-
+import { fetchAppointments } from "../../LocalStorage/LocalDatabase"; // Update path accordingly
+import { useFocusEffect } from "@react-navigation/native";
 // dummy data to test
 const dummyData = {
   "2024-04-20": {
@@ -104,9 +105,28 @@ export default function CalendarScreen() {
   // same fetech function : fetch from backend API, store in data, else return error
   const fetchAppointmentInfo = async () => {
     try {
-      const response = await fetch("take-backend-api-url"); // Update this with your actual backend API endpoint
-      const data = await response.json();
-      setAppointmentInfo(data);
+      const appointments = await fetchAppointments();  // call localdata fetch function and store data into appointments
+      const formattedAppointments = {};
+  
+  // citation for for loop and pushing : https://sliceofdev.com/posts/promises-with-loops-and-array-methods-in-javascript
+      for (const ap of appointments) {
+        const { eventDate, eventName, eventStartTime, eventEndTime } = ap;
+       
+        // if formattedAppointments[] doesn't exist then create empty array. 
+        if (formattedAppointments[eventDate] === undefined || formattedAppointments[eventDate] === null) {
+          formattedAppointments[eventDate] = []; 
+        }
+        // Push a promise into the array while following format. 
+          formattedAppointments[eventDate].push({
+            name: eventName,
+            date: eventDate,
+            start: eventStartTime,
+            end: eventEndTime,
+          });
+        }
+  
+      setAppointmentInfo(formattedAppointments); // update appointment info
+      onclose()
     } catch (error) {
       console.log("Failed to fetch appointment data: ", error);
     }
@@ -116,16 +136,12 @@ export default function CalendarScreen() {
     fetchAppointmentInfo();
   }, []);
 
-  // check whether clicked date has data - check with actual data from backend
-  // citation: use useEffect() with if else : https://forum.freecodecamp.org/t/react-useeffect-cleanup-function-within-if-statement/556965
-  useEffect(() => {
-    if (pickedDate && appointmentInfo[pickedDate]) {
-      setHasDataInPickedDate(true);
-    } else {
-      setHasDataInPickedDate(false);
-    }
-  }, [pickedDate, appointmentInfo]);
-
+  useFocusEffect(
+    useCallback(() => {
+      fetchAppointmentInfo();
+    }, [])
+  );
+  
   // create render function to display events informaton.
   const renderEvents = () => {
    

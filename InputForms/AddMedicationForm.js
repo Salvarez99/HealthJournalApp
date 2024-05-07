@@ -4,8 +4,9 @@
  * Code Version: 1.0
  * 
  * Description:
- *  Renders a form that takes user input to fill out fields required for Medications
- * 
+ *  Renders a form that takes user input to fill out fields required for Medications.
+ * Adds gathered data to local DB table when onSave() is triggered or clears data when form  
+ * is closed without changing tables.
  * 
  * 
  ***************************************************************************************/
@@ -23,6 +24,10 @@ import {
 import Medication from "../Classes/Medication";
 import DropDownList from "../Components/DosageSchedDropDown";
 import WeekDaysButtons from "../Components/WeekdayButtons";
+import {
+  addMedicineEntry
+} from "../LocalStorage/LocalDatabase";
+
 
 const AddMedicationForm = ({ isVisible, onClose }) => {
   const [medicationName, setMedicationName] = new useState("");
@@ -37,8 +42,7 @@ const AddMedicationForm = ({ isVisible, onClose }) => {
    * 6 = Saturday
    */
   const [frequency, setFrequency] = useState([]); 
-  let medication = null;
-
+  let medication = null;  //To be used to store data into an {JournalEntry} instance
   
   /**
    * Resets form's fields to default values then closes form
@@ -51,37 +55,38 @@ const AddMedicationForm = ({ isVisible, onClose }) => {
     onClose();
   };
 
-  //TODO: Implement save functionality
-    /**
-   * Takes collected user data and pushes the data either to local or cloud
-   * storage, depends if user has cloud storage active
-   * 
+  /**
+   * Takes collected user data and pushes the data either to local or storage
    */
-  const onSave = () => {
-    medication = new Medication(
-      medicationName,
-      dosage,
-      dosageSchedule,
-      frequency
-    );
-
+    const onSave = async () => {
+      // Create a new Medication object
+      const medication = new Medication(
+        medicationName,
+        dosage,
+        dosageSchedule,
+        frequency
+      );
     
-    //Checks if required fields are inputted in the correct format
-    //medication name is not just whitespace
-    //medication dosage is not empty string
-    //frequency list is not empty
-    if (!/^\s*$/.test(medication.name) && medication.dosage != "" && medication.frequency.length != 0) {
-      console.log(medication.toString());
-      clearFields();
-      onClose();
-    } else {
-      alert('Required fields missing.\nRequired fields contains \'*\'.')
-    }
-    // console.log("Medication: " + medicationName);
-    // console.log("Dosage: " + dosage);
-    // console.log('Dosage Schedule: ' + dosageSchedule);
-    // console.log('Frequency: ' + frequency);
-  };
+      // Check if required fields are filled out
+      if (!/^\s*$/.test(medication.name) && medication.dosage !== "" && medication.frequency.length !== 0) {
+        try {
+          // Add the medication entry to the database
+          const insertId = await addMedicineEntry(medication.name, medication.dosage, medication.dosageSchedule, JSON.stringify(medication.frequency));
+    
+          // Log success message
+          console.log("Medicine entry added successfully with ID:", insertId);
+          clearFields();
+          onClose();
+        } catch (error) {
+          // Log and handle any errors
+          console.error("Error adding medicine entry:", error);
+          // Optionally, you could show an alert or error message to the user
+        }
+      } else {
+        alert('Required fields missing.\nRequired fields contains \'*\'.')
+      }
+    };
+    
 
   return (
     <Modal
