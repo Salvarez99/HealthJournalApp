@@ -1,36 +1,13 @@
 import * as SQLite from 'expo-sqlite';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Sharing from 'expo-sharing';
-import * as FileSystem from 'expo-file-system';
-import * as DocumentPicker from 'expo-document-picker';
 
 const db = SQLite.openDatabase('journal.db');
-/*
-const medicineList = ["Motrin", "Ibuprofen",  "Benadryl", "Albuterol", "Motrin", "Epinephrine"];
-const illnessList = ["Cold", "Flu", "Pneumonia", "Cancer", "Allergies", "Pink Eye"];
-const symptomList = ["Cough", "Headache", "Sore Throat", "Back Pain", "Congestion", "Light Headedness"];
-const testList = ["Bloodwork", "X-Ray", "Physical Exam", "Biopsy", "Blood Pressure", "Cholesterol"];
-*/
+
 export const initializeDatabase = () => {
     return new Promise((resolve, reject) => {
       
-      //
-      //const checkAndPreloadData = async () => {
       db.transaction((tx) => {
-        // Create the appointments table
-        /*
-        tx.executeSql(
-          `DROP TABLE IF EXISTS journal;`,
-          [],
-          (_, result) => {
-              console.log("Journal table deleted successfully");
-              resolve();
-          },
-          (_, error) => {
-              reject(error);
-          }
-      );
-*/
+        
+        // Create the appointments table used for calendar
         tx.executeSql(
           `CREATE TABLE IF NOT EXISTS appointments (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -49,6 +26,7 @@ export const initializeDatabase = () => {
           }
         );
         
+        //Create illness table
         tx.executeSql(
           `CREATE TABLE IF NOT EXISTS illness (
               id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -64,6 +42,7 @@ export const initializeDatabase = () => {
           }
       );
       
+      //Checks to see if table is already pre-populated with the illness data and if not calls populateIllnessTable
         tx.executeSql(
           `SELECT name FROM sqlite_master WHERE type='table' AND name='illness';`,
           [],
@@ -123,7 +102,7 @@ tx.executeSql(
       reject(error);
   }
 );
-
+//Checks to see if table is already pre-populated with the symptom data and if not calls populateSymptomTable
 tx.executeSql(
   `SELECT name FROM sqlite_master WHERE type='table' AND name='symptom';`,
   [],
@@ -142,8 +121,7 @@ tx.executeSql(
               reject(error);
           }
       );
-          // symptom table does not exist, create table and populate it
-          // symptom table exists, check if it's empty
+          
           
       }
       else {
@@ -185,7 +163,7 @@ console.log("Error prepopulating symptom table:", error);
               reject(error);
           }
       );
-      
+      //Checks to see if table is already pre-populated with the test data and if not calls populateTestTable
         tx.executeSql(
           `SELECT name FROM sqlite_master WHERE type='table' AND name='test';`,
           [],
@@ -249,6 +227,7 @@ tx.executeSql(
           }
       );
       
+      //Checks to see if table is already pre-populated with the medicine data and if not calls populateMedicineTable
         tx.executeSql(
           `SELECT name FROM sqlite_master WHERE type='table' AND name='medicine';`,
           [],
@@ -280,20 +259,20 @@ tx.executeSql(
           }
       );
 
-const populateMedicineTable = (tx) => {
-tx.executeSql(
-  `INSERT INTO medicine (name) VALUES (?), (?), (?), (?), (?), (?);`,
-  ["Motrin", "Ibuprofen",  "Benadryl", "Albuterol", "Motrin", "Epinephrine"],
-  (_, result) => {
-      console.log("Medicine prepopulated successfully");
-  },
-  (_, error) => {
-      console.log("Error prepopulating medicine table:", error);
-  }
-);
-};
-        // Create the medicineEntry table with foreign key reference to medicine
+    const populateMedicineTable = (tx) => {
+      tx.executeSql(
+        `INSERT INTO medicine (name) VALUES (?), (?), (?), (?), (?), (?);`,
+        ["Motrin", "Ibuprofen",  "Benadryl", "Albuterol", "Motrin", "Epinephrine"],
+        (_, result) => {
+            console.log("Medicine prepopulated successfully");
+        },
+        (_, error) => {
+            console.log("Error prepopulating medicine table:", error);
+        }
+      );
+    };
         
+        // Create the medicineEntry table with foreign key reference to medicine
         tx.executeSql(
           `CREATE TABLE IF NOT EXISTS medicineEntry (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -313,6 +292,7 @@ tx.executeSql(
           }
         );
 
+        //Create Journal Entry table to keep track of 
         tx.executeSql(
           `CREATE TABLE IF NOT EXISTS journalEntry (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -327,6 +307,8 @@ tx.executeSql(
           }
         );
 
+        //Create userSymptom table to keep track of user entered journal data regarding symptoms
+        //These userTables are connected by a JID Foreign Key to the JournalEntry table
         tx.executeSql(
           `CREATE TABLE IF NOT EXISTS userSymptom (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -347,6 +329,8 @@ tx.executeSql(
           }
         );
 
+        //Create userIllness table to keep track of user entered journal data regarding illnesses
+        //These userTables are connected by a JID Foreign Key to the JournalEntry table
         tx.executeSql(
           `CREATE TABLE IF NOT EXISTS userIllness (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -367,6 +351,8 @@ tx.executeSql(
           }
         );
 
+        //Create userTest table to keep track of user entered journal data regarding tests
+        //These userTables are connected by a JID Foreign Key to the JournalEntry table
         tx.executeSql(
           `CREATE TABLE IF NOT EXISTS userTest (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -436,6 +422,7 @@ export const fetchAppointments = () => {
   });
 };
 
+//Create new journalEntry, created when user presses save on the AddJournalInputForm
 export const addJournalEntry = (primaryDate) => {
   return new Promise((resolve, reject) => {
       db.transaction((tx) => {
@@ -454,6 +441,7 @@ export const addJournalEntry = (primaryDate) => {
   });
 };
 
+//Fetch all journal Entries
 export const fetchJournalEntries = () => {
   return new Promise((resolve, reject) => {
       db.transaction((tx) => {
@@ -464,48 +452,6 @@ export const fetchJournalEntries = () => {
                   const appointments = result.rows._array; //Id , Date 
                   console.log("Fetched journal entries:", appointments); // Log fetched appointments
                   resolve(appointments); // Resolve with the fetched appointments
-              },
-              (_, error) => {
-                console.error("Error fetching journal entries:", error); // Log fetch error
-                  reject(error); // Reject with the error if fetching fails
-              }
-          );
-      });
-  });
-};
-
-// Create a new journal entry
-// export const addJournal = (symptomName, symptomStartDate, symptomEndDate, illnessName, illnessStartDate, illnessEndDate, testName, testDate, JID) => {
-//   return new Promise((resolve, reject) => {
-//       db.transaction((tx) => {
-//           tx.executeSql(
-//               `INSERT INTO journal (symptomName, symptomStartDate, symptomEndDate, illnessName, illnessStartDate, illnessEndDate, testName, testDate, JID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);`,
-//               [symptomName, symptomStartDate, symptomEndDate, illnessName, illnessStartDate, illnessEndDate, testName, testDate, JID],
-//               (_, result) => {
-//                   console.log("Journal entry added successfully");
-//                   resolve(result.insertId); // Resolve with the ID of the newly inserted journal entry
-//               },
-//               (_, error) => {
-//                   reject(error); // Reject with the error if insertion fails
-//               }
-//           );
-//       });
-//   });
-// };
-
-
-// Fetch all journal entries
-export const fetchJournals = () => {
-  return new Promise((resolve, reject) => {
-      db.transaction((tx) => {
-          tx.executeSql(
-              `SELECT * FROM journal;`,
-              [],
-              (_, result) => {
-                  const journalEntries = result.rows._array;
-                  console.log("Fetched journal entries:", journalEntries); // Log fetched journal entries
-        
-                  resolve(journalEntries); // Resolve with the fetched journal entries
               },
               (_, error) => {
                 console.error("Error fetching journal entries:", error); // Log fetch error
@@ -554,6 +500,7 @@ export const fetchMedicineEntries = () => {
   });
 };
 
+//Used to delete all medicine entries
 export const clearMedicineEntry = () => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
@@ -735,24 +682,7 @@ export const fetchMedicines = () => {
   });
 };
 
-export const fetchJournalDataByJournalId = (journalId) => {
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        `SELECT * FROM journal WHERE JID = ?;`,
-        [journalId],
-        (_, result) => {
-          const journalData = result.rows._array;
-          resolve(journalData); // Resolve with the fetched journal data
-        },
-        (_, error) => {
-          reject(error); // Reject with the error if fetching fails
-        }
-      );
-    });
-  });
-};
-
+//Clear illness table
 export const clearIllness = () => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
@@ -781,6 +711,7 @@ export const clearIllness = () => {
   });
 };
 
+//Clear symptom table
 export const clearSymptom = () => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
@@ -809,6 +740,7 @@ export const clearSymptom = () => {
   });
 };
 
+//Clear test table
 export const clearTest = () => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
@@ -837,6 +769,7 @@ export const clearTest = () => {
   });
 };
 
+//Clear medicine table
 export const clearMedicine = () => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
@@ -865,6 +798,7 @@ export const clearMedicine = () => {
   });
 };
 
+//Clear journal entry table
 export const clearJournalEntry = () => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
@@ -875,34 +809,6 @@ export const clearJournalEntry = () => {
           // After deleting all records, reset the primary key sequence
           tx.executeSql(
             `DELETE FROM sqlite_sequence WHERE name = 'journalEntry';`,
-            [],
-            () => {
-              // Resolve with the number of rows affected (should be 0 or more)
-              resolve(result.rowsAffected);
-            },
-            (_, error) => {
-              reject(error); // Reject with the error if resetting the sequence fails
-            }
-          );
-        },
-        (_, error) => {
-          reject(error); // Reject with the error if deletion fails
-        }
-      );
-    });
-  });
-};
-
-export const clearJournal = () => {
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        `DELETE FROM journal;`,
-        [],
-        (_, result) => {
-          // After deleting all records, reset the primary key sequence
-          tx.executeSql(
-            `DELETE FROM sqlite_sequence WHERE name = 'journal';`,
             [],
             () => {
               // Resolve with the number of rows affected (should be 0 or more)
