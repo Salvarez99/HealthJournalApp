@@ -33,6 +33,9 @@ const DosageSchedDropDown = ({ setDosageSchedule }) => {
   const [value, setValue] = useState("Morning");
   const [isFocus, setIsFocus] = useState(false);
 
+  /**
+   * Triggered when value is changed, updates dosageSchedule and closes focus
+   */
   const onChangeValue = (item) => {
     setValue(item.value);
     setDosageSchedule(item.label);
