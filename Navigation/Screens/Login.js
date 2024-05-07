@@ -53,11 +53,37 @@ export default function Login() {
     } catch (error) {
       console.log(email);
       console.log(password);
-      Alert.alert("Error logging in", error.message);
+      console.log("Error logging in", error.message);
+      alert('Incorrect email or password')
     }
   };
-  
-  
+  /*
+      const handleGoogleSignIn = async() => {
+        try{
+            await GoogleSignIn.hasPlayServices();
+            const userInfo = await GoogleSignIn.signIn();
+
+            const googleCredential = auth.GoogleAuthProvider.credential(userInfo.idToken);
+            const userCredential = await signInWithCredential(auth, googleCredential);
+
+            navigation.navigate('MainContainer');
+        }
+        catch(error){
+            if(error.code === statusCodes.SIGN_IN_CANCELLED){
+                console.log("Google sign-in cancelled");
+            }
+            else if(error.code === statusCodes.IN_PROGRESS){
+                console.log("Google sign-in in progress already");
+            }
+            else if(error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE){
+                console.log("Google play services not available");
+            }
+            else{
+                console.error("Google sign-in error", error.message);
+            }
+        }
+      }
+*/
   // MyTextInput component : https://www.youtube.com/watch?v=BQ-kHwLlhrg
   const MyTextInput = ({
     label,
@@ -100,7 +126,7 @@ export default function Login() {
           resizeMode="cover"
           source={require("../../assets/login_page.png")}
         />
-        <Text style={styles.Title}>Pulse Journal</Text>
+        <Text style={styles.Title}>Health Journaling App</Text>
         <Text style={styles.SubText}>Account Login</Text>
         <Formik
           initialValues={{ email: "", password: "" }}
@@ -128,7 +154,7 @@ export default function Login() {
                 onChangeText={handleChange("password")}
                 onBlur={handleBlur("password")}
                 value={values.password}
-               
+                //keyboardType="email-address"
                 // hide password while user typing for security purpose
                 secureTextEntry={hidePassword}
                 isPassword={true}
@@ -195,27 +221,32 @@ export default function Login() {
   );
 }
 
+// export default Login;
 
 // Get the height of the status bar on the device : https://stackoverflow.com/questions/64926356/paddingtop-platform-os-android-statusbar-currentheight-0
 const StatusBarHeight = Platform.OS === "android" ? StatusBar.currentHeight : 0;
 
 // Define styled components -fixed
 const styles = StyleSheet.create({
-  LoginStyleButton: { // for login button style
+  LoginStyleButton: {
+    // for login button style
     marginTop: 10,
     padding: 15,
     backgroundColor: "#6495ED", // dark  navy
-    justifyContent: "center", 
-    alignItems: "center", 
-    borderRadius: 7, 
+    justifyContent: "center", // centered
+    alignItems: "center", // horionzontally
+    borderRadius: 7, //'7px',
+    // marginVertical: '5px',
     height: 55,
   },
-  GoogleStyleButton: { // for google login button
-    padding: 2, 
-    backgroundColor: "#6495ED", 
-    justifyContent: "center", 
-    alignItems: "center", 
-    borderRadius: 7, 
+  GoogleStyleButton: {
+    // for google login button
+    padding: 2, //'4vh',
+    backgroundColor: "#6495ED", // dark  navy
+    justifyContent: "center", // centered
+    alignItems: "center", // horionzontally
+    borderRadius: 7, //'7px',
+    //  marginVertical: '5px',
     flexDirection: "row",
   },
   // for left , right side icon style
@@ -227,8 +258,8 @@ const styles = StyleSheet.create({
   },
   MainContainer: {
     flex: 1,
-    padding: "5%", 
-    paddingTop: StatusBarHeight, 
+    padding: "5%", // Padding of 5% of the screen width
+    paddingTop: StatusBarHeight, // Padding top including StatusBar height
     backgroundColor: "#FAF3E6", // sky blue
     width: "100%",
     height: "100%",
@@ -238,49 +269,62 @@ const styles = StyleSheet.create({
     width: "100%",
     flex: 1,
     alignItems: "center",
-    justifyContent: "center", 
+    justifyContent: "center", // Center content vertically - add
   },
 
   MainPageImage: {
-    paddingTop: 230, 
-    width: "70%", 
-    height: 200, 
+    paddingTop: 230, // 20% of the screen height
+    width: "70%", // Width of 250 pixels
+    height: 200, //'200px', // Height of 200 pixels
+    zIndex : 1
   },
 
-  Title: {  // Health journaling App text styling
-    fontSize: 32, 
+  Title: {
+    // Health journaling App text styling
+    fontSize: 32, //'32px', /* if props.welcome is ture font size : 35 else 30px*/
     textAlign: "center",
     fontWeight: "bold",
     color: "#000080",
+    //  padding: '10px', // Padding of 10 pixels
   },
 
-  SubText: { // display account login text styling
-    fontSize: 18, 
-    marginBottom: 5, 
-    letterSpacing: 1, 
+  SubText: {
+    // display account login text styling
+    fontSize: 18, //'18px',
+    marginBottom: 5, //'20px',
+    letterSpacing: 1, //'1px',
     fontWeight: "bold",
     color: "#1F2937",
-    marginBottom: 2, 
+    marginBottom: 2, //'5px' ,
     textAlign: "center",
     paddingBottom: 7,
   },
 
   FormArea: {
-    width: "85%",
+    width: "85%", // styled form area (s.t. enter email, login box) set size of 85%of width
   },
   TextInputLabel: {
+    //fixed
+    // padding: "10px",
     padding: 3,
+    //paddingLeft: "55px",
+    // paddingLeft: 5,
+    // paddingRight: 55,
     borderRadius: 5,
     fontSize: 16,
+    // height: "60px",
     height: 25,
+    // marginVertical: "3px",
+    // marginVertical: 3,
+    // marginBottom: "10px",
     color: "#1F2937",
     minHeight: 20,
   },
 
   LoginTextInButton: {
     color: "#FAF3E6",
-    fontSize: 16, 
-   
+    fontSize: 16, //'16px',
+    // padding:  '20px' ,
   },
 
   righticonstyle: {
@@ -294,17 +338,17 @@ const styles = StyleSheet.create({
     color: "#FAF3E6",
     fontSize: 16,
     padding: 3,
-    paddingLeft: "7%", 
+    paddingLeft: "7%", // only for  signin with google button text
     marginTop: 12,
     marginBottom: 12,
   },
   messageBox: {
-    textAlign: "center",
-    fontSize: 20, 
+    textAlign: "center", //horizontally
+    fontSize: 20, //'20px',
   },
 
   horizontalLineStyle: {
-    height: 1.5, 
+    height: 1.5, // make line little thicker.
     width: "100%",
     backgroundColor: "#9CA3AF",
     marginVertical: "5%",
@@ -314,7 +358,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     flexDirection: "row",
     alignItems: "center",
-    padding: 2, 
+    padding: 2, //'10px',
   },
 
   textInputStyle: {

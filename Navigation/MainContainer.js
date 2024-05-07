@@ -1,15 +1,22 @@
 import * as React from "react";
 
+import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { Platform } from "react-native";
 
+// toi link journalscreen.js with journaltitle.js
+import { createStackNavigator } from "@react-navigation/stack";
+
 import JournalScreen from "./Screens/JournalScreen";
 import CalendarScreen from "./Screens/CalendarScreen";
 import MedicationScreen from "./Screens/MedicationScreen";
+import { TouchableOpacity } from "react-native-gesture-handler";
+//import JournalTitle from './Screens/JournalTitle';
 
 // for setting button
 import SettingButton from "../Components/SettingButton";
+import SettingPage from "./Screens/SettingPage";
 
 //Screen Names
 const journalName = "Journal";

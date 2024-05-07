@@ -4,7 +4,7 @@
  * Code Version: 1.0
  * 
  * Description:
- *  Renders a button. When clicked expands into 3 buttons that are linked to respected modal forms
+ *  Renders a button. When clicked expandes into 3 buttons that are linked to respected modal forms
  * 
  * 
  ***************************************************************************************/

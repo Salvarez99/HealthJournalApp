@@ -16,7 +16,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 
 /**
  * 
- * @param {String} name displayed on top of touchableOpacity
+ * @param {String} name name displayed on top of touchableOpacity
  * @param {function} onTimeChange passthrough parent function, used to update parents variables with time gathered
  * @returns 
  */
@@ -24,9 +24,6 @@ const TimePicker = ({ name, onTimeChange }) => {
   const [time, setTime] = useState("");
   const [show, setShow] = useState(false);
 
-  /**
-   * Updates time and passes new time to parent function
-   */
   const handleTimeChange = (event, selectedTime) => {
     const currentTime = selectedTime || time;
     setShow(false);

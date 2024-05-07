@@ -1,5 +1,9 @@
 import styled from "styled-components/native"; // Make sure to import from 'styled-components/native' for React Native
 import { StatusBar, YellowBox } from "react-native";
+import Constants from "expo-constants";
+
+//const StatusBarHeight = Constants.statusBarHeight;
+
 // Get the height of the status bar on the device
 const StatusBarHeight = StatusBar.currentHeight || 0;
 
@@ -20,8 +24,10 @@ const {
   secondary,
   tertiary,
   darkLight,
+  ligthBrown,
   brand,
   orange,
+  red,
 } = Colors;
 
 // Define styled components
@@ -50,12 +56,14 @@ export const WelcomePageContainer = styled(InnerContainer)({
   padding: "15px",
   paddingTop: "320px",
   justifyContent: "center",
+  // height : '30%', // added
 });
 
 // BottomNavBar.js componenet styleing  >> add to styles.js in components
 export const BottomNavBarContainer = styled.View({
   flex: 1,
   zIndex: 1,
+  //padding: '5%', // Padding of 5% of the screen width
   paddingTop: "30px", // Padding top including StatusBar height
   backgroundColor: Colors.ligthBrown,
   width: "100%",
@@ -106,6 +114,7 @@ export const PageLogo = styled.Image({
 
 // PageTitle
 export const PageTitle = styled.Text({
+  //fontSize: '30px', // Font size of 30 pixels
   fontSize: (props) =>
     props.welcome
       ? "35px"
@@ -173,6 +182,7 @@ export const RightIcon = styled.TouchableOpacity({
 
 // StyledButton - look at props
 export const StyledButton = styled.TouchableOpacity((props) => ({
+  // padding: '15px',
   padding: "4vh",
   backgroundColor: props.google ? orange : brand,
   justifyContent: props.google ? "center" : "center", // centered
@@ -187,6 +197,7 @@ export const StyledButton = styled.TouchableOpacity((props) => ({
 export const ButtonText = styled.Text((props) => ({
   color: primary, // always use primary regard less properties.
   fontSize: "16px",
+  //lineHeight: props.google ? '18vh' : '0px', // Adjust padding vertically
   padding: props.google ? "20px" : "0px",
   paddingLeft: props.google ? "7%" : "0vh", // only for  signin with google button text
 }));

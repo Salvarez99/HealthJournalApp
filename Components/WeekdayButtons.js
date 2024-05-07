@@ -1,14 +1,3 @@
-/***************************************************************************************
- * Authors: Stephen Alvarez
- * Date: 5/1/2024
- * Code Version: 1.0
- *
- * Description:
- *  Renders a set of buttons. Each button is associated with a day of the week.
- *
- *
- ***************************************************************************************/
-
 import React from "react";
 import {
   View,

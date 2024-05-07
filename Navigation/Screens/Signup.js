@@ -10,9 +10,12 @@ import styled from 'styled-components/native';
 import { Platform, Button, View, StyleSheet, TouchableOpacity, Image, Text, TextInput } from 'react-native';
 
 // icon
-import { Octicons, Fontisto, Ionicons } from '@expo/vector-icons'; // Ionicons : for isPassword , Fontisto : for goole icon.
+import { Octicons, Fontisto, Ionicons } from '@expo/vector-icons'; // Ionicons : for isPassword , Fontisto : for goole icon
+// Datetimepicker - need to be installed on terminal before using it. check out expo datetimepicker documentation.
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { ScreenOrientation } from 'expo';  // import screenorientation 
+// import screenorientation 
+import { ScreenOrientation } from 'expo';
+//for navigation
 import { useNavigation } from '@react-navigation/native'; // Import useNavigation hook
 
 
@@ -54,13 +57,16 @@ const Signup = () => {
         setShow(false); 
         //set date as current date 
         setDate(currentDate); 
-        setDob(currentDate); 
+        setDob(currentDate); // ?
     }
 
     const showDatePicker = () => {  
         setShow(true);
     };
 
+    // end of declation variables. 
+
+    
     // initially lock screen as portrait mode ( vertical)
     useEffect(() => {
         async function lockScreenOrientation() {
@@ -108,6 +114,20 @@ const Signup = () => {
                 <Text style={styles.Title}>Health Journaling App</Text>
                 <Text style={styles.SubText}>Account Signup</Text>
             
+                {/* {show && (
+                        <DateTimePicker
+                        testID="dateTimePicker"
+                        value={date}
+                        mode="date"
+                        is24Hour={true}
+                        display="default"
+                        onChange={onChange}
+                        style={{
+                        backgroundColor: 'yellow',
+                  }}
+                 />
+               )} */}
+
                 {/* Use Formik Library to manage form state and handle submission.  */}
                 <Formik
                     initialValues={{ fullName: '',  email: '', dateOfBirth : '', password: '', confirmPassword : '', }}
@@ -163,6 +183,7 @@ const Signup = () => {
                                 onChangeText={handleChange('password')}
                                 onBlur={handleBlur('password')}
                                 value={values.password}
+                                //keyboardType="email-address"
                                 // hide password while user typing for security purpose 
                                 secureTextEntry={hidePassword}
                                 isPassword={true}
@@ -179,6 +200,7 @@ const Signup = () => {
                                 onChangeText={handleChange('confirmPassword')}
                                 onBlur={handleBlur('confirmPassword')}
                                 value={values.confirmPassword}
+                                //keyboardType="email-address"
                                 // hide password while user typing for security purpose 
                                 secureTextEntry={hidePassword}
                                 isPassword={true}
@@ -232,19 +254,19 @@ const styles = StyleSheet.create({
     SignInStyleButton : { // for login button style 
         marginTop : 10,
         padding: 15,
-        backgroundColor: '#6495ED',  
-        justifyContent:  'center', 
-        alignItems: 'center', 
-        borderRadius:5,
-        marginVertical: 3,
-        height: 50, 
+        backgroundColor: '#6495ED',  // dark  navy 
+        justifyContent:  'center', // centered
+        alignItems: 'center', // horionzontally
+        borderRadius:5,// '7px',
+        marginVertical: 3,//'5px',
+        height: 50, //'60px', 
     } , 
 
     MainContainer : { 
         flex: 1,
         padding: '5%', 
-        paddingTop: StatusBarHeight, 
-        backgroundColor:'#FAF3E6',
+        paddingTop: StatusBarHeight,  // Padding top including StatusBar height
+        backgroundColor:'#FAF3E6',// sky blue
         width : '100%',
         height :'100%',
        },
@@ -253,38 +275,49 @@ const styles = StyleSheet.create({
         width: '100%',
         flex: 1,
         alignItems: 'center', 
-        justifyContent: 'center', 
+        justifyContent: 'center', // Center content vertically - add 
        },
 
        Title : {
-        fontSize: 32, 
+        // Health journaling App text styling 
+        fontSize: 32, //'32px', /* if props.welcome is ture font size : 35 else 30px*/
         textAlign: 'center',
         fontWeight: 'bold',
         color: '#000080',
+      //  padding: '10px', // Padding of 10 pixels
        }, 
        
        SubText : { 
-        fontSize: 18, 
-        marginBottom: 5, 
-        letterSpacing: 1,
+        // display account login text styling 
+        fontSize: 18, //'18px',
+        marginBottom: 5, //'20px',
+        letterSpacing: 1, //'1px',
         fontWeight: 'bold',
         color:  '#1F2937',
-        marginBottom:  2, 
+        marginBottom:  2, //'5px' ,
         textAlign:'center',
         paddingBottom : 7,
        },
 
        TextInputLabel : {
+        // padding: "10px",
         padding: 1,
+        //paddingLeft: "55px",
+       // paddingLeft: 5,
+       // paddingRight: 55,
         borderRadius: 5,
         fontSize: 16,
+        // height: "60px",
         height: 20,
+       // marginVertical: "3px",
+      // marginVertical: 3,
+       // marginBottom: "10px",
         color: "#1F2937",
         minHeight: 10,
        },
 
        horizontalLineStyle: {
-        height: 1.5,   
+        height: 1.5,  // make line little thicker. 
         width: '100%',
         backgroundColor: '#9CA3AF',
         marginVertical: '5%',

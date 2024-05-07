@@ -2,13 +2,12 @@
  * Authors: Stephen Alvarez
  * Date: 5/1/2024
  * Code Version: 1.0
- *
+ * 
  * Description:
- *  Renders a form that takes user input to fill out fields required for Journal Entries.
- * Adds gathered data to local DB tables when onSave() is triggered or clears data when form  
- * is closed without changing tables.
- *
- *
+ *  Renders a form that takes user input to fill out fields required for Journal Entries
+ * 
+ * 
+ * 
  ***************************************************************************************/
 import Ionicons from "react-native-vector-icons/Ionicons"; //Vector Icons are used for button icons
 import React, { useState } from "react";
@@ -21,155 +20,75 @@ import {
   Platform,
 } from "react-native";
 
-import SearchComponent from "../Components/SearchComponent";
+import SearchComponent from "../Components/SearchComponent"; 
 import JournalEntry from "../Classes/JournalEntry";
-import {
-  fetchLatestJournalEntryJID, //Get the most recent JID added to table as {Integer}
-  fetchJournalEntries, //Get all rows in journalEntry table
-  addJournalEntry, //Add instance to journalEntry table
-  fetchSymptoms, //Get all rows in symptom table
-  addUserSymptom, //Add instance to userSymptom table
-  fetchIllnesses, //Get all rows in illness table
-  addUserIllness, //Add instance to userIllness table
-  fetchTests, //Get all rows in test table
-  addUserTest, //Add instance to userTest table
-} from "../LocalStorage/LocalDatabase"; //imports localDB functions
 
 const AddJournalEntryForm = ({ isVisible, onClose }) => {
-  const [userSymptoms, setUserSymptoms] = useState([]); //list of userSymptoms, items are of type {Symptom}
-  const [symptoms, setSymptoms] = useState([]); //list of symptoms to populate search data, items are of type {String}
-  const [userIllnesses, setUserIllnesses] = useState([]);  //list of userIllnesses, items are of type {Illness}
-  const [illnesses, setIllnesses] = useState([]); //list of illnesses to populate search data, items are of type {String}
-  const [userTests, setUserTests] = useState([]);  //list of userTests, items are of type {TestAndLabworks}
-  const [tests, setTests] = useState([]); //list of illnesses to populate search data, items are of type {String}
-  let journalEntry = null;  //To be used to store data into an {JournalEntry} instance
+  let dummySymptoms = [
+    "Cough",
+    "Headache",
+    "Sore throat",
+    "Back pain",
+    "Congestion",
+    "Light Headedness",
+  ]; //Dummy db list, to be replaced with call to
 
-  /**
-   * Fetches data from symptom, illness and test tables when JournalEntryForm is visible
-   */
-  useEffect(() => {
-    if (isVisible) {
-      // Fetch preloaded illnesses store as list of {String}
-      fetchIllnesses()
-        .then((data) => {
-          const illnessNames = data.map((illness) => illness.name);
-          setIllnesses(illnessNames);
-        })
-        .catch((error) => {
-          console.error("Error fetching illnesses:", error);
-        });
+  let dummyIllnesses = [
+    "Cold",
+    "Flu",
+    "Pneumonia",
+    "Cancer",
+    "Allergies",
+    "Pink eye",
+  ]; //Dummy db list, to be replaced with call to db
 
-      // Fetch preloaded symptoms store as list of {String}
-      fetchSymptoms()
-        .then((data) => {
-          const symptomNames = data.map((symptom) => symptom.name);
-          setSymptoms(symptomNames);
-        })
-        .catch((error) => {
-          console.error("Error fetching symptoms:", error);
-        });
+  let dummyTest = [
+    "Bloodwork",
+    "X-Ray",
+    "Physical Exam",
+    "Biopsy",
+    "Blood Pressure",
+    "Cholestrol",
+  ]; //Dummy db list, to be replaced with call to db
 
-      // Fetch preloaded tests store as list of {String}
-      fetchTests()
-        .then((data) => {
-          const testNames = data.map((test) => test.name);
-          setTests(testNames);
-        })
-        .catch((error) => {
-          console.error("Error fetching tests:", error);
-        });
-    }
-  }, [isVisible]);
+  const [symptoms, setSymptoms] = useState([]);
+  const [illnesses, setIllnesses] = useState([]);
+  const [tests, setTests] = useState([]);
+  let journalEntry = null;
 
-  /**
-   * Print User symptoms, illnesses, test to console
-   */
   const printLists = () => {
     console.log("Symptoms: \n");
-    for (const symptom of userSymptoms) {
+    for (const symptom of symptoms) {
       console.log(
-        symptom.name +
-          ": " +
-          symptom.startDate +
-          " -> " +
-          symptom.endDate +
-          "\n"
+        symptom.name + ": " + symptom.startDate + " -> " + symptom.endDate + "\n"
       );
     }
     console.log("\n");
     console.log("Illnesses: \n");
-    for (const illness of userIllnesses) {
+    for (const illness of illnesses) {
       console.log(
-        illness.name +
-          ": " +
-          illness.startDate +
-          " -> " +
-          illness.endDate +
-          "\n"
+        illness.name + ": " + illness.startDate + " -> " + illness.endDate + "\n"
       );
     }
     console.log("\n");
 
     console.log("Tests: \n");
-    for (const test of userTests) {
+    for (const test of tests) {
       console.log(test.name + ": " + test.dateOccured + "\n");
     }
     console.log("\n");
   };
 
+  //TODO: Implement save functionality
   /**
-   * Takes collected user data and pushes the data either to local storage
+   * Takes collected user data and pushes the data either to local or cloud
+   * storage, depends if user has cloud storage active
+   * 
    */
-  const onSave = async () => {
+  const onSave = () => {
     printLists();
-    journalEntry = new JournalEntry(userSymptoms, userIllnesses, userTests);
-    try {
-      //Fetch lastest JID added to journalEntry table
-      const latest_journal_entry = fetchLatestJournalEntryJID();
-      const date = new Date();
-      const journalEntryId = await addJournalEntry(date.toLocaleDateString());
-      console.log(`Added journal entry with ID: ${journalEntryId}`);
-
-      //Iterate through each symptom and add them to userSymptom table
-      for (const symptom of journalEntry.symptoms) {
-        const userSymptom = await addUserSymptom(
-          journalEntryId,
-          symptom.name,
-          symptom.startDate,
-          symptom.endDate
-        );
-        console.log('Symptom added with ID: ' + journalEntryId);
-      }
-
-      //Iterate through each illness and add them to userSymptom table
-      for (const illness of journalEntry.illnesses) {
-
-        const illnessId = await addUserIllness(
-          journalEntryId,
-          illness.name,
-          illness.startDate,
-          illness.endDate
-        );
-        console.log('Illness added with ID: ' + journalEntryId);
-      }
-
-      //Iterate through each test and add them to userSymptom table
-      for (const test of journalEntry.testAndLabworks) {
-
-        const testId = await addUserTest(journalEntryId, test.name, test.dateOccured);
-        console.log('Test added with ID: ' + journalEntryId);
-      }
-
-      // Fetch all journal entries after adding the new entry
-      const entries = await fetchJournalEntries();
-
-      // Close the modal or perform any other post-save actions
-      onClose();
-    } catch (error) {
-      //If an error is encountered when saving, alert the user that saving has failed
-      console.error("Error saving journal entry:", error);
-      alert("Failed to save journal entry. Please try again.");
-    }
+    journalEntry = new JournalEntry(symptoms, illnesses, tests);
+    onClose();
   };
 
   return (
@@ -194,33 +113,30 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
               <Text style={styles.SearchComponentHeader}>*Symptoms:</Text>
             </View>
             <View style={{ height: 180 }}>
-              {/**Ensure searchData is a list of {String} */}
               <SearchComponent
                 searchData={dummySymptoms}
                 typeDataInputted={"symptoms"}
-                updateList={setUserSymptoms}
+                updateList={setSymptoms}
               />
             </View>
             <View>
               <Text style={styles.SearchComponentHeader}>*Illnesses:</Text>
             </View>
             <View style={{ height: 180 }}>
-              {/**Ensure searchData is a list of {String} */}
               <SearchComponent
                 searchData={dummyIllnesses}
                 typeDataInputted={"illnesses"}
-                updateList={setUserIllnesses}
+                updateList={setIllnesses}
               />
             </View>
             <View>
               <Text style={styles.SearchComponentHeader}>*Tests:</Text>
             </View>
             <View style={{ height: 180 }}>
-              {/**Ensure searchData is a list of {String} */}
               <SearchComponent
                 searchData={dummyTest}
                 typeDataInputted={"tests"}
-                updateList={setUserTests}
+                updateList={setTests}
               />
             </View>
             {/**Save button that calls onSave function */}
@@ -249,7 +165,7 @@ const styles = StyleSheet.create({
     height: 700,
     borderRadius: 10,
     alignItems: "center",
-    top: 15,
+    top : 15,
     ...Platform.select({
       ios: {
         shadowColor: "black",
