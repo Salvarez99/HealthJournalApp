@@ -1,6 +1,7 @@
-cd directory
-npm install to download npm_modules dependencies 
-npx expo start or press i for iOS simulator or a for Android emulator in the terminal where the Expo development server is running. 
+Instruction to run application:
+    cd to the HealthJournalApp folder
+    then run npm install on the terminal to download npm_modules dependencies
+    afterwards run npx expo start on the terminal and press 'i' for iOS simulator or 'a' for Android emulator in the terminal where the Expo development server is running. 
 
 Note: The log in functionality will only work if the fireBaseConfig method contains the SDK.
 You can obtain this by creating a firebase account and a project then navigating to project settings on the firebase console website. If you scroll down you can copy the firebaseConfig() and replace the same method located in firebaseConfig.js
