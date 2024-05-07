@@ -13,13 +13,7 @@ import QuickAddButton from "../../Components/QuickAddButton";
 import AddJournalEntryForm from "../../InputForms/AddJournalEntryForm";
 import AddAppointmentForm from "../../InputForms/AddAppointmentForm";
 import AddMedicationForm from "../../InputForms/AddMedicationForm";
-import {
-  fetchJournalEntries,
-  addJournalEntry,
-  addJournal,
-  fetchJournals,
-  fetchJournalDataByJournalId,
-} from "../../LocalStorage/LocalDatabase";
+import {fetchJournalEntries} from "../../LocalStorage/LocalDatabase";
 
 export default function JournalScreen({ navigation }) {
   const [isModalVisible, setIsModalVisible] = React.useState(false); // vsible or not
@@ -31,7 +25,7 @@ export default function JournalScreen({ navigation }) {
     try {
       const entries = await fetchJournalEntries(); // Fetch journal entries with id and date
       setJournalEntries(entries);
-      console.log('Fetched journal entries:', entries); 
+      // console.log('Fetched journal entries:', entries); 
     } catch (error) {
       console.error('Failed to fetch journal entries:', error);
     }
