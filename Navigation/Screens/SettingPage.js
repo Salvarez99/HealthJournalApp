@@ -1,7 +1,5 @@
 import React, { useState, useContext } from "react";
 import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
-
-//for navigation
 import { useNavigation } from "@react-navigation/native"; // Import useNavigation hook
 
 // import on app.js on navigation stack.
