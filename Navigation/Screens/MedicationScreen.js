@@ -50,6 +50,7 @@ export default function MedicationScreen({ navigation }) {
 
   const closeModal = () => {
     setIsModalVisible(false);
+    //freshed the page to update any changes made 
     fetchMedicationData();
   };
 
