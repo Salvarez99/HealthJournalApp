@@ -8,17 +8,12 @@ import {
   FlatList,
   Platform,
 } from "react-native";
+
 import QuickAddButton from "../../Components/QuickAddButton";
 import AddJournalEntryForm from "../../InputForms/AddJournalEntryForm";
 import AddAppointmentForm from "../../InputForms/AddAppointmentForm";
 import AddMedicationForm from "../../InputForms/AddMedicationForm";
-import {
-  fetchJournalEntries,
-  addJournalEntry,
-  addJournal,
-  fetchJournals,
-  fetchJournalDataByJournalId,
-} from "../../LocalStorage/LocalDatabase";
+import {fetchJournalEntries} from "../../LocalStorage/LocalDatabase";
 
 export default function JournalScreen({ navigation }) {
   const [isModalVisible, setIsModalVisible] = React.useState(false); // vsible or not
@@ -30,7 +25,7 @@ export default function JournalScreen({ navigation }) {
     try {
       const entries = await fetchJournalEntries(); // Fetch journal entries with id and date
       setJournalEntries(entries);
-      console.log('Fetched journal entries:', entries); 
+      // console.log('Fetched journal entries:', entries); 
     } catch (error) {
       console.error('Failed to fetch journal entries:', error);
     }
@@ -57,6 +52,7 @@ export default function JournalScreen({ navigation }) {
   };
 
   const closeModal = () => {
+    //refreshes the page to update when a new jounral is added
     fetchJournalData();
     setIsModalVisible(false);
     fetchJournalData();
@@ -123,21 +119,7 @@ export default function JournalScreen({ navigation }) {
 
   // render appointment item (prepare for displaying)
   const renderJournalItem = ({ item }) => {
-    // Determine the source of data (dummy or fetched appointments)
-    // const sourceAppointments = appointments.length > 0 ? appointments : dummyAppointments;
-
-    // Sort the appointments based on date difference
-    // citation : https://stackoverflow.com/questions/47071623/sort-by-closest-date-to-dates-which-have-occured-and-will-occur
-    //TODO: reimplement sorting algorithm to work with primary dates
-    // sourceAppointments.sort((a, b) => {
-
-    //   // Calculate date difference for both items
-    //   const differenceA = calculateDateDifference(displayStartDate(a));
-    //   const differenceB = calculateDateDifference(displayStartDate(b));
-    //   return differenceA - differenceB; // sort by ascending order , nearest item fist comes.
-    // });
-
-    
+  
     // render return with touchable opacity >> linked to journaltitle.js
     return (
       <TouchableOpacity
@@ -185,22 +167,6 @@ export default function JournalScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.mainContent}>
-        
-        {/**Dev Button: Adds item to journal table
-         * TODO: Remove later
-         */}
-        {/* <TouchableOpacity
-          style={{ backgroundColor: "aquamarine", flex: 1 }}
-          onPress={addToJournalTable}
-        >
-          <Text> Add to Journal Table</Text>
-        </TouchableOpacity> */}
-
-
-
-
-
-        {/* Put your content in this view */}
 
         {/** show list of saved appointment records */}
         <FlatList

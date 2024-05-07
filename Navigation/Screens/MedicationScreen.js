@@ -13,9 +13,7 @@ export default function MedicationScreen({ navigation }) {
   const [selectedModal, setSelectedModal] = React.useState(null);
   const [medications, setMedications] = useState([]);
   
-
-  
-
+// use predefined fetch function to collect data from database.
   const fetchMedicationData = async () => {
     try {
       const medData = await fetchMedicineEntries();
@@ -27,11 +25,9 @@ export default function MedicationScreen({ navigation }) {
   };
   useFocusEffect(
     useCallback(() => {
-      fetchMedicationData();
+      fetchMedicationData();  
     }, [])
   );
-
-
 
   useEffect(() => {
     fetchMedicationData();
@@ -54,6 +50,7 @@ export default function MedicationScreen({ navigation }) {
 
   const closeModal = () => {
     setIsModalVisible(false);
+    //freshed the page to update any changes made 
     fetchMedicationData();
   };
 
@@ -74,7 +71,7 @@ export default function MedicationScreen({ navigation }) {
     }
     return outputList.join(" ");
   };
-
+// render each entry of medication list before displaying.
   const renderMedicationItem = ({ item }) => (
     <View style={styles.medicationItem}>
       <View style={{alignContent : 'center', justifyContent : 'center'}}>
@@ -89,8 +86,7 @@ export default function MedicationScreen({ navigation }) {
     </View>
   );
 
-
-
+// rendering for output.
   const renderOutput = () => {
     return (
       <FlatList

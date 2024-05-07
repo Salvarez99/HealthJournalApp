@@ -24,6 +24,9 @@ const DatePicker = ({ name, onDateChange }) => {
   const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false); //state to control if datePicker is shown
 
+  /**
+   * Updates date and passes new date to parent function
+   */
   const handleDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShow(false);
@@ -37,7 +40,7 @@ const DatePicker = ({ name, onDateChange }) => {
 
   return (
     <View style={styles.container}>
-      {/**show the picker if show is true; Otherwise picker is hidden*/}
+      {/**show the picker if show === true; Otherwise picker is hidden*/}
       {show && (
         <DateTimePicker
           testID="dateTimePicker"

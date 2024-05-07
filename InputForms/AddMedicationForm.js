@@ -4,8 +4,9 @@
  * Code Version: 1.0
  * 
  * Description:
- *  Renders a form that takes user input to fill out fields required for Medications
- * 
+ *  Renders a form that takes user input to fill out fields required for Medications.
+ * Adds gathered data to local DB table when onSave() is triggered or clears data when form  
+ * is closed without changing tables.
  * 
  * 
  ***************************************************************************************/
@@ -23,7 +24,9 @@ import {
 import Medication from "../Classes/Medication";
 import DropDownList from "../Components/DosageSchedDropDown";
 import WeekDaysButtons from "../Components/WeekdayButtons";
-import { addMedicineEntry } from "../LocalStorage/LocalDatabase";
+import {
+  addMedicineEntry
+} from "../LocalStorage/LocalDatabase";
 
 
 const AddMedicationForm = ({ isVisible, onClose }) => {
@@ -39,8 +42,7 @@ const AddMedicationForm = ({ isVisible, onClose }) => {
    * 6 = Saturday
    */
   const [frequency, setFrequency] = useState([]); 
-  let medication = null;
-
+  let medication = null;  //To be used to store data into an {JournalEntry} instance
   
   /**
    * Resets form's fields to default values then closes form
@@ -53,13 +55,9 @@ const AddMedicationForm = ({ isVisible, onClose }) => {
     onClose();
   };
 
-  //TODO: Implement save functionality
-    /**
-   * Takes collected user data and pushes the data either to local or cloud
-   * storage, depends if user has cloud storage active
-   * 
+  /**
+   * Takes collected user data and pushes the data either to local or storage
    */
-
     const onSave = async () => {
       // Create a new Medication object
       const medication = new Medication(
@@ -77,8 +75,6 @@ const AddMedicationForm = ({ isVisible, onClose }) => {
     
           // Log success message
           console.log("Medicine entry added successfully with ID:", insertId);
-    
-          // Clear the form fields
           clearFields();
           onClose();
         } catch (error) {
