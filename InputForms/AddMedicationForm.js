@@ -55,8 +55,10 @@ const AddMedicationForm = ({ isVisible, onClose }) => {
     onClose();
   };
 
-  /**
-   * Takes collected user data and pushes the data either to local or storage
+    /**
+   * Takes collected user data and pushes the data either to local or cloud
+   * storage, depends if user has cloud storage active
+   * 
    */
     const onSave = async () => {
       // Create a new Medication object

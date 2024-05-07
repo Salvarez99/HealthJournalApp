@@ -52,6 +52,7 @@ export default function JournalScreen({ navigation }) {
   };
 
   const closeModal = () => {
+    //refreshes the page to update when a new jounral is added
     fetchJournalData();
     setIsModalVisible(false);
     fetchJournalData();
