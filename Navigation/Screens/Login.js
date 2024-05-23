@@ -25,6 +25,7 @@ import { FIREBASE_AUTH, GOOGLE_WEB_CLIENT_ID } from "../../firebaseConfig";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  getAuth,
 } from "firebase/auth";
 
 /*
@@ -45,15 +46,16 @@ export default function Login() {
 
   const handleLogin = async ({ email, password }) => {
     try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const user = userCredential.user;
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user; //gets the current user
+      const uid = user.uid; //gets associated uid
+
       navigation.navigate("MainContainer");
-      console.log("Logging in successful!", user);
+      console.log("Logging in successful!");
+      console.log("User id: ", uid);
+
     } catch (error) {
+
       console.log(email);
       console.log(password);
       Alert.alert("Error logging in", error.message);
