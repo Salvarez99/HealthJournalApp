@@ -7,10 +7,10 @@ export const initializeDatabase = () => {
       
       db.transaction((tx) => {
 
-        //TODO: Remove when not needed
-        //Used to delete table
+        // TODO: Remove when not needed
+        // Used to delete table
         // tx.executeSql(
-        //   "DROP TABLE IF EXISTS medicineEntry;",
+        //   "DROP TABLE IF EXISTS appointments;",
         //   [],
         //   (_, result) => {
         //     console.log("Table deleted successfully");
@@ -39,10 +39,12 @@ export const initializeDatabase = () => {
         tx.executeSql(
           `CREATE TABLE IF NOT EXISTS appointments (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            uid TEXT,
             eventName TEXT,
             eventDate TEXT,
             eventStartTime TEXT,
-            eventEndTime TEXT
+            eventEndTime TEXT,
+            FOREIGN KEY (uid) REFERENCES user(uid)
           );`,
           [],
           (_, result) => {
@@ -163,16 +165,16 @@ tx.executeSql(
 );
 
 const populateSymptomTable = (tx) => {
-tx.executeSql(
-`INSERT INTO symptom (name) VALUES (?), (?), (?), (?), (?), (?);`,
-["Cough", "Headache", "Sore Throat", "Back Pain", "Congestion", "Light Headedness"],
-(_, result) => {
-console.log("symptom prepopulated successfully");
-},
-(_, error) => {
-console.log("Error prepopulating symptom table:", error);
-}
-);
+  tx.executeSql(
+    `INSERT INTO symptom (name) VALUES (?), (?), (?), (?), (?), (?);`,
+    ["Cough", "Headache", "Sore Throat", "Back Pain", "Congestion", "Light Headedness"],
+    (_, result) => {
+      console.log("symptom prepopulated successfully");
+    },
+    (_, error) => {
+      console.log("Error prepopulating symptom table:", error);
+    }
+  );
 };
 
         // Create the test table
@@ -482,12 +484,12 @@ export const clearUser = () => {
 
 
 // Create a new appointment
-export const addAppointment = (eventName, eventDate, eventStartTime, eventEndTime) => {
+export const addAppointment = (uid, eventName, eventDate, eventStartTime, eventEndTime) => {
   return new Promise((resolve, reject) => {
       db.transaction((tx) => {
           tx.executeSql(
-              `INSERT INTO appointments (eventName, eventDate, eventStartTime, eventEndTime) VALUES (?, ?, ?, ?);`,
-              [eventName, eventDate, eventStartTime, eventEndTime],
+              `INSERT INTO appointments (uid, eventName, eventDate, eventStartTime, eventEndTime) VALUES (?, ?, ?, ?, ?);`,
+              [uid, eventName, eventDate, eventStartTime, eventEndTime],
               (_, result) => {
                   console.log("Appointment added successfully");
                   console.log(`Appointment Details - Name: ${eventName}, Date: ${eventDate}, Start Time: ${eventStartTime}, End Time: ${eventEndTime}`);
@@ -504,12 +506,12 @@ export const addAppointment = (eventName, eventDate, eventStartTime, eventEndTim
 };
 
 // Fetch all appointments
-export const fetchAppointments = () => {
+export const fetchAppointments = (uid) => {
   return new Promise((resolve, reject) => {
       db.transaction((tx) => {
           tx.executeSql(
-              `SELECT * FROM appointments;`,
-              [],
+              `SELECT * FROM appointments WHERE uid = ?;`,
+              [uid],
               (_, result) => {
                   const appointments = result.rows._array;
                   resolve(appointments); // Resolve with the fetched appointments
@@ -550,7 +552,7 @@ export const fetchJournalEntries = (uid) => {
               [uid],
               (_, result) => {
                   const journal = result.rows._array; //Id, uid , Date 
-                  console.log("Fetched journal entries:", journal); // Log fetched appointments
+                  // console.log("Fetched journal entries:", journal); // Log fetched appointments
                   resolve(journal); // Resolve with the fetched appointments
               },
               (_, error) => {
@@ -591,7 +593,7 @@ export const fetchMedicineEntries = (uid) => {
               (_, result) => {
                   const medicineEntries = result.rows._array;
                   resolve(medicineEntries); // Resolve with the fetched medicine entries
-                  console.log(medicineEntries)
+                  // console.log(medicineEntries);
               },
               (_, error) => {
                   reject(error); // Reject with the error if fetching fails
