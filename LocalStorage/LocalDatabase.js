@@ -10,7 +10,7 @@ export const initializeDatabase = () => {
         //TODO: Remove when not needed
         //Used to delete table
         // tx.executeSql(
-        //   "DROP TABLE IF EXISTS journalEntry;",
+        //   "DROP TABLE IF EXISTS medicineEntry;",
         //   [],
         //   (_, result) => {
         //     console.log("Table deleted successfully");
@@ -303,11 +303,13 @@ tx.executeSql(
         tx.executeSql(
           `CREATE TABLE IF NOT EXISTS medicineEntry (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            uid TEXT,
             medicineName TEXT,
             dosage TEXT,
             dosageSchedule TEXT,
             frequency TEXT,
-            FOREIGN KEY (medicineName) REFERENCES medicine(name)
+            FOREIGN KEY (medicineName) REFERENCES medicine(name),
+            FOREIGN KEY (uid) REFERENCES user(uid)
           );`,
           [],
           (_, result) => {
@@ -561,12 +563,12 @@ export const fetchJournalEntries = (uid) => {
 };
 
 // Create a new medicine entry
-export const addMedicineEntry = (medicineName, dosage, dosageSchedule, frequency) => {
+export const addMedicineEntry = (uid, medicineName, dosage, dosageSchedule, frequency) => {
   return new Promise((resolve, reject) => {
       db.transaction((tx) => {
           tx.executeSql(
-              `INSERT INTO medicineEntry (medicineName, dosage, dosageSchedule, frequency) VALUES (?, ?, ?, ?);`,
-              [medicineName, dosage, dosageSchedule, frequency],
+              `INSERT INTO medicineEntry (uid, medicineName, dosage, dosageSchedule, frequency) VALUES (?, ?, ?, ?, ?);`,
+              [uid, medicineName, dosage, dosageSchedule, frequency],
               (_, result) => {
                   console.log("Medicine entry added successfully");
                   resolve(result.insertId); // Resolve with the ID of the newly inserted medicine entry
@@ -580,15 +582,16 @@ export const addMedicineEntry = (medicineName, dosage, dosageSchedule, frequency
 };
 
 // Fetch all medicine entries
-export const fetchMedicineEntries = () => {
+export const fetchMedicineEntries = (uid) => {
   return new Promise((resolve, reject) => {
       db.transaction((tx) => {
           tx.executeSql(
-              `SELECT * FROM medicineEntry;`,
-              [],
+              `SELECT * FROM medicineEntry WHERE uid = ?;`,
+              [uid],
               (_, result) => {
                   const medicineEntries = result.rows._array;
                   resolve(medicineEntries); // Resolve with the fetched medicine entries
+                  console.log(medicineEntries)
               },
               (_, error) => {
                   reject(error); // Reject with the error if fetching fails

@@ -5,7 +5,7 @@ import QuickAddButton from "../../Components/QuickAddButton";
 import AddJournalEntryForm from "../../InputForms/AddJournalEntryForm";
 import AddAppointmentForm from "../../InputForms/AddAppointmentForm";
 import AddMedicationForm from "../../InputForms/AddMedicationForm";
-import { fetchMedicineEntries } from "../../LocalStorage/LocalDatabase";
+import { fetchUser, fetchMedicineEntries } from "../../LocalStorage/LocalDatabase";
 // define backend API >> fetch data from backend ex fetch >> parse and set data to display
 
 export default function MedicationScreen({ navigation }) {
@@ -16,7 +16,8 @@ export default function MedicationScreen({ navigation }) {
 // use predefined fetch function to collect data from database.
   const fetchMedicationData = async () => {
     try {
-      const medData = await fetchMedicineEntries();
+      const users = await fetchUser();
+      const medData = await fetchMedicineEntries(users[0].uid);
       setMedications(medData);
     } catch (error) {
       console.error("Failed to fetch medication data:", error);
