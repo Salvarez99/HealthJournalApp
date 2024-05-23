@@ -38,7 +38,7 @@ export default function CalendarScreen() {
         }
   
       setAppointmentInfo(formattedAppointments); // update appointment info
-      onclose()
+      // onclose()
     } catch (error) {
       console.log("Failed to fetch appointment data: ", error);
     }
@@ -87,7 +87,7 @@ export default function CalendarScreen() {
       <Calendar
         style={styles.calendarContainer}
         onDayPress={(day) => {
-          setPickedDate(day.dateString), console.log("Picked Date", day);
+          setPickedDate(day.dateString); /*, console.log("Picked Date", day);*/
         }}
         markedDates={{
           [pickedDate]: {

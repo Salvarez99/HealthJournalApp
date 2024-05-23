@@ -24,6 +24,7 @@ import {
 import SearchComponent from "../Components/SearchComponent";
 import JournalEntry from "../Classes/JournalEntry";
 import {
+  fetchUser,
   fetchLatestJournalEntryJID, //Get the most recent JID added to table as {Integer}
   fetchJournalEntries, //Get all rows in journalEntry table
   addJournalEntry, //Add instance to journalEntry table
@@ -122,12 +123,14 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
    */
   const onSave = async () => {
     printLists();
+    const users = await fetchUser();
+    console.log('uid:', users[0].uid);
     journalEntry = new JournalEntry(userSymptoms, userIllnesses, userTests);
     try {
       //Fetch lastest JID added to journalEntry table
       const latest_journal_entry = fetchLatestJournalEntryJID();
       const date = new Date();
-      const journalEntryId = await addJournalEntry(date.toLocaleDateString());
+      const journalEntryId = await addJournalEntry(users[0].uid, date.toLocaleDateString());
       console.log(`Added journal entry with ID: ${journalEntryId}`);
 
       //Iterate through each symptom and add them to userSymptom table
@@ -161,7 +164,7 @@ const AddJournalEntryForm = ({ isVisible, onClose }) => {
       }
 
       // Fetch all journal entries after adding the new entry
-      const entries = await fetchJournalEntries();
+      const entries = await fetchJournalEntries(users[0].uid);
 
       // Close the modal or perform any other post-save actions
       onClose();

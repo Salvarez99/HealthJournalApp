@@ -6,7 +6,35 @@ export const initializeDatabase = () => {
     return new Promise((resolve, reject) => {
       
       db.transaction((tx) => {
+
+        //TODO: Remove when not needed
+        //Used to delete table
+        // tx.executeSql(
+        //   "DROP TABLE IF EXISTS journalEntry;",
+        //   [],
+        //   (_, result) => {
+        //     console.log("Table deleted successfully");
+        //   },
+        //   (_, error) => {
+        //     console.error("Error deleting table:", error);
+        //   }
+        // );
         
+        // Create the appointments table used for calendar
+        tx.executeSql(
+          `CREATE TABLE IF NOT EXISTS user (
+            uid TEXT PRIMARY KEY
+          );`,
+          [],
+          (_, result) => {
+            // Resolve if the user table creation is successful
+            console.log("User table created successfully");
+          },
+          (_, error) => {
+            reject(error); // Reject with the error if table creation fails
+          }
+        );
+
         // Create the appointments table used for calendar
         tx.executeSql(
           `CREATE TABLE IF NOT EXISTS appointments (
@@ -69,7 +97,6 @@ export const initializeDatabase = () => {
                 console.log("Illness table doesn't exist?");
                 resolve();
             }
-
           },
           (_, error) => {
               reject(error);
@@ -296,13 +323,17 @@ tx.executeSql(
         tx.executeSql(
           `CREATE TABLE IF NOT EXISTS journalEntry (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            primaryDate TEXT);`,
+            uid TEXT,
+            primaryDate TEXT,
+            FOREIGN KEY (uid) REFERENCES user(uid)
+          );`,
           [],
           (_, result) => {
             console.log("journalEntry Table Initialized Successfully");
             resolve();
           },
           (_, error) => {
+            console.error("Error creating journalEntry Table:", error);
             reject(error);
           }
         );
@@ -376,8 +407,75 @@ tx.executeSql(
     });
 };
 
+// Create a new user
+export const addUser = (uid) => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `INSERT INTO user (uid) VALUES (?)`,
+        [uid],
+        (_, result) => {
+          console.log("User added successfully");
+          console.log(`User details - uid: ${uid}`);
+          resolve(result.insertId);
+        },
+        (_,error) => {
+          console.error("Error adding user:", error);
+          reject(error);
+        }
+      );
+    });
+  });
+};
 
+// Fetch all users
+export const fetchUser = () => {
+  return new Promise((resolve, reject) => {
+      db.transaction((tx) => {
+          tx.executeSql(
+              `SELECT * FROM user;`,
+              [],
+              (_, result) => {
+                  const user = result.rows._array;
+                  resolve(user); // Resolve with the fetched users
+              },
+              (_, error) => {
+                  reject(error); // Reject with the error if fetching fails
+              }
+          );
+      });
+  });
+};
 
+//Used to delete all user entries
+export const clearUser = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        `DELETE FROM user;`,
+        [],
+        (_, result) => {
+          // After deleting all records, reset the primary key sequence
+          tx.executeSql(
+            `DELETE FROM sqlite_sequence WHERE name = 'user';`,
+            [],
+            () => {
+              // Resolve with the number of rows affected (should be 0 or more)
+              resolve(result.rowsAffected);
+              console.log('Rows deleted: ', result.rowsAffected);
+            },
+            (_, error) => {
+              reject(error); // Reject with the error if resetting the sequence fails
+            }
+          );
+        },
+        (_, error) => {
+          reject(error); // Reject with the error if deletion fails
+        }
+      );
+    });
+  });
+};
 
 
 
@@ -423,12 +521,12 @@ export const fetchAppointments = () => {
 };
 
 //Create new journalEntry, created when user presses save on the AddJournalInputForm
-export const addJournalEntry = (primaryDate) => {
+export const addJournalEntry = (uid, primaryDate) => {
   return new Promise((resolve, reject) => {
       db.transaction((tx) => {
           tx.executeSql(
-              `INSERT INTO journalEntry (primaryDate) VALUES (?);`,
-              [primaryDate],
+              `INSERT INTO journalEntry (uid, primaryDate) VALUES (?,?);`,
+              [uid, primaryDate],
               (_, result) => {
                   console.log("Entry Added Successfully");
                   resolve(result.insertId); // Resolve with the ID of the newly inserted journalEntry
@@ -441,17 +539,17 @@ export const addJournalEntry = (primaryDate) => {
   });
 };
 
-//Fetch all journal Entries
-export const fetchJournalEntries = () => {
+//Fetch all journal Entries for specific user
+export const fetchJournalEntries = (uid) => {
   return new Promise((resolve, reject) => {
       db.transaction((tx) => {
           tx.executeSql(
-              `SELECT * FROM journalEntry;`,
-              [],
+              `SELECT * FROM journalEntry WHERE uid = ?;`,
+              [uid],
               (_, result) => {
-                  const appointments = result.rows._array; //Id , Date 
-                  console.log("Fetched journal entries:", appointments); // Log fetched appointments
-                  resolve(appointments); // Resolve with the fetched appointments
+                  const journal = result.rows._array; //Id, uid , Date 
+                  console.log("Fetched journal entries:", journal); // Log fetched appointments
+                  resolve(journal); // Resolve with the fetched appointments
               },
               (_, error) => {
                 console.error("Error fetching journal entries:", error); // Log fetch error

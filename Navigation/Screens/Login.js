@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 // citation learned from : https://www.youtube.com/watch?v=BQ-kHwLlhrg
 import styled from "styled-components/native";
@@ -22,11 +22,9 @@ import { Octicons, Fontisto, Ionicons } from "@expo/vector-icons"; // Ionicons :
 //for navigation
 import { useNavigation } from "@react-navigation/native"; // Import useNavigation hook
 import { FIREBASE_AUTH, GOOGLE_WEB_CLIENT_ID } from "../../firebaseConfig";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  getAuth,
-} from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
+
+import { addUser, clearUser } from "../../LocalStorage/LocalDatabase";
 
 /*
 GoogleSignIn.configure({
@@ -53,6 +51,10 @@ export default function Login() {
       navigation.navigate("MainContainer");
       console.log("Logging in successful!");
       console.log("User id: ", uid);
+
+      await clearUser();
+      addUser(uid);
+
 
     } catch (error) {
 
