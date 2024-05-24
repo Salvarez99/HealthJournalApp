@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import {
   View,
@@ -37,6 +37,10 @@ export default function JournalScreen({ navigation }) {
       fetchJournalData();
     }, [])
   );
+
+  useEffect(() => {
+    fetchJournalData();
+  }, []);
   const openModal1 = () => {
     setSelectedModal("AddAppointmentForm");
     setIsModalVisible(true);
