@@ -25,6 +25,8 @@ import Medication from "../Classes/Medication";
 import DropDownList from "../Components/DosageSchedDropDown";
 import WeekDaysButtons from "../Components/WeekdayButtons";
 import {
+  fetchUser,
+  fetchMedicineEntries,
   addMedicineEntry
 } from "../LocalStorage/LocalDatabase";
 
@@ -71,7 +73,8 @@ const AddMedicationForm = ({ isVisible, onClose }) => {
       if (!/^\s*$/.test(medication.name) && medication.dosage !== "" && medication.frequency.length !== 0) {
         try {
           // Add the medication entry to the database
-          const insertId = await addMedicineEntry(medication.name, medication.dosage, medication.dosageSchedule, JSON.stringify(medication.frequency));
+          const users = await fetchUser();
+          const insertId = await addMedicineEntry(users[0].uid, medication.name, medication.dosage, medication.dosageSchedule, JSON.stringify(medication.frequency));
     
           // Log success message
           console.log("Medicine entry added successfully with ID:", insertId);

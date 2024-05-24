@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { View, Text, ScrollView, Platform, StyleSheet } from "react-native";
 import { Calendar } from "react-native-calendars";
 import QuickAddButton from "../../Components/QuickAddButton";
-import { fetchAppointments } from "../../LocalStorage/LocalDatabase"; // Update path accordingly
+import { fetchUser, fetchAppointments } from "../../LocalStorage/LocalDatabase"; // Update path accordingly
 import { useFocusEffect } from "@react-navigation/native";
 // dummy data to test
 
@@ -17,12 +17,13 @@ export default function CalendarScreen() {
  
   const fetchAppointmentInfo = async () => {
     try {
-      const appointments = await fetchAppointments();  // call localdata fetch function and store data into appointments
+      const users = await fetchUser();
+      const appointments = await fetchAppointments(users[0].uid);  // call localdata fetch function and store data into appointments
       const formattedAppointments = {};
   
   // citation for for loop and pushing : https://sliceofdev.com/posts/promises-with-loops-and-array-methods-in-javascript
       for (const ap of appointments) {
-        const { eventDate, eventName, eventStartTime, eventEndTime } = ap;
+        const { uid, eventDate, eventName, eventStartTime, eventEndTime } = ap;
        
         // if formattedAppointments[] doesn't exist then create empty array. 
         if (formattedAppointments[eventDate] === undefined || formattedAppointments[eventDate] === null) {
@@ -38,7 +39,7 @@ export default function CalendarScreen() {
         }
   
       setAppointmentInfo(formattedAppointments); // update appointment info
-      onclose()
+      // onclose()
     } catch (error) {
       console.log("Failed to fetch appointment data: ", error);
     }
@@ -87,7 +88,7 @@ export default function CalendarScreen() {
       <Calendar
         style={styles.calendarContainer}
         onDayPress={(day) => {
-          setPickedDate(day.dateString), console.log("Picked Date", day);
+          setPickedDate(day.dateString); /*, console.log("Picked Date", day);*/
         }}
         markedDates={{
           [pickedDate]: {

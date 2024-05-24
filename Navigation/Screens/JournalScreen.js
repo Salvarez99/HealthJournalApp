@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import {
   View,
@@ -13,7 +13,7 @@ import QuickAddButton from "../../Components/QuickAddButton";
 import AddJournalEntryForm from "../../InputForms/AddJournalEntryForm";
 import AddAppointmentForm from "../../InputForms/AddAppointmentForm";
 import AddMedicationForm from "../../InputForms/AddMedicationForm";
-import {fetchJournalEntries} from "../../LocalStorage/LocalDatabase";
+import {fetchJournalEntries, fetchUser} from "../../LocalStorage/LocalDatabase";
 
 export default function JournalScreen({ navigation }) {
   const [isModalVisible, setIsModalVisible] = React.useState(false); // vsible or not
@@ -23,7 +23,8 @@ export default function JournalScreen({ navigation }) {
 
   const fetchJournalData = async () => {
     try {
-      const entries = await fetchJournalEntries(); // Fetch journal entries with id and date
+      const users = await fetchUser();
+      const entries = await fetchJournalEntries(users[0].uid); // Fetch journal entries with id and date
       setJournalEntries(entries);
       // console.log('Fetched journal entries:', entries); 
     } catch (error) {
@@ -36,6 +37,10 @@ export default function JournalScreen({ navigation }) {
       fetchJournalData();
     }, [])
   );
+
+  useEffect(() => {
+    fetchJournalData();
+  }, []);
   const openModal1 = () => {
     setSelectedModal("AddAppointmentForm");
     setIsModalVisible(true);

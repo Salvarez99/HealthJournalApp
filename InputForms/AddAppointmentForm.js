@@ -27,6 +27,7 @@ import Appointment from "../Classes/Appointment";
 import DatePicker from "../Components/DatePicker";
 import TimePicker from "../Components/TimePicker";
 import {
+  fetchUser,
   addAppointment, //Add appointment to appointment table
   clearAppointments, //Clear the apppointment table
   } from "../LocalStorage/LocalDatabase"; 
@@ -102,8 +103,9 @@ const AddAppointmentForm = ({ isVisible, onClose }) => {
     }
 
     try {
+      const users = await fetchUser();
+      const data = await addAppointment(users[0].uid, eventName, eventDate, eventStartTime, eventEndTime);
       // call localDatabase's addappointment function to store entered data into local database. 
-      const data = await addAppointment(eventName, eventDate, eventStartTime, eventEndTime);
 
       console.log(`{adding Page} Appointment added with ID: ${data}`);
 

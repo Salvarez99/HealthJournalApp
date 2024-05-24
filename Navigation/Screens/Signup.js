@@ -37,7 +37,7 @@ const Signup = () => {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
             navigation.navigate('Login');
-            console.log("Registration successful! ", user);
+            console.log("Registration successful! ", user.uid);
         }
         catch(error){
             console.log(email);
