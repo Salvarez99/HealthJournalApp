@@ -1,6 +1,4 @@
-import * as SQLite from "expo-sqlite";
-
-const db = SQLite.openDatabase("journal.db");
+import { db } from "./InitializeLocalDB";
 
 //Used to delete all user entries
 export const clearUser = () => {

@@ -3,7 +3,8 @@ import React, { useState, useEffect, useCallback } from "react";
 import { View, Text, ScrollView, Platform, StyleSheet } from "react-native";
 import { Calendar } from "react-native-calendars";
 import QuickAddButton from "../../Components/QuickAddButton";
-import { fetchUser, fetchAppointments } from "../../LocalStorage/LocalDatabase"; // Update path accordingly
+// import { fetchUser, fetchAppointments } from "../../LocalStorage/LocalDatabase"; // Update path accordingly
+import { fetchUser, fetchAppointments } from "../../LocalStorage/FetchLocalDB"; // Update path accordingly
 import { useFocusEffect } from "@react-navigation/native";
 // dummy data to test
 

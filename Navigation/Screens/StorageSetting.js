@@ -6,7 +6,7 @@ import {
   Text,
   Switch,
 } from "react-native";
-import {clearJournalEntry, clearUserIllness, clearUserTest, clearUserSymptom, clearMedicineEntry} from "../../LocalStorage/LocalDatabase";
+import {clearJournalEntry, clearUserIllness, clearUserTest, clearUserSymptom, clearMedicineEntry} from "../../LocalStorage/ClearLocalDB";
 
 export default function StorageSetting() {
   const [isEnabled, setIsEnabled] = useState(true);

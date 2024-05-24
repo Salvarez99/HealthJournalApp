@@ -1,6 +1,6 @@
 import * as SQLite from "expo-sqlite";
 
-const db = SQLite.openDatabase("journal.db");
+export const db = SQLite.openDatabase("journal.db");
 
 export const initializeDatabase = () => {
   return new Promise((resolve, reject) => {

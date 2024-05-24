@@ -1,6 +1,4 @@
-import * as SQLite from "expo-sqlite";
-
-const db = SQLite.openDatabase("journal.db");
+import { db } from "./InitializeLocalDB";
 
 // Create a new user
 export const addUser = (uid) => {
