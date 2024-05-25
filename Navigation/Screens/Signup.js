@@ -6,7 +6,6 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'fire
 
 // import formik
 import { Formik } from 'formik';
-import styled from 'styled-components/native';
 import { Platform, Button, View, StyleSheet, TouchableOpacity, Image, Text, TextInput } from 'react-native';
 
 // icon

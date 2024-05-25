@@ -12,7 +12,7 @@
  ***************************************************************************************/
 
 import Ionicons from "react-native-vector-icons/Ionicons"; //Vector Icons are used for button icons
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -26,11 +26,13 @@ import {
 import Appointment from "../Classes/Appointment";
 import DatePicker from "../Components/DatePicker";
 import TimePicker from "../Components/TimePicker";
-import {
-  fetchUser,
-  addAppointment, //Add appointment to appointment table
-  clearAppointments, //Clear the apppointment table
-  } from "../LocalStorage/LocalDatabase"; 
+// import {
+//   fetchUser,
+//   addAppointment, //Add appointment to appointment table
+//   clearAppointments, //Clear the apppointment table
+//   } from "../LocalStorage/LocalDatabase"; 
+import { fetchUser } from "../LocalStorage/FetchLocalDB"; 
+import { addAppointment } from "../LocalStorage/AddLocalDB"; 
 
 const AddAppointmentForm = ({ isVisible, onClose }) => {
   const [eventName, setEventName] = new useState("");

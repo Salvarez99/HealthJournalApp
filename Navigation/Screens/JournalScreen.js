@@ -13,7 +13,7 @@ import QuickAddButton from "../../Components/QuickAddButton";
 import AddJournalEntryForm from "../../InputForms/AddJournalEntryForm";
 import AddAppointmentForm from "../../InputForms/AddAppointmentForm";
 import AddMedicationForm from "../../InputForms/AddMedicationForm";
-import {fetchJournalEntries, fetchUser} from "../../LocalStorage/LocalDatabase";
+import { fetchJournalEntries, fetchUser } from "../../LocalStorage/FetchLocalDB";
 
 export default function JournalScreen({ navigation }) {
   const [isModalVisible, setIsModalVisible] = React.useState(false); // vsible or not

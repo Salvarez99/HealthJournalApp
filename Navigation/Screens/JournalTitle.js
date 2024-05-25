@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
-import { Ionicons } from "@expo/vector-icons";
+
 import {
   fetchUserIllnessByJournalId,
   fetchUserSymptomByJournalId,
   fetchUserTestByJournalId,
   fetchUserSymptom,
-} from "../../LocalStorage/LocalDatabase";
+} from "../../LocalStorage/FetchLocalDB";
+
 import {
   View,
   Text,

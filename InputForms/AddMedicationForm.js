@@ -11,7 +11,7 @@
  * 
  ***************************************************************************************/
 import Ionicons from "react-native-vector-icons/Ionicons"; //Vector Icons are used for button icons
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -24,11 +24,8 @@ import {
 import Medication from "../Classes/Medication";
 import DropDownList from "../Components/DosageSchedDropDown";
 import WeekDaysButtons from "../Components/WeekdayButtons";
-import {
-  fetchUser,
-  fetchMedicineEntries,
-  addMedicineEntry
-} from "../LocalStorage/LocalDatabase";
+import { fetchUser } from "../LocalStorage/FetchLocalDB";
+import { addMedicineEntry } from "../LocalStorage/AddLocalDB";
 
 
 const AddMedicationForm = ({ isVisible, onClose }) => {
@@ -68,11 +65,13 @@ const AddMedicationForm = ({ isVisible, onClose }) => {
         dosageSchedule,
         frequency
       );
-    
+
+      
       // Check if required fields are filled out
       if (!/^\s*$/.test(medication.name) && medication.dosage !== "" && medication.frequency.length !== 0) {
         try {
           // Add the medication entry to the database
+          console.log("here");
           const users = await fetchUser();
           const insertId = await addMedicineEntry(users[0].uid, medication.name, medication.dosage, medication.dosageSchedule, JSON.stringify(medication.frequency));
     

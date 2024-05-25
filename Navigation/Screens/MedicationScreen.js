@@ -5,7 +5,7 @@ import QuickAddButton from "../../Components/QuickAddButton";
 import AddJournalEntryForm from "../../InputForms/AddJournalEntryForm";
 import AddAppointmentForm from "../../InputForms/AddAppointmentForm";
 import AddMedicationForm from "../../InputForms/AddMedicationForm";
-import { fetchUser, fetchMedicineEntries } from "../../LocalStorage/LocalDatabase";
+import { fetchUser, fetchMedicineEntries } from "../../LocalStorage/FetchLocalDB";
 // define backend API >> fetch data from backend ex fetch >> parse and set data to display
 
 export default function MedicationScreen({ navigation }) {
