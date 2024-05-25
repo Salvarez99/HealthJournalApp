@@ -4,17 +4,14 @@ import { createStackNavigator } from "@react-navigation/stack";
 import MainContainer from "./Navigation/MainContainer";
 import Login from "./Navigation/Screens/Login";
 import SignUp from "./Navigation/Screens/Signup";
-//import Logout from './Navigation/Screens/Logout';
 import JournalTitle from "./Navigation/Screens/JournalTitle";
 
 
 // for setting 
-import SettingButton from './Components/SettingButton';
 import SettingPage from './Navigation/Screens/SettingPage';
 import AccountSetting from './Navigation/Screens/AccountSetting';
 import StorageSetting from './Navigation/Screens/StorageSetting';
 import ChangePasswordScreen from './Navigation/Screens/ChangePasswordScreen';
-// import { initializeDatabase, exportDb } from "./LocalStorage/LocalDatabase";
 import { initializeDatabase } from "./LocalStorage/InitializeLocalDB";
 
 import AddAppointmentForm from "./InputForms/AddAppointmentForm";

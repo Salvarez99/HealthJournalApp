@@ -24,7 +24,6 @@ import {
 import Medication from "../Classes/Medication";
 import DropDownList from "../Components/DosageSchedDropDown";
 import WeekDaysButtons from "../Components/WeekdayButtons";
-// import { fetchUser, addMedicineEntry } from "../LocalStorage/LocalDatabase";
 import { fetchUser } from "../LocalStorage/FetchLocalDB";
 import { addMedicineEntry } from "../LocalStorage/AddLocalDB";
 

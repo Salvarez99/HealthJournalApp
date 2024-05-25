@@ -23,18 +23,6 @@ import {
 
 import SearchComponent from "../Components/SearchComponent";
 import JournalEntry from "../Classes/JournalEntry";
-// import {
-//   fetchUser,
-//   fetchLatestJournalEntryJID, //Get the most recent JID added to table as {Integer}
-//   fetchJournalEntries, //Get all rows in journalEntry table
-//   addJournalEntry, //Add instance to journalEntry table
-//   fetchSymptoms, //Get all rows in symptom table
-//   addUserSymptom, //Add instance to userSymptom table
-//   fetchIllnesses, //Get all rows in illness table
-//   addUserIllness, //Add instance to userIllness table
-//   fetchTests, //Get all rows in test table
-//   addUserTest, //Add instance to userTest table
-// } from "../LocalStorage/LocalDatabase"; //imports localDB functions
 
 import {
   fetchUser,

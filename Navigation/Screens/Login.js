@@ -24,7 +24,6 @@ import { useNavigation } from "@react-navigation/native"; // Import useNavigatio
 import { FIREBASE_AUTH, GOOGLE_WEB_CLIENT_ID } from "../../firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
-// import { addUser, clearUser } from "../../LocalStorage/LocalDatabase";
 import { addUser } from "../../LocalStorage/AddLocalDB";
 import { clearUser } from "../../LocalStorage/ClearLocalDB";
 
