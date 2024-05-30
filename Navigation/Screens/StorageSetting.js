@@ -7,6 +7,9 @@ import {
   Switch,
 } from "react-native";
 import {clearJournalEntry, clearUserIllness, clearUserTest, clearUserSymptom, clearMedicineEntry} from "../../LocalStorage/ClearLocalDB";
+import { removeUserJournals, removeUserAppointments, removeUserMedications } from "../../LocalStorage/RemoveLocalDB";
+import { fetchUser } from "../../LocalStorage/FetchLocalDB";
+import { remove } from "firebase/database";
 
 export default function StorageSetting() {
   const [isEnabled, setIsEnabled] = useState(true);
@@ -15,22 +18,30 @@ export default function StorageSetting() {
     !isEnabled
       ? alert("Cloud Storage Enabled")
       : alert("Cloud Storage Disabled");
-
-    //TODO: db logic goes here
-  };
-  const removeJournals = async () => {
-    //TODO: db logic goes here
-    await clearJournalEntry();
-    await clearUserIllness();
-    await clearUserTest()
-    await clearUserSymptom()
-    alert("Removed Journals from cloud.");
+      
+      //TODO: db logic goes here
+    };
+    const removeJournals = async () => {
+      // //TODO: db logic goes here
+    const users = await fetchUser();
+    await removeUserJournals(users[0].uid);
+    alert("Removed Journals.");
   };
 
   const removeMedications = async() => {
     //db logic goes here
-    await clearMedicineEntry();
-    alert("Removed medications from cloud.");
+    
+    const users = await fetchUser();
+    await removeUserMedications(users[0].uid);
+    alert("Removed medications.");
+  };
+
+  const removeAppoinments = async() => {
+    //db logic goes here
+    console.log("Appointments")
+    const users = await fetchUser();
+    await removeUserAppointments(users[0].uid);
+    alert("Removed appointments.");
   };
 
   return (
@@ -53,14 +64,21 @@ export default function StorageSetting() {
           style={styles.storageButtons}
           onPress={removeJournals}
         >
-          <Text style={styles.buttonText}>Remove Journals </Text>
+          <Text style={styles.buttonText}>Remove Local Journals </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.storageButtons}
           onPress={removeMedications}
         >
-          <Text style={styles.buttonText}>Remove Medications </Text>
+          <Text style={styles.buttonText}>Remove Local Medications </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.storageButtons}
+          onPress={removeAppoinments}
+        >
+          <Text style={styles.buttonText}>Remove Local Appointments </Text>
         </TouchableOpacity>
       </View>
     </View>
